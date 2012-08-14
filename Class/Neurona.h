@@ -1,21 +1,40 @@
+#ifndef __NEURONA_H__
+#define __NEURONA_H__
+
+#include <vector>
+
+
 
 class Neurona {
+	
+private: 
 	//Vector de pesos sinápticos
-	private vector<double> W;
+	std::vector<double> W;
+	//Cantidad de entradas
+	unsigned int dimension;
+	//constante gamma de aprendizaje de la neurona
+	double constante_aprendizaje;
 
 	//...
 
+	
+public:
+	static const unsigned int FUNCION_SIGNO = 1;
+	static const unsigned int FUNCION_SIGMODEA = 2;
 	//Constructor
-	public void Neurona() { }
-
-	//Métodos
+	//  * dim = Cantidad de entradas
+	Neurona(unsigned int dim, double min, double max, unsigned int funcion);
 
 	//Guardar pesos sinápticos
-	public void SaveW() {}
+	void saveW();
 	//Leer pesos sinápticos
-	public void ReadW() {}
+	void readW();
 
 	//Entrenar con un conjunto de entradas X y una salida deseada yd
-	public void Train(vector<double> X, double yd) {}
+	void train(std::vector<double> X, double yd);
+	
+	double getResponse(std::vector<double> X);
 
-}
+};
+
+#endif
