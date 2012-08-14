@@ -1,9 +1,13 @@
+#ifndef __UTILS_CPP__
+#define __UTILS_CPP__
+
 #include <vector>
 #include <sstream>
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <cstdlib>
+#include <cstdlib> 
+#include <cassert>
 
 
 
@@ -11,33 +15,52 @@
 Entrada: Path al archivo csv
 Salida: Devuelve un vector de vector<double>  con el contenido de un archivo CSV
 */
-/*
-std::vector<std::vector<double> > parse_csv(char *filename) {
-        std::ifstream f;
-        f.open(filename);
-        
-        if(!f.is_open()){
-                std::cout<<"No se pudo abrir el archivo: "<<filename<<std::endl;
-                getchar();
-                //exit(-1);
-        }
-		std::vector<std::vector<double> > X = std::vector<std::vector<double> >();
-        double value;
-        std::string s;
-        //Lectura de los datos de entrenamiento
-        while(getline(f,s)){
-			std::stringstream ss(s);
-			std::vector<double> tempy;
-                while(ss>>value){
-                        tempy.push_back(value);
-                        if(ss.peek() == ',')
-                                ss.ignore();
-                }
-                X.push_back(tempy);
-        }
-        return X;
+
+void parseCSV(char *filename, std::vector<std::vector<double> > & X) {
+
+	std::ifstream file;
+	file.open(filename);
+	assert(file.is_open()); //muestra error si no se pudo abrir el archivo
+	
+	double value;
+	std::string s, line;
+	std::stringstream ss, iss;
+	//Lectura de los datos de entrenamiento
+	while(getline(file,line)){ 		//lee una linea entera
+		iss<<line;
+		X.push_back(std::vector<double>()); 		//agrega un vector vacio
+		
+		while(getline(iss,s,',')){ //separa la linea entre las comas
+			//transforma de string a double
+			ss<<s;
+			ss>>value;
+			X.back().push_back(value); //agrega el elemento al vector
+			ss.clear(); //limpia el stream
+		}
+		iss.clear();
+	}
 }
-*/
+
+template<typename T>
+void printVector(std::vector<T> &v, char separator = ' '){
+	for (unsigned int i = 0; i < v.size(); i++){
+		std::cout<<v[i];
+		if(i < v.size()-1) //Si no es el ultimo caso
+			std::cout<<separator;
+	}
+}
+
+
+template<typename T>
+void printVectorVector(std::vector<std::vector<T> > &v, char separator = ' ', 
+						std::string newcase = "\n-------\n"){
+	for (unsigned int i = 0; i < v.size(); i++){
+		printVector(v[i],separator);
+		std::cout<<newcase;
+	}
+}
+
+
 
 //Genera un numero aleatorio en el rango [a,b].
 // NOTA: solo funciona para numeros de punto flotante
@@ -64,3 +87,5 @@ double sigmodea(double x){
 	//...
 	return 1;
 }
+
+#endif

@@ -3,8 +3,6 @@
 
 #include <vector>
 
-
-
 class Neurona {
 	
 private: 

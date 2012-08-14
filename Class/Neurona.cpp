@@ -1,10 +1,16 @@
+//Includes librerías C++
 #include <ctime>
 #include <cmath>
 #include <cstdlib>
 #include <cassert>
 
+//Include clases
 #include "Neurona.h"
-#include "utils.cpp"
+
+//Include funciones externas
+template<typename T>
+extern T randomDecimal(T a, T b);
+
 
 
 Neurona::Neurona(unsigned int dim, double min = -0.5, double max = 0.5, unsigned int funcion = 1) {
@@ -13,7 +19,7 @@ Neurona::Neurona(unsigned int dim, double min = -0.5, double max = 0.5, unsigned
 
 	//dim+1 porque una entrada pertenece al bias (umbral)
 	for(unsigned int i = 0; i < dim+1; i++){
-		W.push_back(randomDecimal<double>(min,max));
+		//W.push_back(randomDecimal<double>(min,max));
 	}
 }
 
