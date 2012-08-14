@@ -1,11 +1,15 @@
-#include<iostream>
+#include <iostream>
 #include <cassert>
+#include <vector>
 //#include "Neurona.h"
-//#include "utils.cpp"
-using namespace std;
+#include "utils.cpp"
+
 
 int main (int argc, char *argv[]) {
-	assert(1 < 0);
+	std::vector<std::vector<double> > entrada;
+	parseCSV("input.txt", entrada);
+	printVectorVector<double>(entrada);
+
 	return 0;
 }
 

@@ -12,11 +12,11 @@ custom_tabs=0
 tab_use_spaces=0
 use_wxfb=0
 explorer_path=
-current_source=../Class/Neurona.h
+current_source=../Utils/utils.cpp
 path_char=/
 [source]
 path=main.cpp
-cursor=168
+cursor=80
 open=true
 [source]
 path=../Class/Neurona.cpp
@@ -24,7 +24,7 @@ cursor=0
 open=true
 [header]
 path=../Class/Neurona.h
-cursor=275
+cursor=64
 open=true
 [config]
 name=Debug
@@ -42,7 +42,7 @@ warnings_level=1
 ansi_compliance=0
 debug_level=2
 optimization_level=0
-headers_dirs=../Utils,../Class
+headers_dirs=../Utils,../Class, 
 linking_extra=
 libraries_dirs=
 libraries=
