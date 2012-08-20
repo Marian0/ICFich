@@ -34,5 +34,8 @@ class Red {
 
 		void singleTrain(std::vector<double> X, std::vector<double> YD);
 		void backpropagation() {}; //soon
+		
+		//Devuelvo el arreglo de neuronas para algunas cuestiones de graficación.
+		void getNeuronas(std::vector<Neurona> &N);
 
 };

@@ -25,7 +25,7 @@ Neurona::Neurona(unsigned int dim, double min, double max, unsigned int funcion,
 double Neurona::getResponse(std::vector<double> X){
 	//Si el tamaño no coincide, cancela la ejecucion y muestra un mensaje 
 	// de error informativo
-	assert(X.size() != dimension);
+	assert(X.size() == dimension);
 	
 	double result = -1*W[0]; //bias
 	//Realiza el producto punto entre la entrada y los pesos

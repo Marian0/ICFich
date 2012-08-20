@@ -2,8 +2,10 @@
 #include <cassert>
 #include <vector>
 #include <string>
+#include <iostream>
 #include "Neurona.h"
 #include "utils.h"
+#include "Red.h"
 
 #include "GNUPlot.h"
 
@@ -19,12 +21,13 @@ int main (int argc, char *argv[]) {
 	plotter("set yrange [-2:2]");
 	plotter("set multiplot");
 	
-	
+//	
 	std::vector<std::vector<double > > casos, salida;
-	
-	utils::parseCSV("or.csv", casos);	
-	
-	//Haremos un string para poder plotear al final
+//	
+	utils::parseCSV("Cache/or_disperso500.csv", casos);	
+
+//	
+//	//Haremos un string para poder plotear al final
 	std::string plot1 = "plot \"-\" notitle pt 1 lt 1\n";
 	std::string plot2 = "plot \"-\" notitle pt 8 lt 3\n";
 	for (unsigned i = 0 ; i < 500; i++) {
@@ -45,9 +48,53 @@ int main (int argc, char *argv[]) {
 	plot2 += "e\n";
 	plotter(plot1);
 	plotter(plot2);
+//	
+//	utils::saveCSV("Cache/or_disperso500.csv", salida);
 	
-	utils::saveCSV("Cache/or_disperso500.csv", salida);
+	//Definición de una Matriz de adyacencias para las neuronas
+	std::vector<bool> a;
+	a.push_back(0);
+	std::vector<std::vector<bool> > b;
+	b.push_back(a);
 	
+	//Definición de una Matriz de adyacencias para las entradas
+	std::vector<bool> ea;
+	ea.push_back(1);
+	std::vector<std::vector<bool> > eb;
+	eb.push_back(ea);
+	eb.push_back(ea);
+	
+	//Instancio la red
+	Red perceptron(b,eb,"Red Perceptron");
+	
+	//Entreno y grafico
+	
+	for (unsigned int i = 0; i < 100 ; i++) {
+		//Grafico una frontera de desición de color aleatorio
+		std::vector<Neurona> V;
+		perceptron.getNeuronas(V);
+		
+		std::vector<double> W;
+		V[0].getW(W);
+		
+		double da  = W[0]/W[2];
+		double da2  = W[1]/W[2];
+		double da3 = rand()%30+1;
+		
+		plotter("plot " + utils::doubleToStr(da) + "-" + utils::doubleToStr(da2) + "*x lt "+ utils::doubleToStr(da3) +" notitle");
+		
+		//Entreno en base a los patrones
+		
+		std::vector<double> temp, temp2;
+		temp.push_back(casos[i][0]);
+		temp.push_back(casos[i][1]);
+		temp2.push_back(casos[i][2]);
+		
+		
+		
+		perceptron.train(temp, temp2);
+		std::getchar();
+	}
 	
 	
 	return 0;
