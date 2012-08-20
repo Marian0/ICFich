@@ -44,8 +44,8 @@ void parseCSV(std::string filename, std::vector<std::vector<double> > & X) {
 }
 
 //Imprime un vector, separando sus valores con char separator
-template<typename T>
-void printVector(std::vector<T> &v, char separator = ' '){
+
+void printVector(std::vector<double> &v, char separator = ' '){
 	for (unsigned int i = 0; i < v.size(); i++){
 		std::cout<<v[i];
 		if(i < v.size()-1) //Si no es el ultimo caso
@@ -55,8 +55,7 @@ void printVector(std::vector<T> &v, char separator = ' '){
 
 //Imprime un vector de vectores. Sus parametros representan el vector,
 // el separador entre elementos(v[i]), y el separador entre casos (v[i][j])
-template<typename T>
-void printVectorVector(std::vector<std::vector<T> > &v, char separator = ' ', 
+void printVectorVector(std::vector<std::vector<double> > &v, char separator = ' ', 
 						std::string newcase = "\n-------\n"){
 	for (unsigned int i = 0; i < v.size(); i++){
 		printVector(v[i],separator);
@@ -67,11 +66,11 @@ void printVectorVector(std::vector<std::vector<T> > &v, char separator = ' ',
 
 //Genera un numero aleatorio en el rango [a,b].
 // NOTA: solo funciona para numeros de punto flotante
-template<typename T>
-T randomDecimal(T a, T b) {
-	T random = ((T) rand()) / (T) RAND_MAX;
-	T diff = b - a;
-	T r = random * diff;
+
+double randomDecimal(double a, double b) {
+	double random = ((double) rand()) / (double) RAND_MAX;
+	double diff = b - a;
+	double r = random * diff;
 	return a + r;
 }
 
@@ -91,3 +90,31 @@ double sigmoidea(double x, double param){
 	return result;
 }
 
+void vectorEscalar(std::vector<double> &W, double value){
+	for(unsigned int i = 0; i < W.size(); i++){
+		W[i] = W[i]*value;
+	}
+}
+
+void vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
+	assert(X.size() != Y.size());
+	std::vector<double> temp;
+	
+	temp.resize(X.size());
+	for(unsigned int i = 0; i < X.size(); i++){
+		temp[i] = X[i] + Y[i];
+	}
+	Z = temp;
+}
+
+void vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
+	vectorSuma(X,vectorEscalar(Y,-1),Z);
+}
+
+void vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
+	assert(X.size() != Y.size());
+	Z.resize(X.size());
+	for(unsigned int i = 0; i < X.size(); i++){
+		Z[i] = X[i]*Y[i];
+	}
+}

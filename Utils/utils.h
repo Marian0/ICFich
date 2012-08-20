@@ -22,20 +22,17 @@ por referencia
 void parseCSV(std::string filename, std::vector<std::vector<double> > & X);
 
 //Imprime un vector, separando sus valores con char separator
-template<typename T>
-void printVector(std::vector<T> &v, char separator = ' ');
+void printVector(std::vector<double> &v, char separator = ' ');
 
 //Imprime un vector de vectores. Sus parametros representan el vector,
 // el separador entre elementos(v[i]), y el separador entre casos (v[i][j])
-template<typename T>
-void printVectorVector(std::vector<std::vector<T> > &v, char separator = ' ', 
+void printVectorVector(std::vector<std::vector<double> > &v, char separator = ' ', 
 	std::string newcase = "\n-------\n");
 
 
 //Genera un numero aleatorio en el rango [a,b].
 // NOTA: solo funciona para numeros de punto flotante
-template<typename T>
-T randomDecimal(T a, T b);
+double randomDecimal(double a, double b);
 
 
 //Funciones de activacion
@@ -47,6 +44,18 @@ double signo(double x);
 double sigmoidea(double x, double param = 0.5);
 
 
+//Funciones de Algebra de Vectores
 
+//Producto de un vector por un escalar
+void vectorEscalar(std::vector<double> &W, double value);
+
+//Suma de dos vectores
+void vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
+
+//Resta de dos vectores
+void vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
+
+//Producto punto entre dos vectores
+void vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
 
 #endif
