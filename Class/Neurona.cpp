@@ -10,33 +10,19 @@
 //Include funciones externas
 template<typename T>
 extern T randomDecimal(T a, T b);
+extern double signo(double);
+extern double sigmoidea(double);
 
 
-
-Neurona::Neurona(unsigned int dim, double min = -0.5, double max = 0.5, unsigned int funcion = 1) {
+Neurona::Neurona(unsigned int dim, double min = -0.5, double max = 0.5, unsigned int funcion = 1, double constante_aprendizaje = 0.5) {
 	std::srand(time(0));
 	dimension = dim;
-
+	this.constante_aprendizaje = constante_aprendizaje;
+	this.id_funcion_activacion = funcion;
 	//dim+1 porque una entrada pertenece al bias (umbral)
 	for(unsigned int i = 0; i < dim+1; i++){
-		//W.push_back(randomDecimal<double>(min,max));
+		W.push_back(randomDecimal<double>(min,max));
 	}
-}
-
-
-//Guardar pesos sinápticos
-void Neurona::saveW() {
-	
-}
-
-//Leer pesos sinápticos
-void Neurona::readW() {
-	
-}
-
-//Entrenar con un conjunto de entradas X y una salida deseada yd
-void Neurona::train(std::vector<double> X, double yd) {
-	
 }
 
 //Obtiene la salida de la neurona para una entrada dada
@@ -50,5 +36,17 @@ double Neurona::getResponse(std::vector<double> X){
 	for(unsigned int i = 0; i < X.size(); i++){
 		result += W[i+1] * X[i];
 	}
+
+	switch(this.id_funcion_activacion) {
+		case FUNCION_SIGNO: {
+			result = signo(result);
+			break;
+		}
+		case FUNCION_SIGMOIDEA:
+		default:
+			result = sigmoidea(result);
+	}
+
+
 	return result;
 }

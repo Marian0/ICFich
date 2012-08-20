@@ -9,6 +9,8 @@
 #include <cstdlib> 
 #include <cassert>
 
+//Constante para comparaciones con cero
+#define EPSILON = 0.000001;
 
 /*
 Entrada: Path al archivo csv
@@ -84,9 +86,9 @@ double signo(double x){
 }
 
 //Funcion sigmodea
-double sigmodea(double x){
-	//...
-	return 1;
+double sigmoidea(double x, double param = 0.5){
+	double result = (1-exp(-param*x))/(1+exp(-param*x));
+	return result;
 }
 
 #endif
