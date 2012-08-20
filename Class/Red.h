@@ -15,6 +15,10 @@ class Red {
 
 		// Nombre identificador de la Red (Sirve como nombre de archivo de datos)
 		std::string identificador;
+		
+		//Variable calculada para identificar que algoritmo de entrenamiento usar
+		// en base a la estructura de la Red neuronal
+		bool multicapa;
 	public:
 
 		//En base a las adyacencias construimos la Red y sus interrelaciones con las neuronas y las entradas.
@@ -25,10 +29,10 @@ class Red {
 
 		//Devuelve el error en el entrenamiento
 		//Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
-		double train(std::vector<double> X, std::vector<double> YD);
-		double train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD);
+		void train(std::vector<double> X, std::vector<double> YD);
+		void train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD);
 
-		void singleTrain();
+		void singleTrain(std::vector<double> X, std::vector<double> YD);
 		void backpropagation() {}; //soon
 
 };

@@ -52,3 +52,9 @@ double Neurona::getResponse(std::vector<double> X){
 
 	return result;
 }
+
+
+//Devuelve la constante de aprendizaje
+double Neurona::getConstanteAprendizaje() {
+	return this->constante_aprendizaje;
+}
