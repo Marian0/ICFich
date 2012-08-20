@@ -8,6 +8,7 @@
 #include <string>
 #include <cstdlib> 
 #include <cassert>
+#include <cmath>
 
 //Constante para comparaciones con cero
 #define EPSILON = 0.000001;

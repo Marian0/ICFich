@@ -17,8 +17,8 @@ extern double sigmoidea(double);
 Neurona::Neurona(unsigned int dim, double min = -0.5, double max = 0.5, unsigned int funcion = 1, double constante_aprendizaje = 0.5) {
 	std::srand(time(0));
 	dimension = dim;
-	this.constante_aprendizaje = constante_aprendizaje;
-	this.id_funcion_activacion = funcion;
+	this->constante_aprendizaje = constante_aprendizaje;
+	this->id_funcion_activacion = funcion;
 	//dim+1 porque una entrada pertenece al bias (umbral)
 	for(unsigned int i = 0; i < dim+1; i++){
 		W.push_back(randomDecimal<double>(min,max));
@@ -37,7 +37,7 @@ double Neurona::getResponse(std::vector<double> X){
 		result += W[i+1] * X[i];
 	}
 
-	switch(this.id_funcion_activacion) {
+	switch(this->id_funcion_activacion) {
 		case FUNCION_SIGNO: {
 			result = signo(result);
 			break;
