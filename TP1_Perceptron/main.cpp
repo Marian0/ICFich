@@ -2,7 +2,7 @@
 #include <cassert>
 #include <vector>
 #include "Neurona.h"
-#include "utils.cpp"
+#include "utils.h"
 
 #include "GNUPlot.h"
 

@@ -7,12 +7,14 @@
 //Include clases
 #include "Neurona.h"
 
-//Include funciones externas
+#include "utils.h"
+/*//Include funciones externas
 template<typename T>
 extern T randomDecimal(T a, T b);
-extern double signo(double);
-extern double sigmoidea(double);
 
+extern double signo(double);
+extern double sigmoidea(double,double);
+*/
 
 Neurona::Neurona(unsigned int dim, double min = -0.5, double max = 0.5, unsigned int funcion = 1, double constante_aprendizaje = 0.5) {
 	std::srand(time(0));
@@ -21,7 +23,7 @@ Neurona::Neurona(unsigned int dim, double min = -0.5, double max = 0.5, unsigned
 	this->id_funcion_activacion = funcion;
 	//dim+1 porque una entrada pertenece al bias (umbral)
 	for(unsigned int i = 0; i < dim+1; i++){
-		W.push_back(randomDecimal<double>(min,max));
+		//W.push_back(randomDecimal<double>(min,max));
 	}
 }
 

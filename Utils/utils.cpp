@@ -1,5 +1,4 @@
-#ifndef __UTILS_CPP__
-#define __UTILS_CPP__
+#include "utils.h"
 
 #include <vector>
 #include <sstream>
@@ -87,9 +86,8 @@ double signo(double x){
 }
 
 //Funcion sigmodea
-double sigmoidea(double x, double param = 0.5){
+double sigmoidea(double x, double param){
 	double result = (1-exp(-param*x))/(1+exp(-param*x));
 	return result;
 }
 
-#endif
