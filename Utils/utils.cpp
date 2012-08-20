@@ -43,6 +43,27 @@ void utils::parseCSV(std::string filename, std::vector<std::vector<double> > & X
 	}
 }
 
+//Guarda la matriz pasada por parametro en un archivo CSV
+
+void utils::saveCSV(std::string filename, std::vector<std::vector<double> > & X) {
+	std::ofstream file;
+	file.open(filename.c_str());
+	assert(file.is_open()); //muestra error si no se pudo abrir el archivo
+	
+	unsigned int n = X.size();
+	
+	for (unsigned int i = 0 ; i < n ; i++) {
+		unsigned int m = X[i].size();
+		
+		for (unsigned int j = 0 ; j < m ; j++) {
+			file<<X[i][j];
+			if (j+1 < m)
+				file<<", ";
+		}
+		file<<std::endl;
+	}
+}
+
 //Imprime un vector, separando sus valores con char separator
 
 void utils::printVector(std::vector<double> &v, char separator){
@@ -120,4 +141,10 @@ void utils::vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vec
 	for(unsigned int i = 0; i < X.size(); i++){
 		Z[i] = X[i]*Y[i];
 	}
+}
+
+std::string utils::doubleToStr(double & input) {
+	std::stringstream str;
+	str<<input;
+	return str.str();
 }
