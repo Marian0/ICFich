@@ -1,4 +1,4 @@
-	#ifndef UTILS_H
+#ifndef UTILS_H
 #define UTILS_H
 
 #include <vector>
@@ -21,7 +21,9 @@ por referencia
 class utils{
 public:
 
-void parseCSV(std::string filename, std::vector<std::vector<double> > & X);
+void static parseCSV(std::string filename, std::vector<std::vector<double> > & X);
+	
+void static saveCSV(std::string filename, std::vector<std::vector<double> > & X);
 
 //Imprime un vector, separando sus valores con char separator
 void printVector(std::vector<double> &v, char separator = ' ');
@@ -60,6 +62,7 @@ void vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<dou
 //Producto punto entre dos vectores
 void vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
 
+std::string static doubleToStr(double & input);
 
 };
 #endif
