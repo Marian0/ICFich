@@ -109,7 +109,9 @@ void utils::vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vect
 }
 
 void utils::vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
-	//vectorSuma(X,vectorEscalar(Y,-1),Z);
+	std::vector<double> temp;
+	utils::vectorEscalar(Y,-1,temp);
+	utils::vectorSuma(X, temp ,Z);
 }
 
 void utils::vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
