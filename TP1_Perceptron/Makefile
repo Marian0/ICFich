@@ -2,7 +2,7 @@ GPP=g++
 GCC=gcc
 FLAGS=  -g2 -Wall -O0 -I../Class -I../Utils  -D_DEBUG 
 LIBS=  
-OBJS=Debug/main.o Debug/GNUPlot.o Debug/Neurona.o Debug/Red.o 
+OBJS=Debug/main.o Debug/GNUPlot.o Debug/Neurona.o Debug/Red.o Debug/utils.o 
 
 all: Debug Debug/TP1_Perceptron.bin
 
@@ -26,4 +26,7 @@ Debug/Neurona.o: ../Class/Neurona.cpp ../Class/Neurona.h ../Utils/utils.h
 
 Debug/Red.o: ../Class/Red.cpp ../Class/Red.h ../Class/Neurona.h ../Utils/utils.h
 	${GPP} ${FLAGS} -c ../Class/Red.cpp -o $@
+
+Debug/utils.o: ../Utils/utils.cpp ../Utils/utils.h
+	${GPP} ${FLAGS} -c ../Utils/utils.cpp -o $@
 

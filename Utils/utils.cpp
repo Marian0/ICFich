@@ -30,24 +30,37 @@ void utils::parseCSV(std::string filename, std::vector<std::vector<double> > & X
 	//Lectura de los datos de entrenamiento
 	while(getline(file,line)){ 		//lee una linea entera
 		iss<<line;
-		X.push_back(std::vector<double>()); 		//agrega un vector vacio
 		
+		//std::cout<<iss.str()<<std::endl;
+		if(!iss.str().empty() && iss.str()[0] == '#'){
+			//comentario, no lo procesa pero si lo imprime
+			std::cout<<iss.str()<<std::endl;
+			iss.str(""); //limpia la string asociada
+			iss.clear(); //limpia el stream
+			continue;
+		}
+		
+		X.push_back(std::vector<double>()); 		//agrega un vector vacio	
 		while(getline(iss,s,',')){ //separa la linea entre las comas
 			//transforma de string a double
 			ss<<s;
 			ss>>value;
 			X.back().push_back(value); //agrega el elemento al vector
+			ss.str(""); //limpia la string asociada
 			ss.clear(); //limpia el stream
 		}
-		iss.clear();
+		iss.str(""); //limpia la string asociada
+		iss.clear(); //limpia el stream
 	}
+	file.close();
 }
 
 //Guarda la matriz pasada por parametro en un archivo CSV
 
 void utils::saveCSV(std::string filename, std::vector<std::vector<double> > & X) {
-	std::ofstream file;
-	file.open(filename.c_str());
+	std::ofstream file (filename.c_str(), 
+		std::ofstream::out|std::ofstream::trunc); //trunc explicito para borrar contenido
+	
 	assert(file.is_open()); //muestra error si no se pudo abrir el archivo
 	
 	unsigned int n = X.size();
@@ -62,6 +75,7 @@ void utils::saveCSV(std::string filename, std::vector<std::vector<double> > & X)
 		}
 		file<<std::endl;
 	}
+	file.close();
 }
 
 //Imprime un vector, separando sus valores con char separator
