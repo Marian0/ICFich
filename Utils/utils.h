@@ -18,6 +18,8 @@ Entrada: Path al archivo csv
 Salida: Devuelve un vector de vector<double>  con el contenido de un archivo CSV
 por referencia
 */
+class utils{
+public:
 
 void parseCSV(std::string filename, std::vector<std::vector<double> > & X);
 
@@ -32,30 +34,30 @@ void printVectorVector(std::vector<std::vector<double> > &v, char separator = ' 
 
 //Genera un numero aleatorio en el rango [a,b].
 // NOTA: solo funciona para numeros de punto flotante
-double randomDecimal(double a, double b);
+double static randomDecimal(double a, double b);
 
 
 //Funciones de activacion
 
 //Funcion signo
-double signo(double x);
+double static signo(double x);
 
 //Funcion sigmodea
-double sigmoidea(double x, double param = 0.5);
+double static sigmoidea(double x, double param = 0.5);
 
 
 //Funciones de Algebra de Vectores
 
 //Producto de un vector por un escalar
-void vectorEscalar(std::vector<double> &W, double value);
+void static vectorEscalar(std::vector<double> &X, double value, std::vector<double> &Z);
 
 //Suma de dos vectores
-void vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
+void static vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
 
 //Resta de dos vectores
 void vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
 
 //Producto punto entre dos vectores
 void vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
-
+};
 #endif

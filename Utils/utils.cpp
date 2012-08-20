@@ -18,7 +18,7 @@ Salida: Devuelve un vector de vector<double>  con el contenido de un archivo CSV
 	por referencia
 */
 
-void parseCSV(std::string filename, std::vector<std::vector<double> > & X) {
+void utils::parseCSV(std::string filename, std::vector<std::vector<double> > & X) {
 
 	std::ifstream file;
 	file.open(filename.c_str());
@@ -45,7 +45,7 @@ void parseCSV(std::string filename, std::vector<std::vector<double> > & X) {
 
 //Imprime un vector, separando sus valores con char separator
 
-void printVector(std::vector<double> &v, char separator = ' '){
+void utils::printVector(std::vector<double> &v, char separator = ' '){
 	for (unsigned int i = 0; i < v.size(); i++){
 		std::cout<<v[i];
 		if(i < v.size()-1) //Si no es el ultimo caso
@@ -55,7 +55,7 @@ void printVector(std::vector<double> &v, char separator = ' '){
 
 //Imprime un vector de vectores. Sus parametros representan el vector,
 // el separador entre elementos(v[i]), y el separador entre casos (v[i][j])
-void printVectorVector(std::vector<std::vector<double> > &v, char separator = ' ', 
+void utils::printVectorVector(std::vector<std::vector<double> > &v, char separator = ' ', 
 						std::string newcase = "\n-------\n"){
 	for (unsigned int i = 0; i < v.size(); i++){
 		printVector(v[i],separator);
@@ -67,7 +67,7 @@ void printVectorVector(std::vector<std::vector<double> > &v, char separator = ' 
 //Genera un numero aleatorio en el rango [a,b].
 // NOTA: solo funciona para numeros de punto flotante
 
-double randomDecimal(double a, double b) {
+double static utils::randomDecimal(double a, double b) {
 	double random = ((double) rand()) / (double) RAND_MAX;
 	double diff = b - a;
 	double r = random * diff;
@@ -77,7 +77,7 @@ double randomDecimal(double a, double b) {
 //Funciones de activacion
 
 //Funcion signo
-double signo(double x){
+double static utils::signo(double x){
 	if(x < 0)
 		return -1;
 	else
@@ -85,18 +85,19 @@ double signo(double x){
 }
 
 //Funcion sigmodea
-double sigmoidea(double x, double param){
+double static utils::sigmoidea(double x, double param){
 	double result = (1-exp(-param*x))/(1+exp(-param*x));
 	return result;
 }
 
-void vectorEscalar(std::vector<double> &W, double value){
+void static utils::vectorEscalar(std::vector<double> &X, double value, std::vector<double> &Z){
+	Z.resize(W.size());
 	for(unsigned int i = 0; i < W.size(); i++){
-		W[i] = W[i]*value;
+		Z[i] = W[i]*value;
 	}
 }
 
-void vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
+void static utils::vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
 	assert(X.size() != Y.size());
 	std::vector<double> temp;
 	
@@ -107,11 +108,11 @@ void vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vector<doub
 	Z = temp;
 }
 
-void vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
+void utils::vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
 	vectorSuma(X,vectorEscalar(Y,-1),Z);
 }
 
-void vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
+void utils::vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
 	assert(X.size() != Y.size());
 	Z.resize(X.size());
 	for(unsigned int i = 0; i < X.size(); i++){

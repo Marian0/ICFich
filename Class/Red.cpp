@@ -2,6 +2,7 @@
 #include <string>
 #include <cassert>
 #include "Red.h"
+#include "utils.h"
 
 Red::Red(std::vector<std::vector<bool> > adyacencias, std::vector<std::vector<bool> > adyacencias_entradas, std::string identificador ) {
 	unsigned int n,m,ne,me;
@@ -36,7 +37,7 @@ Red::Red(std::vector<std::vector<bool> > adyacencias, std::vector<std::vector<bo
 			}
 		}
 	
-		Neurona n(dimension);
+		Neurona n(dimension, -0.5, 0.5, Neurona::FUNCION_SIGNO, 0.5);
 		this->neuronas.push_back(n);
 	}
 	
@@ -49,17 +50,18 @@ void readData();
 //Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
 void Red::train(std::vector<double> X, std::vector<double> YD) {	
 	if (this->multicapa) {
-		return -1.11;
+		return;
 	} else {
 		singleTrain(X,YD);
 	}
 }
-double train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD);
+void Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD){ }
 
-void singleTrain(std::vector<double> X, std::vector<double> YD) {
-	n = this->neuronas.size();
+
+void Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
+	unsigned int n = this->neuronas.size();
 	
-	ne = adyacencias_entradas.size(); //Filas de adyacencia
+	unsigned int ne = this->adyacencias_entradas.size(); //Filas de adyacencia
 	assert(ne != X.size()); //Verificamos que se envien la cantidad de entradas necesarias para el entrenamiento de la RED
 	for (unsigned int i = 0; i < n ; i++) {
 		std::vector<double> entradan;
@@ -77,9 +79,14 @@ void singleTrain(std::vector<double> X, std::vector<double> YD) {
 		this->neuronas[i].getW(Wi);
 		//Actualizo los pesos
 		respuesta = (YD[i] - respuesta) * ( this->neuronas[i].getConstanteAprendizaje()/2 );
-		vectorSuma( vectorEscalar(Wi,respuesta), Wi, Wi )
 		
-		this->neuronas[i].setW( Wi );
+		std::vector<double> vesc;
+		utils::vectorEscalar(entradan, respuesta, vesc);
+		
+		std::vector<double> Wnuevo;
+		utils::vectorSuma(Wi, vesc, Wnuevo);
+		
+		this->neuronas[i].setW( Wnuevo );
 		
 	}
 }
