@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
 #include <vector>
-//#include "Neurona.h"
+#include "Neurona.h"
 #include "utils.cpp"
 
 

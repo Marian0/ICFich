@@ -10,16 +10,16 @@
 #include <cassert>
 
 
-
 /*
 Entrada: Path al archivo csv
 Salida: Devuelve un vector de vector<double>  con el contenido de un archivo CSV
+	por referencia
 */
 
-void parseCSV(char *filename, std::vector<std::vector<double> > & X) {
+void parseCSV(std::string filename, std::vector<std::vector<double> > & X) {
 
 	std::ifstream file;
-	file.open(filename);
+	file.open(filename.c_str());
 	assert(file.is_open()); //muestra error si no se pudo abrir el archivo
 	
 	double value;
@@ -41,6 +41,7 @@ void parseCSV(char *filename, std::vector<std::vector<double> > & X) {
 	}
 }
 
+//Imprime un vector, separando sus valores con char separator
 template<typename T>
 void printVector(std::vector<T> &v, char separator = ' '){
 	for (unsigned int i = 0; i < v.size(); i++){
@@ -50,7 +51,8 @@ void printVector(std::vector<T> &v, char separator = ' '){
 	}
 }
 
-
+//Imprime un vector de vectores. Sus parametros representan el vector,
+// el separador entre elementos(v[i]), y el separador entre casos (v[i][j])
 template<typename T>
 void printVectorVector(std::vector<std::vector<T> > &v, char separator = ' ', 
 						std::string newcase = "\n-------\n"){
@@ -59,7 +61,6 @@ void printVectorVector(std::vector<std::vector<T> > &v, char separator = ' ',
 		std::cout<<newcase;
 	}
 }
-
 
 
 //Genera un numero aleatorio en el rango [a,b].
