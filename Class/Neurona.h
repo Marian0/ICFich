@@ -32,6 +32,9 @@ public:
 	void getW(std::vector<double> & W);
 	//Define por referencia el vector W
 	void setW(std::vector<double> & W);
+	
+	//Devuelve la constante de aprendizaje
+	double getConstanteAprendizaje();
 };
 
 #endif
