@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Debug" />
+	<File name="include/utils.h" open="1" top="0" tabpos="3">
+		<Cursor position="757" topLine="21" />
+	</File>
+	<File name="src/GNUPlot.cpp" open="1" top="0" tabpos="1">
+		<Cursor position="10" topLine="0" />
+	</File>
+	<File name="src/utils.cpp" open="1" top="1" tabpos="2">
+		<Cursor position="1828" topLine="60" />
+	</File>
+</CodeBlocks_layout_file>

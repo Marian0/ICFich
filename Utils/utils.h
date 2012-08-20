@@ -59,5 +59,7 @@ void vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<dou
 
 //Producto punto entre dos vectores
 void vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
+
+
 };
 #endif

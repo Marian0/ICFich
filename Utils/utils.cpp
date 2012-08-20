@@ -44,7 +44,6 @@ void utils::parseCSV(std::string filename, std::vector<std::vector<double> > & X
 }
 
 //Imprime un vector, separando sus valores con char separator
-
 void utils::printVector(std::vector<double> &v, char separator){
 	for (unsigned int i = 0; i < v.size(); i++){
 		std::cout<<v[i];
