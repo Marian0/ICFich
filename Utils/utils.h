@@ -64,5 +64,8 @@ void vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<dou
 
 std::string static doubleToStr(double & input);
 
+//Se parar un vector en 2
+void static splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, int size_y = 1);
+
 };
 #endif

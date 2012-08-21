@@ -161,3 +161,29 @@ std::string utils::doubleToStr(double & input) {
 	str<<input;
 	return str.str();
 }
+
+
+//Se parar un vector en 2
+void  utils::splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, int size_y) {
+	//Limpiamos por las dudas
+	X.clear();
+	Y.clear();
+	
+	unsigned int n = V.size();
+	
+	for (unsigned int i = 0 ; i < n; i++) {
+		unsigned int m = V[i].size();
+		assert(m > size_y); //Sino, para que lo queres dividir?
+		std::vector<double> Xtemp, Ytemp;
+		for (unsigned int j = 0; j < m ; j++) {
+			if (j < m-size_y) {
+				Xtemp.push_back(V[i][j]);
+			} else {
+				Ytemp.push_back(V[i][j]);
+			}
+		}
+		X.push_back(Xtemp);
+		Y.push_back(Ytemp);
+	}
+	
+}

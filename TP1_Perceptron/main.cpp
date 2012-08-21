@@ -67,9 +67,14 @@ int main (int argc, char *argv[]) {
 	//Instancio la red
 	Red perceptron(b,eb,"Red Perceptron");
 	
+	
+	//Divido en X y Yd los casos
+	std::vector<std::vector<double> > X, Y;
+	utils::splitVector(casos, X, Y);
+	
 	//Entreno y grafico
 	
-	for (unsigned int i = 0; i < 100 ; i++) {
+	for (unsigned int i = 0; i < 400 ; i++) {
 		//Grafico una frontera de desición de color aleatorio
 		std::vector<Neurona> V;
 		perceptron.getNeuronas(V);
@@ -85,14 +90,8 @@ int main (int argc, char *argv[]) {
 		
 		//Entreno en base a los patrones
 		
-		std::vector<double> temp, temp2;
-		temp.push_back(casos[i][0]);
-		temp.push_back(casos[i][1]);
-		temp2.push_back(casos[i][2]);
 		
-		
-		
-		perceptron.train(temp, temp2);
+		perceptron.train(X[i], Y[i]);
 		std::getchar();
 	}
 	
