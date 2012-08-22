@@ -84,8 +84,6 @@ void Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
 		
 		//Obtengo los pesos sinápticos actuales
 		std::vector<double> Wi = this->neuronas[i].getW();
-        std::cout<<"Cantidad de pesos: "<<Wi.size()<<'\n';
-		
         //Calculo de los nuevos pesos
 
         //Parte Escalar

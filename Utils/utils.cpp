@@ -102,7 +102,6 @@ void utils::printVectorVector(std::vector<std::vector<double> > &v, char separat
 // NOTA: solo funciona para numeros de punto flotante
 
 double utils::randomDecimal(double a, double b) {
-//    std::srand(time(NULL));
 	double random = ((double) rand()) / (double) RAND_MAX;
 	double diff = b - a;
 	double r = random * diff;

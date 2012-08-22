@@ -3,9 +3,11 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <ctime>
 #include "Neurona.h"
 #include "utils.h"
 #include "Red.h"
+
 
 #include "GNUPlot.h"
 
@@ -20,7 +22,8 @@ int main (int argc, char *argv[]) {
 	plotter("set xrange [-2:2]");
 	plotter("set yrange [-2:2]");
 	plotter("set multiplot");
-    
+   
+    srand( (unsigned) std::time(NULL)); //inicializacion de semilla
     	
 	//Lectura de casos de prueba
     std::vector<std::vector<double > > casos, salida;
