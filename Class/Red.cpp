@@ -61,7 +61,8 @@ void Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<dou
 
 
 void Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
-	unsigned int n = this->neuronas.size();
+	//El single train supone red monocapa 
+	unsigned int n = this->neuronas.size(); //Cantidad de neuronas en la primera capa
 	
 	unsigned int ne = this->adyacencias_entradas.size(); //Filas de adyacencia
 
@@ -83,14 +84,13 @@ void Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
 		
 		//Obtengo los pesos sinápticos actuales
 		std::vector<double> Wi = this->neuronas[i].getW();
-	
         //Calculo de los nuevos pesos
 
         //Parte Escalar
 		respuesta = (YD[i] - respuesta) * ( this->neuronas[i].getConstanteAprendizaje()/2 );
 
-        //Temporal para el producto 
-        entradan.insert(entradan.begin(), -1);
+        //Temporal para el producto
+		entradan.insert(entradan.begin(), -1); //Agregamos la entrada correspondiente al Bias
 		std::vector<double> vesc; 
 		utils::vectorEscalar(entradan, respuesta, vesc);
 

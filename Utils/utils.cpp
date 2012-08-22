@@ -92,7 +92,7 @@ void utils::printVector(std::vector<double> &v, char separator){
 void utils::printVectorVector(std::vector<std::vector<double> > &v, char separator, 
 						std::string newcase){
 	for (unsigned int i = 0; i < v.size(); i++){
-		printVector(v[i],separator);
+		utils::printVector(v[i],separator);
 		std::cout<<newcase;
 	}
 }
