@@ -74,7 +74,7 @@ int main (int argc, char *argv[]) {
 	
 	//Entreno y grafico
 	
-	for (unsigned int i = 0; i < 400 ; i++) {
+	for (unsigned int i = 0; i < 1500 ; i++) {
 		//Grafico una frontera de desición de color aleatorio
 		std::vector<Neurona> V;
 		perceptron.getNeuronas(V);
@@ -86,13 +86,14 @@ int main (int argc, char *argv[]) {
 		double da2  = W[1]/W[2];
 		double da3 = rand()%30+1;
 		
+		if (i%100 == 0)
 		plotter("plot " + utils::doubleToStr(da) + "-" + utils::doubleToStr(da2) + "*x lt "+ utils::doubleToStr(da3) +" notitle");
 		
 		//Entreno en base a los patrones
 		
 		
-		perceptron.train(X[i], Y[i]);
-		std::getchar();
+		perceptron.train(X[i%500], Y[i%500]);
+		//std::getchar();
 	}
 	
 	
