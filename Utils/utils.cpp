@@ -8,7 +8,7 @@
 #include <cstdlib> 
 #include <cassert>
 #include <cmath>
-
+#include <algorithm>
 //Constante para comparaciones con cero
 #define EPSILON = 0.000001;
 
@@ -186,4 +186,75 @@ void  utils::splitVector( std::vector<std::vector<double> > &V, std::vector<std:
 		Y.push_back(Ytemp);
 	}
 	
+}
+
+
+//Devuelve la cantidad de patrones especificados con el desvio especificado tomando como base el patron P.
+std::vector<std::vector<double> > utils::genPatrones( std::vector<std::vector<double> > & P,
+	unsigned int cantidad_final, double desvio, unsigned int size_y) {
+	//Cantidad de patrones P
+	unsigned int n = P.size();
+	
+	//Temporal para la salida de los Patrones generados
+	std::vector<std::vector<double> > Salida;
+	
+	//Fábrica de patrones de cantidad especificada
+	for (unsigned int k = 0 ; k < cantidad_final ; k++) {
+		//Obtengo el patron actual
+		std::vector<double> T = P[k%n];
+		//Lo desvío
+		unsigned int m = T.size();
+		for (unsigned int j = 0; j < m ; j++) {
+			if (j < m-size_y) {
+				//Se trata de una entrada X => La dispersamos
+				double rango = fabs( T[j] * desvio );
+				T[j] = T[j] + utils::randomDecimal(-rango, rango);				
+			} else {
+				break; //Las y las dejamos inalteradas 
+			}
+
+		}
+		Salida.push_back(T);		
+	}
+	return Salida;
+}
+
+
+//En base a los patrones pasados por referencia, el % de entrenamiento, prueba y validacion, genera las particiones aleatorias correspondientes
+void utils::genParticiones( std::vector<std::vector<double> > P, 
+	std::vector<std::vector<double> > & Entrenamiento,
+	std::vector<std::vector<double> > & Validacion,
+	std::vector<std::vector<double> > & Prueba,
+	unsigned int porcentaje_entrenamiento,	unsigned int porcentaje_prueba) {
+		
+		assert(porcentaje_entrenamiento + porcentaje_prueba <= 100);
+		//Limpiamos las salidas
+		Entrenamiento.clear();
+		Validacion.clear();
+		Prueba.clear();
+		
+		//Desordenamos
+		random_shuffle(P.begin(), P.end());
+		//Calculo cantidades
+		unsigned int n_patrones = P.size();
+		unsigned int n_ent = std::ceil((float)porcentaje_entrenamiento/100 * n_patrones);
+		unsigned int n_prueba = std::floor((float)porcentaje_prueba/100 * n_patrones);
+//		unsigned int n_validacion = n_patrones - n_ent - n_prueba;
+		
+		//Lleno los vectores de salida.
+		unsigned int i = 0;
+		for (; i < n_ent; i++)
+			Entrenamiento.push_back(P[i]);
+		
+		for(; i < n_prueba + n_ent; i++)
+			Prueba.push_back(P[i]);
+		
+		for (; i < n_patrones; i++)
+			Validacion.push_back(P[i]);
+		
+//		std::cout<<"numeros:"<<n_ent<<" "<<n_prueba<<" "<<n_patrones - n_ent - n_prueba<<"total:"<<n_patrones<<std::endl;
+//		
+//		std::cout<<"numeros:"<<Entrenamiento.size()<<" "<<Prueba.size()<<" "<<Validacion.size()<<"total:"<<P.size();
+		
+		
 }

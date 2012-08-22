@@ -68,5 +68,17 @@ std::string static doubleToStr(double & input);
 //Se parar un vector en 2
 void static splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, unsigned int size_y = 1);
 
+
+//Devuelve la cantidad de patrones especificados con el desvio especificado tomando como base el patron P.
+std::vector<std::vector<double> > static genPatrones( std::vector<std::vector<double> > & P, unsigned int cantidad_final, double desvio, unsigned int size_y = 1);
+
+//En base a los patrones pasados por referencia, el % de entrenamiento, prueba y validacion, genera las particiones aleatorias correspondientes
+void static genParticiones(
+		std::vector<std::vector<double> > P, 
+	    std::vector<std::vector<double> > & Entrenamiento,
+		std::vector<std::vector<double> > & Validacion,
+		std::vector<std::vector<double> > & Prueba,
+		unsigned int porcentaje_entrenamiento,
+		unsigned int porcentaje_prueba);
 };
 #endif

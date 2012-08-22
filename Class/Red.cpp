@@ -4,7 +4,12 @@
 #include "Red.h"
 #include "utils.h"
 
-Red::Red(std::vector<std::vector<bool> > adyacencias, std::vector<std::vector<bool> > adyacencias_entradas, std::string identificador ) {
+Red::Red(std::vector<std::vector<bool> > adyacencias,
+		 std::vector<std::vector<bool> > adyacencias_entradas, 
+		 std::string identificador,
+		 double tasa_aprendizaje,
+		 unsigned int int_funcion_activacion
+		) {
 	unsigned int n,m,ne,me;
 
     n = adyacencias.size();             //Filas
@@ -43,7 +48,7 @@ Red::Red(std::vector<std::vector<bool> > adyacencias, std::vector<std::vector<bo
 				dimension++;
 			}
 		}
-		Neurona neu(dimension, -0.5, 0.5, Neurona::FUNCION_SIGNO, 0.5);
+		Neurona neu(dimension, -0.5, 0.5, int_funcion_activacion , tasa_aprendizaje);
 		this->neuronas.push_back(neu);
 	}
 }

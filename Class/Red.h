@@ -22,7 +22,13 @@ class Red {
 	public:
 
 		//En base a las adyacencias construimos la Red y sus interrelaciones con las neuronas y las entradas.
-		Red(std::vector<std::vector<bool> > adyacencias, std::vector<std::vector<bool> > adyacencias_entradas, std::string identificador );
+		Red(
+			std::vector<std::vector<bool> > adyacencias,
+			std::vector<std::vector<bool> > adyacencias_entradas, 
+			std::string identificador,
+			double tasa_aprendizaje = 0.5,
+			unsigned int int_funcion_activacion = Neurona::FUNCION_SIGNO 
+		);
 
 		void saveData();
 		void readData();
