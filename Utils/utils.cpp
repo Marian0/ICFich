@@ -102,6 +102,7 @@ void utils::printVectorVector(std::vector<std::vector<double> > &v, char separat
 // NOTA: solo funciona para numeros de punto flotante
 
 double utils::randomDecimal(double a, double b) {
+    std::srand(time(NULL));
 	double random = ((double) rand()) / (double) RAND_MAX;
 	double diff = b - a;
 	double r = random * diff;
@@ -132,7 +133,7 @@ void utils::vectorEscalar(std::vector<double> &X, double value, std::vector<doub
 }
 
 void utils::vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
-	assert(X.size() != Y.size());
+	assert(X.size() == Y.size());
 	std::vector<double> temp;
 	
 	temp.resize(X.size());
@@ -149,7 +150,7 @@ void utils::vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vec
 }
 
 void utils::vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
-	assert(X.size() != Y.size());
+	assert(X.size() == Y.size());
 	Z.resize(X.size());
 	for(unsigned int i = 0; i < X.size(); i++){
 		Z[i] = X[i]*Y[i];
@@ -163,8 +164,8 @@ std::string utils::doubleToStr(double & input) {
 }
 
 
-//Se parar un vector en 2
-void  utils::splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, int size_y) {
+//Separar un vector en 2
+void  utils::splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, unsigned int size_y) {
 	//Limpiamos por las dudas
 	X.clear();
 	Y.clear();

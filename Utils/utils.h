@@ -62,10 +62,11 @@ void vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<dou
 //Producto punto entre dos vectores
 void vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
 
+//Convierte un double a string
 std::string static doubleToStr(double & input);
 
 //Se parar un vector en 2
-void static splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, int size_y = 1);
+void static splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, unsigned int size_y = 1);
 
 };
 #endif
