@@ -23,7 +23,7 @@ public:
 	static const unsigned int FUNCION_SIGMOIDEA = 2;
 	//Constructor
 	//  * dim = Cantidad de entradas
-	Neurona(unsigned int dim, double min = -0.5, double max= 0.5, unsigned int funcion = 1, double constante_aprendizaje = 10);
+	Neurona(unsigned int dim, double min = -0.5, double max= 0.5, unsigned int funcion = 1, double constante_aprendizaje = 0.5);
 
 	// Devuelve la respuesta de la Neurona en base a la entrada especificada por parámetro	
 	double getResponse(std::vector<double> X);

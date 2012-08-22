@@ -83,15 +83,14 @@ void Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
 		
 		//Obtengo los pesos sinápticos actuales
 		std::vector<double> Wi = this->neuronas[i].getW();
-        std::cout<<"Cantidad de pesos: "<<Wi.size()<<'\n';
-		
-        Wi.erase(Wi.begin()); //borro el primer elemento, correspondiente al Bias
+	
         //Calculo de los nuevos pesos
 
         //Parte Escalar
 		respuesta = (YD[i] - respuesta) * ( this->neuronas[i].getConstanteAprendizaje()/2 );
 
         //Temporal para el producto 
+        entradan.insert(entradan.begin(), -1);
 		std::vector<double> vesc; 
 		utils::vectorEscalar(entradan, respuesta, vesc);
 

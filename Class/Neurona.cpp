@@ -11,7 +11,6 @@
 
 Neurona::Neurona(unsigned int dim, double min, double max, unsigned int funcion, double constante_aprendizaje) {
 //Neurona::Neurona(unsigned int dim, double min = -0.5, double max = 0.5, unsigned int funcion = 1, double constante_aprendizaje = 0.5) {
-	std::srand(time(0));
 	this->dimension = dim;
 	this->constante_aprendizaje = constante_aprendizaje;
 	this->id_funcion_activacion = funcion;

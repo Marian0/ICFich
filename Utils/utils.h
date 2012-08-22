@@ -26,11 +26,11 @@ void static parseCSV(std::string filename, std::vector<std::vector<double> > & X
 void static saveCSV(std::string filename, std::vector<std::vector<double> > & X);
 
 //Imprime un vector, separando sus valores con char separator
-void printVector(std::vector<double> &v, char separator = ' ');
+void static printVector(std::vector<double> &v, char separator = ' ');
 
 //Imprime un vector de vectores. Sus parametros representan el vector,
 // el separador entre elementos(v[i]), y el separador entre casos (v[i][j])
-void printVectorVector(std::vector<std::vector<double> > &v, char separator = ' ', 
+void static printVectorVector(std::vector<std::vector<double> > &v, char separator = ' ', 
 	std::string newcase = "\n-------\n");
 
 

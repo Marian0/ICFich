@@ -3,9 +3,11 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <ctime>
 #include "Neurona.h"
 #include "utils.h"
 #include "Red.h"
+
 
 #include "GNUPlot.h"
 
@@ -20,7 +22,8 @@ int main (int argc, char *argv[]) {
 	plotter("set xrange [-2:2]");
 	plotter("set yrange [-2:2]");
 	plotter("set multiplot");
-    
+   
+    srand( (unsigned) std::time(NULL)); //inicializacion de semilla
     	
 	//Lectura de casos de prueba
     std::vector<std::vector<double > > casos, salida;
@@ -34,7 +37,7 @@ int main (int argc, char *argv[]) {
      
     //Genera casos aleatorios con <5% de dispersion
     for (unsigned i = 0 ; i < 500; i++) {
-		std::vector<double> a = casos[i%4];
+		std::vector<double> a = casos[i];
 		
 		a[0] += utils::randomDecimal(-0.049, 0.049);
 		a[1] += utils::randomDecimal(-0.049, 0.049);	
@@ -105,7 +108,7 @@ int main (int argc, char *argv[]) {
 		
 		
 		perceptron.train(X[i%500], Y[i%500]);
-		//std::getchar();
+		std::getchar();
 	}
 	
 	
