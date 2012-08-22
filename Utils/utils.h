@@ -57,20 +57,27 @@ void static vectorEscalar(std::vector<double> &X, double value, std::vector<doub
 void static vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
 
 //Resta de dos vectores
-void vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
+void static vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
 
 //Producto punto entre dos vectores
-void vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
+void static vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
 
-//Convierte un double a string
-std::string static doubleToStr(double & input);
-
-int static strToInt(std::string s);
-
-double static strToDouble(std::string s);
+//Calcula la norma de un vector
+double static vectorNorma(std::vector<double> &X);
 
 //Se parar un vector en 2
 void static splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, unsigned int size_y = 1);
+
+//Funciones de conversion de tipos
+//Convierte un double a string
+std::string static doubleToStr(double & input);
+
+//Convierte un string a int
+int static strToInt(std::string s);
+
+//Convierte un string a double
+double static strToDouble(std::string s);
+
 
 };
 #endif

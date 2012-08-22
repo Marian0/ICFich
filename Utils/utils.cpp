@@ -156,6 +156,16 @@ void utils::vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vec
 	}
 }
 
+//Calcula la norma euclidea de un vector
+double utils::vectorNorma(std::vector<double> &X){
+    unsigned int n = 0;
+    double sum = 0;
+    for (unsigned int i = 0; i < n; i++){
+        sum += X[i]*X[i];
+    }
+    return sqrt(sum);
+}
+
 std::string utils::doubleToStr(double & input) {
 	std::stringstream str;
 	str<<input;
