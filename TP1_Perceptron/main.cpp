@@ -7,12 +7,20 @@
 #include "Neurona.h"
 #include "utils.h"
 #include "Red.h"
-
+#include "Config.h"
 
 #include "GNUPlot.h"
 
+//Variable global
+Config config("configuracion.cfg"); //lectura de la configuracion
+
 int main (int argc, char *argv[]) {
-	GNUPlot plotter;	
+    //Ejemplo para consultar un valor
+    //int: utils::strToInt(config.getValue("tasa"));
+    //double: utils::strToDouble(config.getValue("desvio"));
+    srand( (unsigned) std::time(NULL)); //inicializacion de semilla
+	
+    GNUPlot plotter;	
 	plotter("set pointsize 3");
 	plotter("set grid back");
 	
@@ -23,8 +31,6 @@ int main (int argc, char *argv[]) {
 	plotter("set yrange [-2:2]");
 	plotter("set multiplot");
    
-    srand( (unsigned) std::time(NULL)); //inicializacion de semilla
-    	
 	//Lectura de casos de prueba
     std::vector<std::vector<double > > casos, salida;
 	utils::parseCSV("Cache/or_disperso500.csv", casos);	
@@ -35,12 +41,15 @@ int main (int argc, char *argv[]) {
 
 	// Esto bate fruta porque lee cosas re locas
      
+    unsigned int n_casos = utils::strToInt(config.getValue("cantidad_casos"));
+    double desvio = utils::strToDouble(config.getValue("desvio"));
+    
     //Genera casos aleatorios con <5% de dispersion
-    for (unsigned i = 0 ; i < 500; i++) {
+    for (unsigned int i = 0 ; i < n_casos; i++) {
 		std::vector<double> a = casos[i];
 		
-		a[0] += utils::randomDecimal(-0.449, 0.449);
-		a[1] += utils::randomDecimal(-0.449, 0.449);	
+		a[0] += utils::randomDecimal(-desvio, desvio);
+		a[1] += utils::randomDecimal(-desvio, desvio);	
 		
 		if (a[2] == 1) //Clase "true"
 			plot1 += utils::doubleToStr(a[0]) + " " + utils::doubleToStr(a[1]) + " \n";
@@ -107,7 +116,7 @@ int main (int argc, char *argv[]) {
 		//Entreno en base a los patrones
 		
 		
-		perceptron.train(X[i%500], Y[i%500]);
+		perceptron.train(X[i%n_casos], Y[i%n_casos]);
 		std::getchar();
 	}
 	

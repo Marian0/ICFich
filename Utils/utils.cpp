@@ -187,3 +187,13 @@ void  utils::splitVector( std::vector<std::vector<double> > &V, std::vector<std:
 	}
 	
 }
+
+
+int utils::strToInt(std::string s){
+    return atoi(s.c_str());
+}
+
+
+double utils::strToDouble(std::string s){
+    return atof(s.c_str());
+}

@@ -65,6 +65,10 @@ void vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<dou
 //Convierte un double a string
 std::string static doubleToStr(double & input);
 
+int static strToInt(std::string s);
+
+double static strToDouble(std::string s);
+
 //Se parar un vector en 2
 void static splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, unsigned int size_y = 1);
 
