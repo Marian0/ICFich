@@ -82,7 +82,7 @@ int main (int argc, char *argv[]) {
 	
 	//Divido en X y Yd los casos
 	std::vector<std::vector<double> > X, Y;
-	utils::splitVector(casos, X, Y);
+	utils::splitVector(salida, X, Y);
 	
 	//Entreno y grafico
 
