@@ -34,10 +34,10 @@ int main (int argc, char *argv[]) {
      
     //Genera casos aleatorios con <5% de dispersion
     for (unsigned i = 0 ; i < 500; i++) {
-		std::vector<double> a = casos[i%4];
+		std::vector<double> a = casos[i];
 		
-		a[0] += utils::randomDecimal(-0.049, 0.049);
-		a[1] += utils::randomDecimal(-0.049, 0.049);	
+		a[0] += utils::randomDecimal(-0.449, 0.449);
+		a[1] += utils::randomDecimal(-0.449, 0.449);	
 		
 		if (a[2] == 1) //Clase "true"
 			plot1 += utils::doubleToStr(a[0]) + " " + utils::doubleToStr(a[1]) + " \n";
@@ -48,6 +48,7 @@ int main (int argc, char *argv[]) {
 		salida.push_back(a);
 	}
     
+
     
     //utils::saveCSV("Cache/or_disperso500.csv", salida);
     
@@ -98,14 +99,13 @@ int main (int argc, char *argv[]) {
 		double da3 = rand()%30+1;
 
 		
-		if (i%100 == 0)
 		plotter("plot " + utils::doubleToStr(da) + "-" + utils::doubleToStr(da2) + "*x lt "+ utils::doubleToStr(da3) +" notitle");
 		
 		//Entreno en base a los patrones
 		
 		
 		perceptron.train(X[i%500], Y[i%500]);
-		//std::getchar();
+		std::getchar();
 	}
 	
 	

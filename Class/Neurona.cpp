@@ -11,7 +11,7 @@
 
 Neurona::Neurona(unsigned int dim, double min, double max, unsigned int funcion, double constante_aprendizaje) {
 //Neurona::Neurona(unsigned int dim, double min = -0.5, double max = 0.5, unsigned int funcion = 1, double constante_aprendizaje = 0.5) {
-	std::srand(time(0));
+//	std::srand(time(NULL));
 	this->dimension = dim;
 	this->constante_aprendizaje = constante_aprendizaje;
 	this->id_funcion_activacion = funcion;
@@ -19,6 +19,7 @@ Neurona::Neurona(unsigned int dim, double min, double max, unsigned int funcion,
 	for(unsigned int i = 0; i < dim+1; i++){
 		W.push_back(utils::randomDecimal(min,max));
 	}
+	utils::printVector(W);
 }
 
 //Obtiene la salida de la neurona para una entrada dada
