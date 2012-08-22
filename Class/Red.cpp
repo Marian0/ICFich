@@ -6,26 +6,32 @@
 
 Red::Red(std::vector<std::vector<bool> > adyacencias, std::vector<std::vector<bool> > adyacencias_entradas, std::string identificador ) {
 	unsigned int n,m,ne,me;
-	n = adyacencias.size(); //Filas
-	assert(n > 0); //Control de que sea una matriz
-	m = adyacencias[0].size(); //Columnas
-	assert(m > 0 && m == n); //Control de que sea una matriz y cuadrada
+
+    n = adyacencias.size();             //Filas
+	assert(n > 0);                      //Control de que sea una matriz
+	m = adyacencias[0].size();          //Columnas
+	assert(m > 0 && m == n);            //Control de que sea una matriz y cuadrada
 	
-	ne = adyacencias_entradas.size(); //Filas de adyacencia
-	assert(ne > 0); //Control de que sea una matriz
+	ne = adyacencias_entradas.size();   //Filas de adyacencia
+	assert(ne > 0);                     //Control de que sea una matriz
 	me = adyacencias_entradas[0].size();
-	assert(me > 0 && me == n); //Control de que sea una matriz y que esten definidas la misma cantidad de neuronas en adyacencias_entradas 
+	assert(me > 0 && me == n);          //Control de que sea una matriz y que esten definidas 
+                                        // la misma cantidad de neuronas en adyacencias_entradas 
 	
-	//Guardamos el atributo de identificador de la red.
+
+    //Guardamos el atributo de identificador de la red.
 	this->identificador = identificador;
-	
 	this->multicapa = false;
-	//Instanciamos las neuronas, para ello debemos contar su dimensión.
+	this->adyacencias = adyacencias;
+	this->adyacencias_entradas = adyacencias_entradas;
+
+    //Instanciamos las neuronas, para ello debemos contar su dimensión.
 	for (unsigned int i = 0; i < n; i++) {
 		unsigned int dimension = 0;
 		//Cuento la dimension debida a Neuronas
 		for (unsigned int j = 0; j < n; j++) {
 			if (adyacencias[j][i]) {
+                //comprobar i != j ?
 				dimension++;
 				this->multicapa = true; //Detectamos que es multicapa ( ver despues, el tema de la identidad, osea que tiene una sola capa pero es recursivo)
 			}
@@ -37,16 +43,10 @@ Red::Red(std::vector<std::vector<bool> > adyacencias, std::vector<std::vector<bo
 				dimension++;
 			}
 		}
-		Neurona n(dimension, -0.5, 0.5, Neurona::FUNCION_SIGNO, 0.5);
-		this->neuronas.push_back(n);
+		Neurona neu(dimension, -0.5, 0.5, Neurona::FUNCION_SIGNO, 0.5);
+		this->neuronas.push_back(neu);
 	}
-	this->adyacencias = adyacencias;
-	this->adyacencias_entradas = adyacencias_entradas;
-	
 }
-
-void saveData();
-void readData();
 
 //Devuelve el error en el entrenamiento
 //Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
@@ -66,29 +66,40 @@ void Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
 	unsigned int ne = this->adyacencias_entradas.size(); //Filas de adyacencia
 
 	assert(ne == X.size()); //Verificamos que se envien la cantidad de entradas necesarias para el entrenamiento de la RED
+
+    //Se recorre cada una de las neuronas
 	for (unsigned int i = 0; i < n ; i++) {
 		std::vector<double> entradan;
-		
+	    
+        //Recorrer cada entrada y filtrar las entradas que van para cada neurona
 		for (unsigned int j = 0; j < ne; j++) {
 			if (this->adyacencias_entradas[j][i]) {
 				entradan.push_back(X[j]);
 			}
 		}
 		
+        //Estimular una neurona y obtener su respuesta
 		double respuesta = this->neuronas[i].getResponse(entradan);
 		
 		//Obtengo los pesos sinápticos actuales
-		std::vector<double> Wi;
-		this->neuronas[i].getW(Wi);
-		//Actualizo los pesos
+		std::vector<double> Wi = this->neuronas[i].getW();
+        std::cout<<"Cantidad de pesos: "<<Wi.size()<<'\n';
+		
+        Wi.erase(Wi.begin()); //borro el primer elemento, correspondiente al Bias
+        //Calculo de los nuevos pesos
+
+        //Parte Escalar
 		respuesta = (YD[i] - respuesta) * ( this->neuronas[i].getConstanteAprendizaje()/2 );
-		
-		std::vector<double> vesc;
+
+        //Temporal para el producto 
+		std::vector<double> vesc; 
 		utils::vectorEscalar(entradan, respuesta, vesc);
-		
-		std::vector<double> Wnuevo;
+
+        //Temporal para la suma
+		std::vector<double> Wnuevo; 
 		utils::vectorSuma(Wi, vesc, Wnuevo);
-		
+
+        //Actualizar pesos
 		this->neuronas[i].setW( Wnuevo );
 		
 	}

@@ -29,7 +29,7 @@ public:
 	double getResponse(std::vector<double> X);
 
 	//Obtiene por referencia el vector W
-	void getW(std::vector<double> & W);
+	std::vector<double> getW();
 	//Define por referencia el vector W
 	void setW(std::vector<double> & W);
 	

@@ -55,8 +55,8 @@ double Neurona::getConstanteAprendizaje() {
 
 
 //Obtiene por referencia el vector W
-void Neurona::getW(std::vector<double> & W) {
-	W = this->W;
+std::vector<double> Neurona::getW() {
+	return this->W;
 }
 //Define por referencia el vector W
 void Neurona::setW(std::vector<double> & W){
