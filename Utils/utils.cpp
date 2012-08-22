@@ -166,12 +166,6 @@ double utils::vectorNorma(std::vector<double> &X){
     return sqrt(sum);
 }
 
-std::string utils::doubleToStr(double & input) {
-	std::stringstream str;
-	str<<input;
-	return str.str();
-}
-
 
 //Separar un vector en 2
 void  utils::splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, unsigned int size_y) {
@@ -198,6 +192,12 @@ void  utils::splitVector( std::vector<std::vector<double> > &V, std::vector<std:
 	
 }
 
+
+std::string utils::doubleToStr(double & input) {
+	std::stringstream str;
+	str<<input;
+	return str.str();
+}
 
 int utils::strToInt(std::string s){
     return atoi(s.c_str());
