@@ -7,12 +7,20 @@
 #include "Neurona.h"
 #include "utils.h"
 #include "Red.h"
-
+#include "Config.h"
 
 #include "GNUPlot.h"
 
+//Variable global
+Config config("configuracion.cfg"); //lectura de la configuracion
+
 int main (int argc, char *argv[]) {
-	GNUPlot plotter;	
+    //Ejemplo para consultar un valor
+    //int: utils::strToInt(config.getValue("tasa"));
+    //double: utils::strToDouble(config.getValue("desvio"));
+    srand( (unsigned) std::time(NULL)); //inicializacion de semilla
+	
+    GNUPlot plotter;	
 	plotter("set pointsize 3");
 	plotter("set grid back");
 	
@@ -23,8 +31,6 @@ int main (int argc, char *argv[]) {
 	plotter("set yrange [-2:2]");
 	plotter("set multiplot");
    
-    srand( (unsigned) std::time(NULL)); //inicializacion de semilla
-    	
 	//Lectura de casos de prueba
     std::vector<std::vector<double > > patron, entrenamiento, prueba, validacion;
 	utils::parseCSV("xor.csv", patron);	
@@ -39,6 +45,9 @@ int main (int argc, char *argv[]) {
 
 	// Esto bate fruta porque lee cosas re locas
      
+    unsigned int n_casos = utils::strToInt(config.getValue("cantidad_casos"));
+    double desvio = utils::strToDouble(config.getValue("desvio"));
+    
     //Genera casos aleatorios con <5% de dispersion
     for (unsigned i = 0 ; i < patron.size(); i++) {
 		std::vector<double> a = patron[i];
@@ -120,6 +129,17 @@ int main (int argc, char *argv[]) {
 //		getchar();
 //	}
 
+
+	// 	plotter("plot " + utils::doubleToStr(da) + "-" + utils::doubleToStr(da2) + "*x lt "+ utils::doubleToStr(da3) +" notitle");
+		
+	// 	//Entreno en base a los patrones
+		
+		
+	// 	perceptron.train(X[i%n_casos], Y[i%n_casos]);
+	// 	std::getchar();
+	// }
+	
+	
 	return 0;
 }
 

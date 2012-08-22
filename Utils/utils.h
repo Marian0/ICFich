@@ -57,17 +57,16 @@ void static vectorEscalar(std::vector<double> &X, double value, std::vector<doub
 void static vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
 
 //Resta de dos vectores
-void vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
+void static vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
 
 //Producto punto entre dos vectores
-void vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
+void static vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z);
 
-//Convierte un double a string
-std::string static doubleToStr(double & input);
+//Calcula la norma de un vector
+double static vectorNorma(std::vector<double> &X);
 
 //Se parar un vector en 2
 void static splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, unsigned int size_y = 1);
-
 
 //Devuelve la cantidad de patrones especificados con el desvio especificado tomando como base el patron P.
 std::vector<std::vector<double> > static genPatrones( std::vector<std::vector<double> > & P, unsigned int cantidad_final, double desvio, unsigned int size_y = 1);
@@ -80,5 +79,16 @@ void static genParticiones(
 		std::vector<std::vector<double> > & Prueba,
 		unsigned int porcentaje_entrenamiento,
 		unsigned int porcentaje_prueba);
+
+//Funciones de conversion de tipos
+//Convierte un double a string
+std::string static doubleToStr(double & input);
+
+//Convierte un string a int
+int static strToInt(std::string s);
+
+//Convierte un string a double
+double static strToDouble(std::string s);
+
 };
 #endif

@@ -156,10 +156,14 @@ void utils::vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vec
 	}
 }
 
-std::string utils::doubleToStr(double & input) {
-	std::stringstream str;
-	str<<input;
-	return str.str();
+//Calcula la norma euclidea de un vector
+double utils::vectorNorma(std::vector<double> &X){
+    unsigned int n = 0;
+    double sum = 0;
+    for (unsigned int i = 0; i < n; i++){
+        sum += X[i]*X[i];
+    }
+    return sqrt(sum);
 }
 
 
@@ -187,7 +191,6 @@ void  utils::splitVector( std::vector<std::vector<double> > &V, std::vector<std:
 	}
 	
 }
-
 
 //Devuelve la cantidad de patrones especificados con el desvio especificado tomando como base el patron P.
 std::vector<std::vector<double> > utils::genPatrones( std::vector<std::vector<double> > & P,
@@ -255,6 +258,19 @@ void utils::genParticiones( std::vector<std::vector<double> > P,
 //		std::cout<<"numeros:"<<n_ent<<" "<<n_prueba<<" "<<n_patrones - n_ent - n_prueba<<"total:"<<n_patrones<<std::endl;
 //		
 //		std::cout<<"numeros:"<<Entrenamiento.size()<<" "<<Prueba.size()<<" "<<Validacion.size()<<"total:"<<P.size();
+}
 		
-		
+std::string utils::doubleToStr(double & input) {
+	std::stringstream str;
+	str<<input;
+	return str.str();
+}
+
+int utils::strToInt(std::string s){
+    return atoi(s.c_str());
+}
+
+
+double utils::strToDouble(std::string s){
+    return atof(s.c_str());
 }
