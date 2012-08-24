@@ -29,10 +29,8 @@ double Neurona::getResponse(std::vector<double> X){
 	double result = -1*W[0]; //bias
 	//Realiza el producto punto entre la entrada y los pesos
 	
-	std::cout<<std::endl;
 	for(unsigned int i = 0; i < X.size(); i++){
 		result += W[i+1] * X[i];
-		std::cout<<(int) X[i]<<" ";
 	}
 
 	switch(this->id_funcion_activacion) {
@@ -45,9 +43,6 @@ double Neurona::getResponse(std::vector<double> X){
 			result = utils::sigmoidea(result);
 	}
 	
-	
-	std::cout<<": "<<result;
-
 	return result;
 }
 
