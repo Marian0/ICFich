@@ -64,8 +64,10 @@ void Red::train(std::vector<double> X, std::vector<double> YD) {
 }
 void Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD){ }
 
-
-void Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
+//Devuelve true si no hubo error
+// true: la red dio el resultado esperado
+// false: dio resultado incorrecto
+bool Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
 	//El single train supone red monocapa 
 	unsigned int n = this->neuronas.size(); //Cantidad de neuronas en la primera capa
 	
@@ -73,6 +75,7 @@ void Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
 
 	assert(ne == X.size()); //Verificamos que se envien la cantidad de entradas necesarias para el entrenamiento de la RED
 
+	bool salida_sin_error = true;
     //Se recorre cada una de las neuronas
 	for (unsigned int i = 0; i < n ; i++) {
 		std::vector<double> entradan;
@@ -89,9 +92,14 @@ void Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
 		
 		//Obtengo los pesos sinápticos actuales
 		std::vector<double> Wi = this->neuronas[i].getW();
-        //Calculo de los nuevos pesos
+        
 
-        //Parte Escalar
+        // Verifico si hay error en alguna salida
+		if (salida_sin_error && fabs(YD[i] - respuesta) > EPSILON) { //no hubo error aun y son != (hay un error)
+			salida_sin_error = false;
+		}
+		//Calculo de los nuevos pesos
+		//Parte Escalar
 		respuesta = (YD[i] - respuesta) * ( this->neuronas[i].getConstanteAprendizaje()/2 );
 
         //Temporal para el producto
@@ -107,6 +115,7 @@ void Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
 		this->neuronas[i].setW( Wnuevo );
 		
 	}
+	return salida_sin_error;
 }
 
 void backpropagation() {}; //soon
