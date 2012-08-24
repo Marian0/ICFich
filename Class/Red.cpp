@@ -135,3 +135,9 @@ void backpropagation() {}; //soon
 void Red::getNeuronas(std::vector<Neurona> &N) {
 	N = this->neuronas;
 }
+
+
+//Grabo las neuronas por cuestiones de Entrenamiento optimo
+void Red::setNeuronas(std::vector<Neurona> &N) {
+	this->neuronas = N;
+}

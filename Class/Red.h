@@ -43,5 +43,8 @@ class Red {
 		
 		//Devuelvo el arreglo de neuronas para algunas cuestiones de graficación.
 		void getNeuronas(std::vector<Neurona> &N);
+		
+		//Grabo las neuronas por cuestiones de Entrenamiento optimo
+		void setNeuronas(std::vector<Neurona> &N);
 
 };
