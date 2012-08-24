@@ -35,10 +35,10 @@ class Red {
 
 		//Devuelve el error en el entrenamiento
 		//Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
-		void train(std::vector<double> X, std::vector<double> YD);
-		void train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD);
+		bool train(std::vector<double> X, std::vector<double> YD);
+		double train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD);
 
-		void singleTrain(std::vector<double> X, std::vector<double> YD);
+		bool singleTrain(std::vector<double> X, std::vector<double> YD);
 		void backpropagation() {}; //soon
 		
 		//Devuelvo el arreglo de neuronas para algunas cuestiones de graficación.

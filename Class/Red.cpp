@@ -55,17 +55,28 @@ Red::Red(std::vector<std::vector<bool> > adyacencias,
 
 //Devuelve el error en el entrenamiento
 //Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
-void Red::train(std::vector<double> X, std::vector<double> YD) {	
+bool Red::train(std::vector<double> X, std::vector<double> YD) {	
 	if (this->multicapa) {
-		return;
+		return true;
 	} else {
-		singleTrain(X,YD);
+		return singleTrain(X,YD);
 	}
 }
-void Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD){ }
+
+//Ejecuta un conjunto de pruebas y devuelve el porcentaje de aciertos
+double Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD){ 
+    unsigned int total_aciertos = 0;
+    assert(X.size() == YD.size());
+    for (unsigned int i = 0; i < X.size(); i++){
+        bool acierto = train(X[i], YD[i]);
+        if (acierto) 
+            total_aciertos++;
+    }
+    double porcentaje = ((double) total_aciertos) / ((double) X.size());
+}
 
 
-void Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
+bool Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
 	//El single train supone red monocapa 
 	unsigned int n = this->neuronas.size(); //Cantidad de neuronas en la primera capa
 	
