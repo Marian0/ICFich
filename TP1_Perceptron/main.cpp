@@ -94,7 +94,7 @@ int main (int argc, char *argv[]) {
 		std::vector<float> temp;
 		for (unsigned int j = 0; j < criterio_max_epocas; j++) {
 			double error = perceptron.train(X,Yd);
-			plot2 += utils::doubleToStr((double)j) + " " + utils::doubleToStr(error) + " \n";
+			plot2 += utils::intToStr((int)j) + " " + utils::doubleToStr(error) + " \n";
 			temp.push_back( (float) error); //Esto puede ser peligroso :D
 			std::vector<Neurona> ntemp;
 			perceptron.getNeuronas(ntemp);
@@ -110,7 +110,7 @@ int main (int argc, char *argv[]) {
 		utils::splitVector(validacion,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
 		for (unsigned int j = 0; j < criterio_max_epocas; j++) {
 			double error = perceptron.train(X,Yd,false);
-			plot1 += utils::doubleToStr((double)j) + " " + utils::doubleToStr(error) + " \n";
+			plot1 += utils::intToStr((int) j) + " " + utils::doubleToStr(error) + " \n";
 			temp.push_back( (float) error); //Esto puede ser peligroso :D
 		}
 		error_history_validacion.push_back(temp);
