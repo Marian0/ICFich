@@ -59,7 +59,7 @@ int main (int argc, char *argv[]) {
 			plot2 += utils::doubleToStr(a[0]) + " " + utils::doubleToStr(a[1]) + " \n";
 	}
     
-
+    
     
     //utils::saveCSV("Cache/or_disperso500.csv", salida);
     
@@ -69,12 +69,15 @@ int main (int argc, char *argv[]) {
 	plotter(plot1);
 	plotter(plot2);
 	
-	return 0;
     //Inicializacion de un perceptron simple:
     //Se crean la matriz de adyacencias para las neuronas y las entradas
     //Matriz Neuronas = 1x1 con false, porque no se conecta a sí misma
     //Matriz Entradas = 2x1 con true, hay 2 entradas que se conectan a una sola neurona (true)
 
+	Red perceptron("red_perceptron.txt","Red Perceptron", 0.1, Neurona::FUNCION_SIGMOIDEA);
+    perceptron.printStructure();
+
+	return 0;
 //	//Definición de una Matriz de adyacencias para las neuronas
 //	std::vector<bool> fila;
 //	fila.push_back(false); //una sola neurona

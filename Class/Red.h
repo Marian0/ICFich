@@ -2,6 +2,7 @@
 #include <string>
 #include "Neurona.h"
 
+#define EPS 0.0000000001
 class Red {
 	private:
 		//Vector de todas las neuronas que componen la Red
@@ -21,7 +22,14 @@ class Red {
 		bool multicapa;
 	public:
 
-		//En base a las adyacencias construimos la Red y sus interrelaciones con las neuronas y las entradas.
+        //Construye la red leyendola desde un archivo pasado por argumento
+        Red(std::string nombre_archivo,
+            std::string identificador,
+             double tasa_aprendizaje,
+             unsigned int int_funcion_activacion
+            ); 
+		
+        //En base a las adyacencias construimos la Red y sus interrelaciones con las neuronas y las entradas.
 		Red(
 			std::vector<std::vector<bool> > adyacencias,
 			std::vector<std::vector<bool> > adyacencias_entradas, 
@@ -30,8 +38,14 @@ class Red {
 			unsigned int int_funcion_activacion = Neurona::FUNCION_SIGNO 
 		);
 
-		void saveData();
-		void readData();
+        //Genera la estructura de la red, construyendo cada una de las neuronas
+        void structureGenerator( double tasa_aprendizaje, unsigned int int_funcion_activacion); 
+        
+        //Imprime las matrices que dan forma a la estructura de la red
+        void printStructure();
+        
+        //Lee la estructura del archivo dado, modificando las matrices adyacencias y adyacencias_entradas
+        void readStructure(std::string nombre_archivo);
 
 		//Devuelve el error en el entrenamiento
 		//Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
@@ -43,5 +57,4 @@ class Red {
 		
 		//Devuelvo el arreglo de neuronas para algunas cuestiones de graficación.
 		void getNeuronas(std::vector<Neurona> &N);
-
 };
