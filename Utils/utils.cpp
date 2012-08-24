@@ -269,8 +269,16 @@ std::string utils::doubleToStr(double & input) {
 int utils::strToInt(std::string s){
     return atoi(s.c_str());
 }
+		
+std::string utils::intToStr(int & input) {
+	std::stringstream str;
+	str<<input;
+	return str.str();
+}
 
 
 double utils::strToDouble(std::string s){
     return atof(s.c_str());
 }
+
+
