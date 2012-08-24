@@ -75,7 +75,6 @@ int main (int argc, char *argv[]) {
     //Matriz Entradas = 2x1 con true, hay 2 entradas que se conectan a una sola neurona (true)
 
 	Red perceptron("red_perceptron.txt","Red Perceptron", 0.1, Neurona::FUNCION_SIGMOIDEA);
-    perceptron.printStructure();
 
 	return 0;
 //	//Definición de una Matriz de adyacencias para las neuronas

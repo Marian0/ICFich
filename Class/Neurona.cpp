@@ -18,7 +18,6 @@ Neurona::Neurona(unsigned int dim, double min, double max, unsigned int funcion,
 	for(unsigned int i = 0; i < dim+1; i++){
 		W.push_back(utils::randomDecimal(min,max));
 	}
-	utils::printVector(W);
 }
 
 //Obtiene la salida de la neurona para una entrada dada
