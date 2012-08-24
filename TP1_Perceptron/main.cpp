@@ -15,6 +15,20 @@
 Config config("configuracion.cfg"); //lectura de la configuracion
 
 int main (int argc, char *argv[]) {
+	
+	
+	
+	//Inicializamos y configuramos el Graficador
+	GNUPlot plotter;	
+	plotter("set pointsize 3");
+	plotter("set grid back");
+	
+	plotter("set xzeroaxis lt -1");
+	plotter("set yzeroaxis lt -1");
+	
+	plotter("set xrange [-2:2]");
+	plotter("set yrange [-2:2]");
+	plotter("set multiplot");
     srand( (unsigned) std::time(NULL)); //inicializacion de semilla
 	
 	//Leemos los valores de configuracion
@@ -40,6 +54,8 @@ int main (int argc, char *argv[]) {
 	utils::parseCSV(archivo_problema.c_str(), patron);
 	//Genero los casos de pruebas en numero y desvío definidos
 	patron = utils::genPatrones( patron , cantidad_casos, desvio);
+	std::string plot1 = "plot \"-\" notitle pt 1 lt 1\n";
+	std::string plot2 = "plot \"-\" notitle pt 8 lt 3\n";
 	
 	for (unsigned int i = 0; i < cantidad_conjuntos; i++) {
 		//Inicializacion de un perceptron simple:
@@ -72,9 +88,13 @@ int main (int argc, char *argv[]) {
 		utils::splitVector(entrenamiento,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
 		
 		//Entreno las epocas solicitadas y guardo el error en un vector
+		//Haremos un string para poder plotear al final
+
+		
 		std::vector<float> temp;
 		for (unsigned int j = 0; j < criterio_max_epocas; j++) {
 			double error = perceptron.train(X,Yd);
+			plot2 += utils::doubleToStr((double)j) + " " + utils::doubleToStr(error) + " \n";
 			temp.push_back( (float) error); //Esto puede ser peligroso :D
 			std::vector<Neurona> ntemp;
 			perceptron.getNeuronas(ntemp);
@@ -89,10 +109,9 @@ int main (int argc, char *argv[]) {
 		temp.clear();
 		utils::splitVector(validacion,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
 		for (unsigned int j = 0; j < criterio_max_epocas; j++) {
-			double error = perceptron.train(X,Yd);
+			double error = perceptron.train(X,Yd,false);
+			plot1 += utils::doubleToStr((double)j) + " " + utils::doubleToStr(error) + " \n";
 			temp.push_back( (float) error); //Esto puede ser peligroso :D
-			if (abs(error) < criterio_error)
-				break; //Se alcanzó el nivel de error deseado
 		}
 		error_history_validacion.push_back(temp);
 		
@@ -106,62 +125,34 @@ int main (int argc, char *argv[]) {
 					indice_validacion = j;
 				}
 		}
-	
+		plot1 += "e\n";
+		plot2 += "e\n";
+		plotter(plot1);
+		plotter(plot2);
+		
+		std::getchar();
 	}
 	
 	
-	
-	
-	
-	
-	//Inicializamos y configuramos el Graficador
-    GNUPlot plotter;	
-	plotter("set pointsize 3");
-	plotter("set grid back");
-	
-	plotter("set xzeroaxis lt -1");
-	plotter("set yzeroaxis lt -1");
-	
-	plotter("set xrange [-2:2]");
-	plotter("set yrange [-2:2]");
-	plotter("set multiplot");
-   
 
+	
+	
     
-    //Haremos un string para poder plotear al final
-	std::string plot1 = "plot \"-\" notitle pt 1 lt 1\n";
-	std::string plot2 = "plot \"-\" notitle pt 8 lt 3\n";
-
-    
-
-    
-    //Genera casos aleatorios con <5% de dispersion
-    for (unsigned i = 0 ; i < patron.size(); i++) {
-		std::vector<double> a = patron[i];
-		
-		
-		if (a[2] == 1) //Clase "true"
-			plot1 += utils::doubleToStr(a[0]) + " " + utils::doubleToStr(a[1]) + " \n";
-		else  //Clase "false"
-			plot2 += utils::doubleToStr(a[0]) + " " + utils::doubleToStr(a[1]) + " \n";
-	}
-    
-
     
     //utils::saveCSV("Cache/or_disperso500.csv", salida);
     
     //Dibuja
-	plot1 += "e\n";
-	plot2 += "e\n";
-	plotter(plot1);
-	plotter(plot2);
+
 	
-	return 0;
     //Inicializacion de un perceptron simple:
     //Se crean la matriz de adyacencias para las neuronas y las entradas
     //Matriz Neuronas = 1x1 con false, porque no se conecta a sí misma
     //Matriz Entradas = 2x1 con true, hay 2 entradas que se conectan a una sola neurona (true)
 
+	Red perceptron("red_perceptron.txt","Red Perceptron", 0.1, Neurona::FUNCION_SIGMOIDEA);
+    perceptron.printStructure();
+
+	return 0;
 //	//Definición de una Matriz de adyacencias para las neuronas
 //	std::vector<bool> fila;
 //	fila.push_back(false); //una sola neurona
@@ -186,7 +177,7 @@ int main (int argc, char *argv[]) {
 //	//Entreno y grafico
 //	
 //	unsigned int npatrones = X.size();
-//	std::cout<<"asdasdasdasdasdasdas"<<npatrones;
+//	std::<<"asdasdasdasdasdasdas"<<npatrones;
 //	unsigned int epocas = 50;
 //	
 //
