@@ -218,10 +218,8 @@ void Red::setNeuronas(std::vector<Neurona> &N) {
 void Red::printStructure() {
     std::cout<<"Red:\n";
 
-    std::cout<<this->adyacencias[0].size();
-    std::getchar();
     for (unsigned int i = 0; i < this->adyacencias.size(); i++) {
-        for (unsigned int j = 0; i < this->adyacencias[i].size(); j++) {
+        for (unsigned int j = 0; j < this->adyacencias[i].size(); j++) {
             std::cout<<this->adyacencias[i][j]<<' ';
         }
         std::cout<<std::endl;
@@ -229,7 +227,7 @@ void Red::printStructure() {
     
     std::cout<<"Entradas:\n";
     for (unsigned int i = 0; i < this->adyacencias_entradas.size(); i++) {
-        for (unsigned int j = 0; i < this->adyacencias_entradas[i].size(); j++) {
+        for (unsigned int j = 0; j < this->adyacencias_entradas[i].size(); j++) {
             std::cout<<this->adyacencias_entradas[i][j]<<' ';
         }
         std::cout<<std::endl;

@@ -84,6 +84,9 @@ void static genParticiones(
 //Convierte un double a string
 std::string static doubleToStr(double & input);
 
+//Convierte un int a string
+std::string static intToStr(int & input);
+
 //Convierte un string a int
 int static strToInt(std::string s);
 
