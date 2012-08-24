@@ -124,20 +124,20 @@ void Red::structureGenerator( double tasa_aprendizaje, unsigned int int_funcion_
 
 //Devuelve el error en el entrenamiento
 //Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
-bool Red::train(std::vector<double> X, std::vector<double> YD) {	
+bool Red::train(std::vector<double> X, std::vector<double> YD, bool update ) {	
 	if (this->multicapa) {
 		return true;
 	} else {
-		return singleTrain(X,YD);
+		return singleTrain(X,YD, update);
 	}
 }
 
 //Ejecuta un conjunto de pruebas y devuelve el porcentaje de aciertos
-double Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD){ 
+double Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD, bool update){ 
     unsigned int total_aciertos = 0;
     assert(X.size() == YD.size());
     for (unsigned int i = 0; i < X.size(); i++){
-        bool acierto = train(X[i], YD[i]);
+        bool acierto = train(X[i], YD[i], update);
         if (acierto) 
             total_aciertos++;
         //guardar historial pesos
@@ -149,7 +149,7 @@ double Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<d
 //Devuelve true si no hubo error
 // true: la red dio el resultado esperado
 // false: dio resultado incorrecto
-bool Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
+bool Red::singleTrain(std::vector<double> X, std::vector<double> YD, bool update) {
 	//El single train supone red monocapa 
 	unsigned int n = this->neuronas.size(); //Cantidad de neuronas en la primera capa
 	
@@ -196,8 +196,9 @@ bool Red::singleTrain(std::vector<double> X, std::vector<double> YD) {
 		utils::vectorSuma(Wi, vesc, Wnuevo);
 
         //Actualizar pesos
-		this->neuronas[i].setW( Wnuevo );
-		
+		if (update) {
+			this->neuronas[i].setW( Wnuevo );
+		}
 	}
 	return salida_sin_error;
 }
@@ -209,6 +210,10 @@ void Red::getNeuronas(std::vector<Neurona> &N) {
 	N = this->neuronas;
 }
 
+//Grabo las neuronas por cuestiones de Entrenamiento optimo
+void Red::setNeuronas(std::vector<Neurona> &N) {
+	this->neuronas = N;
+}
 //Imprime la estructura de la red (adyacencias)
 void Red::printStructure() {
     std::cout<<"Red:\n";
@@ -306,5 +311,3 @@ void Red::readStructure(std::string nombre_archivo) {
     this->adyacencias_entradas = ady_ent;
 
 }
-
-
