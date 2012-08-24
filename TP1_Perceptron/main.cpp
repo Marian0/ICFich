@@ -26,8 +26,8 @@ int main (int argc, char *argv[]) {
 	plotter("set xzeroaxis lt -1");
 	plotter("set yzeroaxis lt -1");
 	
-	plotter("set xrange [-2:2]");
-	plotter("set yrange [-2:2]");
+	plotter("set xrange [-2:100]");
+	plotter("set yrange [-0.1:0.1]");
 	plotter("set multiplot");
     srand( (unsigned) std::time(NULL)); //inicializacion de semilla
 	
@@ -94,13 +94,17 @@ int main (int argc, char *argv[]) {
 		std::vector<float> temp;
 		for (unsigned int j = 0; j < criterio_max_epocas; j++) {
 			double error = perceptron.train(X,Yd);
+
+			
+			
+			
 			plot2 += utils::intToStr((int)j) + " " + utils::doubleToStr(error) + " \n";
 			temp.push_back( (float) error); //Esto puede ser peligroso :D
 			std::vector<Neurona> ntemp;
 			perceptron.getNeuronas(ntemp);
 			neurona_history.push_back(ntemp);
-			if (abs(error) < criterio_error)
-				break; //Se alcanzó el nivel de error deseado
+//			if (abs(error) < criterio_error)
+//				break; //Se alcanzó el nivel de error deseado
 		}
 		error_history_entrenamiento.push_back(temp);
 		

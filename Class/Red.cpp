@@ -143,6 +143,7 @@ double Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<d
         //guardar historial pesos
     }
     double porcentaje = ((double) total_aciertos) / ((double) X.size());
+	std::cout<<porcentaje<<"sasa"<<total_aciertos<<std::endl;
     return porcentaje;
 }
 
