@@ -62,7 +62,6 @@ int main (int argc, char *argv[]) {
     
     
     //utils::saveCSV("Cache/or_disperso500.csv", salida);
-    
     //Dibuja
 	plot1 += "e\n";
 	plot2 += "e\n";
