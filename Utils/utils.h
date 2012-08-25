@@ -80,6 +80,8 @@ void static genParticiones(
 		unsigned int porcentaje_entrenamiento,
 		unsigned int porcentaje_prueba);
 
+std::vector<std::vector<double> > static genSet( std::vector<std::vector<double> > P,
+                                                 unsigned int tamanio);
 //Funciones de conversion de tipos
 //Convierte un double a string
 std::string static doubleToStr(double & input);

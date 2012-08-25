@@ -203,11 +203,12 @@ std::vector<std::vector<double> > utils::genPatrones( std::vector<std::vector<do
 	//Temporal para la salida de los Patrones generados
 	std::vector<std::vector<double> > Salida;
 	
-	//Fábrica de patrones de cantidad especificada
+    //Fábrica de patrones de cantidad especificada
 	for (unsigned int k = 0 ; k < cantidad_final ; k++) {
 		//Obtengo el patron actual
 		std::vector<double> T = P[k%n];
-		//Lo desvío
+		
+        //Lo desvío
 		unsigned int m = T.size();
 		for (unsigned int j = 0; j < m ; j++) {
 			if (j < m-size_y) {
@@ -261,7 +262,23 @@ void utils::genParticiones( std::vector<std::vector<double> > P,
 //		
 //		std::cout<<"numeros:"<<Entrenamiento.size()<<" "<<Prueba.size()<<" "<<Validacion.size()<<"total:"<<P.size();
 }
-		
+
+
+//Genera un subconjunto a partir de un conjunto mas grande, con la cantidad de elementos dados en tamanio
+std::vector<std::vector<double> > utils::genSet( std::vector<std::vector<double> > P,
+                                                unsigned int tamanio){
+    //aseguro que el tamanio del subconjunto sea menor al del conjunto grande
+    unsigned int n = P.size();
+    assert(tamanio < n); 
+    
+    //Mezcla
+    random_shuffle(P.begin(), P.end());
+    
+    //Toma los primeros valores
+    std::vector<std::vector<double> > ret_val (P.begin(), P.begin()+tamanio);
+    return ret_val;
+}
+
 std::string utils::doubleToStr(double & input) {
 	std::stringstream str;
 	str<<input;
