@@ -36,7 +36,7 @@ int main (int argc, char *argv[]) {
 	plotter("set xzeroaxis lt -1");
 	plotter("set yzeroaxis lt -1");	
 	plotter("set xrange [-2:100]");
-	plotter("set yrange [-0.1:0.1]");
+	plotter("set yrange [-0.1:1.1]");
 	plotter("set multiplot");
 	
 	
@@ -57,12 +57,15 @@ int main (int argc, char *argv[]) {
 	std::string plot2 = "plot \"-\" notitle pt 8 lt 3\n";
 	
 	for (unsigned int i = 0; i < cantidad_conjuntos; i++) {
-		//Inicializacion de un perceptron simple:
+        std::cout<<"Conjunto Numero "<<i<<std::endl;
+
+        //Inicializacion de un perceptron simple:
 		//Se crean la matriz de adyacencias para las neuronas y las entradas
 		//Matriz Neuronas = 1x1 con false, porque no se conecta a sí misma
 		//Matriz Entradas = 2x1 con true, hay 2 entradas que se conectan a una sola neurona (true)
 		
-		//Definición de una Matriz de adyacencias para las neuronas
+		/* Sin uso, ahora tenemos una funcion que cargua la red desde un archivo
+        //Definición de una Matriz de adyacencias para las neuronas
 		std::vector<bool> fila;
 		fila.push_back(false); //una sola neurona
 		std::vector<std::vector<bool> > adyacencias;
@@ -78,9 +81,12 @@ int main (int argc, char *argv[]) {
 		
 		//Instancio la red
 		Red perceptron(adyacencias,adyacencias_entradas,"Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA);
+		*/
 		
+        //Uso del archivo de estructura de la red para cargarla
+        Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA);
 		
-		//Genero una particion de entrenamiento, prueba y validacion
+        //Genero una particion de entrenamiento, prueba y validacion
 		utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, porcentaje_prueba);
 	
 		std::vector<std::vector<double> > X, Yd; //Sirve para separar X de Yd
@@ -90,12 +96,12 @@ int main (int argc, char *argv[]) {
 		//Haremos un string para poder plotear al final		
 		std::vector<float> temp;
 		for (unsigned int j = 0; j < criterio_max_epocas; j++) {
-			double error = perceptron.train(X,Yd);
-			std::cout<<"Epoca "<<j<<". Error: "<<error<<std::endl;
+			double error = 1-perceptron.train(X,Yd);
+			//std::cout<<"Epoca "<<j<<". Error: "<<error<<std::endl;
 			plot2 += utils::intToStr((int)j) + " " + utils::doubleToStr(error) + " \n";
 			temp.push_back( (float) error); //Esto puede ser peligroso :D
 			std::vector<Neurona> ntemp;
-			perceptron.getNeuronas(ntemp);
+			perceptron.getNeurons(ntemp);
 			neurona_history.push_back(ntemp);
 			// if (abs(error) < criterio_error)
 			// 	break; //Se alcanzó el nivel de error deseado
@@ -107,19 +113,21 @@ int main (int argc, char *argv[]) {
 		temp.clear();
 		utils::splitVector(validacion,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
 		for (unsigned int j = 0; j < criterio_max_epocas; j++) {
-			double error = perceptron.train(X,Yd,false);
+            perceptron.setNeurons(neurona_history[j]); //le cambio las neuronas a las que habia en la epoca j
+
+			double error = 1-perceptron.train(X,Yd,false);
 			plot1 += utils::intToStr((int) j) + " " + utils::doubleToStr(error) + " \n";
 			temp.push_back( (float) error); //Esto puede ser peligroso :D
 		}
 		error_history_validacion.push_back(temp);
 		
 		//Busco el indice donde se dio el menor error de validacion
-		float menor = error_history_validacion[i][0];
-		unsigned int size_validacion = error_history_validacion.size();
+		float menor = 1-error_history_validacion[i][0];
+		unsigned int size_validacion = 1-error_history_validacion.size();
 		unsigned int indice_validacion = 0;
 		for (unsigned int j = 1; j < size_validacion; j++) {
-				if (error_history_validacion[i][j] < menor) {
-					menor = error_history_validacion[i][j];
+				if (1-error_history_validacion[i][j] < menor) {
+					menor = 1-error_history_validacion[i][j];
 					indice_validacion = j;
 				}
 		}
@@ -128,7 +136,7 @@ int main (int argc, char *argv[]) {
 		plotter(plot1);
 		plotter(plot2);
 		
-		std::getchar();
+		//std::getchar();
 	}
 	
 	

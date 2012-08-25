@@ -207,12 +207,12 @@ bool Red::singleTrain(std::vector<double> X, std::vector<double> YD, bool update
 void backpropagation() {}; //soon
 
 
-void Red::getNeuronas(std::vector<Neurona> &N) {
+void Red::getNeurons(std::vector<Neurona> &N) {
 	N = this->neuronas;
 }
 
 //Grabo las neuronas por cuestiones de Entrenamiento optimo
-void Red::setNeuronas(std::vector<Neurona> &N) {
+void Red::setNeurons(std::vector<Neurona> &N) {
 	this->neuronas = N;
 }
 //Imprime la estructura de la red (adyacencias)

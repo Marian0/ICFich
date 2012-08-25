@@ -2,7 +2,7 @@
 #include <string>
 #include "Neurona.h"
 
-#define EPS 0.0000000001
+#define EPS 0.001
 class Red {
 	private:
 		//Vector de todas las neuronas que componen la Red
@@ -56,8 +56,8 @@ class Red {
 		void backpropagation() {}; //soon
 		
 		//Devuelvo el arreglo de neuronas para algunas cuestiones de graficación.
-		void getNeuronas(std::vector<Neurona> &N);
+		void getNeurons(std::vector<Neurona> &N);
 		
 		//Grabo las neuronas por cuestiones de Entrenamiento optimo
-		void setNeuronas(std::vector<Neurona> &N);
+		void setNeurons(std::vector<Neurona> &N);
 };
