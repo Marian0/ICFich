@@ -126,14 +126,15 @@ void Red::structureGenerator( double tasa_aprendizaje, unsigned int int_funcion_
 //Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
 bool Red::train(std::vector<double> X, std::vector<double> YD, bool update ) {	
 	if (this->multicapa) {
-		return true;
+		assert(false); //No esta programado asi q mato.
 	} else {
 		return singleTrain(X,YD, update);
 	}
 }
 
 //Ejecuta un conjunto de pruebas y devuelve el porcentaje de aciertos
-double Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD, bool update){ 
+double Red::train(std::vector<std::vector<double> > X,
+				  std::vector<std::vector<double> > YD, bool update){ 
     unsigned int total_aciertos = 0;
     assert(X.size() == YD.size());
     for (unsigned int i = 0; i < X.size(); i++){
@@ -143,7 +144,6 @@ double Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<d
         //guardar historial pesos
     }
     double porcentaje = ((double) total_aciertos) / ((double) X.size());
-	std::cout<<porcentaje<<"sasa"<<total_aciertos<<std::endl;
     return porcentaje;
 }
 
@@ -153,7 +153,7 @@ double Red::train(std::vector<std::vector<double> > X, std::vector<std::vector<d
 bool Red::singleTrain(std::vector<double> X, std::vector<double> YD, bool update) {
 	//El single train supone red monocapa 
 	unsigned int n = this->neuronas.size(); //Cantidad de neuronas en la primera capa
-	
+	assert(n>0); //Control de que al menos haya una neurona
 	unsigned int ne = this->adyacencias_entradas.size(); //Filas de adyacencia
 
 	assert(ne == X.size()); //Verificamos que se envien la cantidad de entradas necesarias para el entrenamiento de la RED
@@ -170,7 +170,7 @@ bool Red::singleTrain(std::vector<double> X, std::vector<double> YD, bool update
 			}
 		}
 		
-        //Estimular una neurona y obtener su respuesta
+        //Estimular una neurona y obtener su respuesta // getResponse ya contempla el x0 = -1
 		double respuesta = this->neuronas[i].getResponse(entradan);
 		
 		//Obtengo los pesos sinápticos actuales

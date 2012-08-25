@@ -168,7 +168,9 @@ double utils::vectorNorma(std::vector<double> &X){
 
 
 //Separar un vector en 2
-void  utils::splitVector( std::vector<std::vector<double> > &V, std::vector<std::vector<double> > &X, std::vector<std::vector<double> > &Y, unsigned int size_y) {
+void  utils::splitVector( std::vector<std::vector<double> > &V, 
+	std::vector<std::vector<double> > &X,
+ 	std::vector<std::vector<double> > &Y, unsigned int size_y) {
 	//Limpiamos por las dudas
 	X.clear();
 	Y.clear();

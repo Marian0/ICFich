@@ -15,21 +15,8 @@
 Config config("configuracion.cfg"); //lectura de la configuracion
 
 int main (int argc, char *argv[]) {
-	
-	
-	
-	//Inicializamos y configuramos el Graficador
-	GNUPlot plotter;	
-	plotter("set pointsize 3");
-	plotter("set grid back");
-	
-	plotter("set xzeroaxis lt -1");
-	plotter("set yzeroaxis lt -1");
-	
-	plotter("set xrange [-2:100]");
-	plotter("set yrange [-0.1:0.1]");
-	plotter("set multiplot");
-    srand( (unsigned) std::time(NULL)); //inicializacion de semilla
+	//inicializacion de semilla
+	srand( (unsigned) std::time(NULL)); 
 	
 	//Leemos los valores de configuracion
 	std::string archivo_problema = config.getValue("archivo_problema"); //Archivo a leer patrones ej xor.csv
@@ -42,18 +29,30 @@ int main (int argc, char *argv[]) {
 	unsigned int criterio_max_epocas = utils::strToInt(config.getValue("criterio_max_epocas"));
 	double criterio_error = utils::strToDouble(config.getValue("criterio_error"));
 	
+	//Inicializamos y configuramos el Graficador
+	GNUPlot plotter;	
+	plotter("set pointsize 3");
+	plotter("set grid back");	
+	plotter("set xzeroaxis lt -1");
+	plotter("set yzeroaxis lt -1");	
+	plotter("set xrange [-2:100]");
+	plotter("set yrange [-0.1:0.1]");
+	plotter("set multiplot");
 	
-	//Lectura de casos de prueba
+	
+	//Vectores temporales para trabajar
 	std::vector<std::vector<double > > patron, entrenamiento, prueba, validacion;
-	//Para guardar errores
+	//Vectores temporales para guardar historial errores
 	std::vector<std::vector<float> > error_history_entrenamiento, error_history_validacion;
-	//Para guardar el historico de W
+	//Vector temporal para guardar el historico de los pesos sinápticos W
 	std::vector<std::vector<Neurona> > neurona_history;
 	
 	//Leo los patrones en patron
 	utils::parseCSV(archivo_problema.c_str(), patron);
+	
 	//Genero los casos de pruebas en numero y desvío definidos
 	patron = utils::genPatrones( patron , cantidad_casos, desvio);
+	
 	std::string plot1 = "plot \"-\" notitle pt 1 lt 1\n";
 	std::string plot2 = "plot \"-\" notitle pt 8 lt 3\n";
 	
@@ -88,23 +87,18 @@ int main (int argc, char *argv[]) {
 		utils::splitVector(entrenamiento,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
 		
 		//Entreno las epocas solicitadas y guardo el error en un vector
-		//Haremos un string para poder plotear al final
-
-		
+		//Haremos un string para poder plotear al final		
 		std::vector<float> temp;
 		for (unsigned int j = 0; j < criterio_max_epocas; j++) {
 			double error = perceptron.train(X,Yd);
-
-			
-			
-			
+			std::cout<<"Epoca "<<j<<". Error: "<<error<<std::endl;
 			plot2 += utils::intToStr((int)j) + " " + utils::doubleToStr(error) + " \n";
 			temp.push_back( (float) error); //Esto puede ser peligroso :D
 			std::vector<Neurona> ntemp;
 			perceptron.getNeuronas(ntemp);
 			neurona_history.push_back(ntemp);
-//			if (abs(error) < criterio_error)
-//				break; //Se alcanzó el nivel de error deseado
+			// if (abs(error) < criterio_error)
+			// 	break; //Se alcanzó el nivel de error deseado
 		}
 		error_history_entrenamiento.push_back(temp);
 		
