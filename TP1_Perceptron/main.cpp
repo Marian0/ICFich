@@ -29,19 +29,29 @@ int main (int argc, char *argv[]) {
 	unsigned int porcentaje_prueba = utils::strToInt(config.getValue("porcentaje_prueba"));
 	unsigned int criterio_max_epocas = utils::strToInt(config.getValue("criterio_max_epocas"));
 	double criterio_error = utils::strToDouble(config.getValue("criterio_error"));
-	
+
+    //Impresion de los datos de ejecucion
+    std::cout<<"Cantidad de epocas = "<<criterio_max_epocas<<'\n';
+    std::cout<<"Cantidad de patrones = "<<cantidad_casos<<'\n';
+    std::cout<<"Desvio de los datos = "<<desvio*100<<"\%\n";
+    std::cout<<"Tasa de aprendizaje = "<<tasa_aprendizaje<<'\n';
+    std::cout<<"Tamaño de cada conjunto = "<<tamanio_conjunto<<'\n';
+    std::cout<<"Porcentaje para entrenamiento = "<<porcentaje_entrenamiento<<"\%\n";
+    std::cout<<"Porcentaje para validacion = "<<100-porcentaje_entrenamiento-porcentaje_prueba<<"\%\n";
+    std::cout<<"Porcentaje para prueba = "<<porcentaje_prueba<<"\%\n";
+
 	//Inicializamos y configuramos el Graficador
 	GNUPlot plotter;	
 	plotter("set pointsize 1");
 	plotter("set grid back");	
 	plotter("set xzeroaxis lt -1");
 	plotter("set yzeroaxis lt -1");	
-	plotter("set xrange [-2:100]");
+	plotter("set xrange [-1:"+utils::intToStr(criterio_max_epocas+1)+"]");
 	plotter("set yrange [-0.1:100]");
     plotter("set xlabel \"Epocas\"");
     plotter("set ylabel \"Efectividad\"");
     plotter("set format y \"\%g \%\%\""); //formato porcentaje en ylabel
-    plotter("set title \"Comportamiento de Efectividad durante 100 Epocas\"");
+    plotter("set title \"Comportamiento de Efectividad durante N Epocas\"");
 
     plotter("set multiplot");
 	
@@ -58,19 +68,13 @@ int main (int argc, char *argv[]) {
 	
     //Genero los casos de pruebas en numero y desvío definidos
     patron = utils::genPatrones( patron , cantidad_casos, desvio);
-
 		
 	for (unsigned int i = 0; i < cantidad_conjuntos; i++) {
-        std::cout<<"Conjunto Numero "<<i<<std::endl;
+        std::cout<<"Conjunto "<<i<<"\t";
         
         //Genero el conjunto con el que trabajare
         std::vector<std::vector<double> > patroni = utils::genSet(patron, tamanio_conjunto); 
                 
-        //Inicializacion de un perceptron simple:
-		//Se crean la matriz de adyacencias para las neuronas y las entradas
-		//Matriz Neuronas = 1x1 con false, porque no se conecta a sí misma
-		//Matriz Entradas = 2x1 con true, hay 2 entradas que se conectan a una sola neurona (true)
-		
         //Genero una particion de entrenamiento, prueba y validacion
 		utils::genParticiones(patroni, entrenamiento, validacion, prueba, porcentaje_entrenamiento, porcentaje_prueba);
 	
@@ -120,8 +124,9 @@ int main (int argc, char *argv[]) {
             perceptron.setNeurons(neurona_history[j]); //le cambio las neuronas a las que habia en la epoca j
 
 			double error = 1-perceptron.train(X,Yd,false);
-			plot1 += utils::intToStr((int) j) + " " + utils::doubleToStr(error*100.0) + " \n";
 			temp.push_back( (float) error); //Esto puede ser peligroso :D
+			
+            plot1 += utils::intToStr((int) j) + " " + utils::doubleToStr(error*100.0) + " \n";
 		}
 		error_history_validacion.push_back(temp);
 		
@@ -135,18 +140,39 @@ int main (int argc, char *argv[]) {
                 indice_validacion = j;
             }
 		}
-		plot1 += "e\n";
+        
+        //Prueba con los patrones nunca vistos
+
+        //Primero seteo el perceptron a los pesos que me dieron mejores resultados
+        perceptron.setNeurons(neurona_history[indice_validacion]); 
+        //Cargo el conjunto de prueba
+		utils::splitVector(prueba,X,Yd,1); 
+        
+        double efectividad_esperada = 1-perceptron.train(X,Yd,false);
+        std::cout<<"Efectividad Esperada en este Subconjunto = "<<efectividad_esperada*100.0<<"\%\n";
+
+        //Actualizacion del dibujo
+        plot1 += "e\n";
 		plot2 += "e\n";
 		plotter(plot1);
 		plotter(plot2);
-        std::getchar();
+        //std::getchar();
 		plotter("clear"); //limpia dibujo
 	}
 	
 
+    Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA);
+
+	std::vector<std::vector<double> > X, Yd; //Sirve para separar X de Yd
+	utils::splitVector(patron,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
+    
+    double prediccion_efectividad = 1-perceptron.train(X,Yd);
+    std::cout<<"Cantidad de Patrones total = "<<X.size()<<"\n";
+    std::cout<<"Prediccion de desempeño final = "<<prediccion_efectividad*100<<"\%\n";
 	
 	
     
+	return 0;
     
     //utils::saveCSV("Cache/or_disperso500.csv", salida);
     //Dibuja
@@ -157,7 +183,6 @@ int main (int argc, char *argv[]) {
     //Matriz Neuronas = 1x1 con false, porque no se conecta a sí misma
     //Matriz Entradas = 2x1 con true, hay 2 entradas que se conectan a una sola neurona (true)
 
-	return 0;
 //	//Definición de una Matriz de adyacencias para las neuronas
 //	std::vector<bool> fila;
 //	fila.push_back(false); //una sola neurona
