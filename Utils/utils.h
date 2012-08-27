@@ -84,7 +84,7 @@ std::vector<std::vector<double> > static genSet( std::vector<std::vector<double>
                                                  unsigned int tamanio);
 //Funciones de conversion de tipos
 //Convierte un double a string
-std::string static doubleToStr(double & input);
+std::string static doubleToStr(double input);
 
 //Convierte un int a string
 std::string static intToStr(int input);

@@ -2,7 +2,7 @@
 #include <string>
 #include "Neurona.h"
 
-#define EPS 0.001
+#define EPS 0.1
 class Red {
 	private:
 		//Vector de todas las neuronas que componen la Red

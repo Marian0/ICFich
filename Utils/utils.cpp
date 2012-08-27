@@ -279,7 +279,7 @@ std::vector<std::vector<double> > utils::genSet( std::vector<std::vector<double>
     return ret_val;
 }
 
-std::string utils::doubleToStr(double & input) {
+std::string utils::doubleToStr(double input) {
 	std::stringstream str;
 	str<<input;
 	return str.str();

@@ -32,13 +32,18 @@ int main (int argc, char *argv[]) {
 	
 	//Inicializamos y configuramos el Graficador
 	GNUPlot plotter;	
-	plotter("set pointsize 3");
+	plotter("set pointsize 1");
 	plotter("set grid back");	
 	plotter("set xzeroaxis lt -1");
 	plotter("set yzeroaxis lt -1");	
 	plotter("set xrange [-2:100]");
-	plotter("set yrange [-0.1:1.1]");
-	plotter("set multiplot");
+	plotter("set yrange [-0.1:100]");
+    plotter("set xlabel \"Epocas\"");
+    plotter("set ylabel \"Efectividad\"");
+    plotter("set format y \"\%g \%\%\""); //formato porcentaje en ylabel
+    plotter("set title \"Comportamiento de Efectividad durante 100 Epocas\"");
+
+    plotter("set multiplot");
 	
 	
 	//Vectores temporales para trabajar
@@ -80,7 +85,7 @@ int main (int argc, char *argv[]) {
         
         //Inicializo el ploteo
 		//Haremos un string para poder plotear al final		
-	    std::string plot2 = "plot \"-\" notitle pt 8 lt 3\n";
+	    std::string plot2 = "plot \"-\" notitle pt 1 lt 3\n";
         
         for (unsigned int j = 0; j < criterio_max_epocas; j++) {
 			
@@ -93,9 +98,9 @@ int main (int argc, char *argv[]) {
 			perceptron.getNeurons(ntemp);
 			neurona_history.push_back(ntemp);
             //std::cout<<"Epoca "<<j<<". Error: "<<error<<std::endl;
-				
+
             //Dibuja
-            plot2 += utils::intToStr((int)j) + " " + utils::doubleToStr(error) + " \n";
+            plot2 += utils::intToStr((int)j) + " " + utils::doubleToStr(error*100.0) + " \n";
 
             // if (abs(error) < criterio_error)
 			// 	break; //Se alcanzó el nivel de error deseado
@@ -115,7 +120,7 @@ int main (int argc, char *argv[]) {
             perceptron.setNeurons(neurona_history[j]); //le cambio las neuronas a las que habia en la epoca j
 
 			double error = 1-perceptron.train(X,Yd,false);
-			plot1 += utils::intToStr((int) j) + " " + utils::doubleToStr(error) + " \n";
+			plot1 += utils::intToStr((int) j) + " " + utils::doubleToStr(error*100.0) + " \n";
 			temp.push_back( (float) error); //Esto puede ser peligroso :D
 		}
 		error_history_validacion.push_back(temp);
@@ -134,9 +139,9 @@ int main (int argc, char *argv[]) {
 		plot2 += "e\n";
 		plotter(plot1);
 		plotter(plot2);
-		std::getchar();
+        std::getchar();
+		plotter("clear"); //limpia dibujo
 	}
-	
 	
 
 	
