@@ -7,11 +7,11 @@ class Neurona {
 	
 private: 
 	//Vector de pesos sinápticos
-	std::vector<double> W;
+	std::vector<float> W;
 	//Cantidad de entradas
 	unsigned int dimension;
 	//constante gamma de aprendizaje de la neurona
-	double constante_aprendizaje;
+	float constante_aprendizaje;
 	//Índice que determina la función de activación
 	unsigned int id_funcion_activacion;
 
@@ -23,18 +23,18 @@ public:
 	static const unsigned int FUNCION_SIGMOIDEA = 2;
 	//Constructor
 	//  * dim = Cantidad de entradas
-	Neurona(unsigned int dim, double min = -0.5, double max= 0.5, unsigned int funcion = 1, double constante_aprendizaje = 0.5);
+	Neurona(unsigned int dim, float min = -0.5, float max= 0.5, unsigned int funcion = 1, float constante_aprendizaje = 0.5);
 
 	// Devuelve la respuesta de la Neurona en base a la entrada especificada por parámetro	
-	double getResponse(std::vector<double> X);
+	float getResponse(std::vector<float> X);
 
 	//Obtiene por referencia el vector W
-	std::vector<double> getW();
+	std::vector<float> getW();
 	//Define por referencia el vector W
-	void setW(std::vector<double> & W);
+	void setW(std::vector<float> & W);
 	
 	//Devuelve la constante de aprendizaje
-	double getConstanteAprendizaje();
+	float getConstanteAprendizaje();
 };
 
 #endif

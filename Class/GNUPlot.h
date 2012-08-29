@@ -27,7 +27,7 @@ algunos ejemplos
         plotter("plot \"-\" notitle pt 6");
 
 
-        this->plot("plot " + doubletostr(W[0]/W[2]) + "-" + doubletostr(W[1]/W[2]) + "*x lt "+ doubletostr((int)rand()%30+1) +" notitle");
+        this->plot("plot " + floattostr(W[0]/W[2]) + "-" + floattostr(W[1]/W[2]) + "*x lt "+ floattostr((int)rand()%30+1) +" notitle");
 */
 class GNUPlot {
 public:

@@ -14,17 +14,17 @@
 
 /*
 Entrada: Path al archivo csv
-Salida: Devuelve un vector de vector<double>  con el contenido de un archivo CSV
+Salida: Devuelve un vector de vector<float>  con el contenido de un archivo CSV
 	por referencia
 */
 
-void utils::parseCSV(std::string filename, std::vector<std::vector<double> > & X) {
+void utils::parseCSV(std::string filename, std::vector<std::vector<float> > & X) {
 
 	std::ifstream file;
 	file.open(filename.c_str());
 	assert(file.is_open()); //muestra error si no se pudo abrir el archivo
 	
-	double value;
+	float value;
 	std::string s, line;
 	std::stringstream ss, iss;
 	//Lectura de los datos de entrenamiento
@@ -40,9 +40,9 @@ void utils::parseCSV(std::string filename, std::vector<std::vector<double> > & X
 			continue;
 		}
 		
-		X.push_back(std::vector<double>()); 		//agrega un vector vacio	
+		X.push_back(std::vector<float>()); 		//agrega un vector vacio	
 		while(getline(iss,s,',')){ //separa la linea entre las comas
-			//transforma de string a double
+			//transforma de string a float
 			ss<<s;
 			ss>>value;
 			X.back().push_back(value); //agrega el elemento al vector
@@ -57,7 +57,7 @@ void utils::parseCSV(std::string filename, std::vector<std::vector<double> > & X
 
 //Guarda la matriz pasada por parametro en un archivo CSV
 
-void utils::saveCSV(std::string filename, std::vector<std::vector<double> > & X) {
+void utils::saveCSV(std::string filename, std::vector<std::vector<float> > & X) {
 	std::ofstream file (filename.c_str(), 
 		std::ofstream::out|std::ofstream::trunc); //trunc explicito para borrar contenido
 	
@@ -79,7 +79,7 @@ void utils::saveCSV(std::string filename, std::vector<std::vector<double> > & X)
 }
 
 //Imprime un vector, separando sus valores con char separator
-void utils::printVector(std::vector<double> &v, char separator){
+void utils::printVector(std::vector<float> &v, char separator){
 	for (unsigned int i = 0; i < v.size(); i++){
 		std::cout<<v[i];
 		if(i < v.size()-1) //Si no es el ultimo caso
@@ -89,7 +89,7 @@ void utils::printVector(std::vector<double> &v, char separator){
 
 //Imprime un vector de vectores. Sus parametros representan el vector,
 // el separador entre elementos(v[i]), y el separador entre casos (v[i][j])
-void utils::printVectorVector(std::vector<std::vector<double> > &v, char separator, 
+void utils::printVectorVector(std::vector<std::vector<float> > &v, char separator, 
 						std::string newcase){
 	for (unsigned int i = 0; i < v.size(); i++){
 		utils::printVector(v[i],separator);
@@ -101,17 +101,17 @@ void utils::printVectorVector(std::vector<std::vector<double> > &v, char separat
 //Genera un numero aleatorio en el rango [a,b].
 // NOTA: solo funciona para numeros de punto flotante
 
-double utils::randomDecimal(double a, double b) {
-	double random = ((double) rand()) / (double) RAND_MAX;
-	double diff = b - a;
-	double r = random * diff;
+float utils::randomDecimal(float a, float b) {
+	float random = ((float) rand()) / (float) RAND_MAX;
+	float diff = b - a;
+	float r = random * diff;
 	return a + r;
 }
 
 //Funciones de activacion
 
 //Funcion signo
-double utils::signo(double x){
+float utils::signo(float x){
 	if(x < 0)
 		return -1;
 	else
@@ -119,21 +119,21 @@ double utils::signo(double x){
 }
 
 //Funcion sigmodea
-double utils::sigmoidea(double x, double param){
-	double result = (1-exp(-param*x))/(1+exp(-param*x));
+float utils::sigmoidea(float x, float param){
+	float result = (1-exp(-param*x))/(1+exp(-param*x));
 	return result;
 }
 
-void utils::vectorEscalar(std::vector<double> &X, double value, std::vector<double> &Z){
+void utils::vectorEscalar(std::vector<float> &X, float value, std::vector<float> &Z){
 	Z.resize(X.size());
 	for(unsigned int i = 0; i < X.size(); i++){
 		Z[i] = X[i]*value;
 	}
 }
 
-void utils::vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
+void utils::vectorSuma(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z){
 	assert(X.size() == Y.size());
-	std::vector<double> temp;
+	std::vector<float> temp;
 	
 	temp.resize(X.size());
 	for(unsigned int i = 0; i < X.size(); i++){
@@ -142,13 +142,13 @@ void utils::vectorSuma(std::vector<double> &X, std::vector<double> &Y, std::vect
 	Z = temp;
 }
 
-void utils::vectorResta(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
-	std::vector<double> temp;
+void utils::vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z){
+	std::vector<float> temp;
 	utils::vectorEscalar(Y,-1,temp);
 	utils::vectorSuma(X, temp ,Z);
 }
 
-void utils::vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vector<double> &Z){
+void utils::vectorPunto(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z){
 	assert(X.size() == Y.size());
 	Z.resize(X.size());
 	for(unsigned int i = 0; i < X.size(); i++){
@@ -157,9 +157,9 @@ void utils::vectorPunto(std::vector<double> &X, std::vector<double> &Y, std::vec
 }
 
 //Calcula la norma euclidea de un vector
-double utils::vectorNorma(std::vector<double> &X){
+float utils::vectorNorma(std::vector<float> &X){
     unsigned int n = 0;
-    double sum = 0;
+    float sum = 0;
     for (unsigned int i = 0; i < n; i++){
         sum += X[i]*X[i];
     }
@@ -168,9 +168,9 @@ double utils::vectorNorma(std::vector<double> &X){
 
 
 //Separar un vector en 2
-void  utils::splitVector( std::vector<std::vector<double> > &V, 
-	std::vector<std::vector<double> > &X,
- 	std::vector<std::vector<double> > &Y, unsigned int size_y) {
+void  utils::splitVector( std::vector<std::vector<float> > &V, 
+	std::vector<std::vector<float> > &X,
+ 	std::vector<std::vector<float> > &Y, unsigned int size_y) {
 	//Limpiamos por las dudas
 	X.clear();
 	Y.clear();
@@ -180,7 +180,7 @@ void  utils::splitVector( std::vector<std::vector<double> > &V,
 	for (unsigned int i = 0 ; i < n; i++) {
 		unsigned int m = V[i].size();
 		assert(m > size_y); //Sino, para que lo queres dividir?
-		std::vector<double> Xtemp, Ytemp;
+		std::vector<float> Xtemp, Ytemp;
 		for (unsigned int j = 0; j < m ; j++) {
 			if (j < m-size_y) {
 				Xtemp.push_back(V[i][j]);
@@ -195,25 +195,25 @@ void  utils::splitVector( std::vector<std::vector<double> > &V,
 }
 
 //Devuelve la cantidad de patrones especificados con el desvio especificado tomando como base el patron P.
-std::vector<std::vector<double> > utils::genPatrones( std::vector<std::vector<double> > & P,
-	unsigned int cantidad_final, double desvio, unsigned int size_y) {
+std::vector<std::vector<float> > utils::genPatrones( std::vector<std::vector<float> > & P,
+	unsigned int cantidad_final, float desvio, unsigned int size_y) {
 	//Cantidad de patrones P
 	unsigned int n = P.size();
 	
 	//Temporal para la salida de los Patrones generados
-	std::vector<std::vector<double> > Salida;
+	std::vector<std::vector<float> > Salida;
 	
     //Fábrica de patrones de cantidad especificada
 	for (unsigned int k = 0 ; k < cantidad_final ; k++) {
 		//Obtengo el patron actual
-		std::vector<double> T = P[k%n];
+		std::vector<float> T = P[k%n];
 		
         //Lo desvío
 		unsigned int m = T.size();
 		for (unsigned int j = 0; j < m ; j++) {
 			if (j < m-size_y) {
 				//Se trata de una entrada X => La dispersamos
-				double rango = fabs( T[j] * desvio );
+				float rango = fabs( T[j] * desvio );
 				T[j] = T[j] + utils::randomDecimal(-rango, rango);				
 			} else {
 				break; //Las y las dejamos inalteradas 
@@ -227,10 +227,10 @@ std::vector<std::vector<double> > utils::genPatrones( std::vector<std::vector<do
 
 
 //En base a los patrones pasados por referencia, el % de entrenamiento, prueba y validacion, genera las particiones aleatorias correspondientes
-void utils::genParticiones( std::vector<std::vector<double> > P, 
-	std::vector<std::vector<double> > & Entrenamiento,
-	std::vector<std::vector<double> > & Validacion,
-	std::vector<std::vector<double> > & Prueba,
+void utils::genParticiones( std::vector<std::vector<float> > P, 
+	std::vector<std::vector<float> > & Entrenamiento,
+	std::vector<std::vector<float> > & Validacion,
+	std::vector<std::vector<float> > & Prueba,
 	unsigned int porcentaje_entrenamiento,	unsigned int porcentaje_prueba,
 	unsigned int indice_prueba) {
 		
@@ -280,8 +280,8 @@ void utils::genParticiones( std::vector<std::vector<double> > P,
 
 
 //Genera un subconjunto a partir de un conjunto mas grande, con la cantidad de elementos dados en tamanio
-std::vector<std::vector<double> > utils::genSet( 
-	std::vector<std::vector<double> > P,
+std::vector<std::vector<float> > utils::genSet( 
+	std::vector<std::vector<float> > P,
     unsigned int tamanio,
     unsigned int inicio
     ) {
@@ -293,11 +293,11 @@ std::vector<std::vector<double> > utils::genSet(
     // random_shuffle(P.begin(), P.end());
     
     //Toma los primeros valores
-    std::vector<std::vector<double> > ret_val (P.begin() + inicio, P.begin()+tamanio + inicio );
+    std::vector<std::vector<float> > ret_val (P.begin() + inicio, P.begin()+tamanio + inicio );
     return ret_val;
 }
 
-std::string utils::doubleToStr(double input) {
+std::string utils::floatToStr(float input) {
 	std::stringstream str;
 	str<<input;
 	return str.str();
@@ -314,7 +314,7 @@ std::string utils::intToStr(int input) {
 }
 
 
-double utils::strToDouble(std::string s){
+float utils::strToFloat(std::string s){
     return atof(s.c_str());
 }
 

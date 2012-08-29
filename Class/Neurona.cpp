@@ -9,8 +9,8 @@
 
 #include "utils.h"
 
-Neurona::Neurona(unsigned int dim, double min, double max, unsigned int funcion, double constante_aprendizaje) {
-//Neurona::Neurona(unsigned int dim, double min = -0.5, double max = 0.5, unsigned int funcion = 1, double constante_aprendizaje = 0.5) {
+Neurona::Neurona(unsigned int dim, float min, float max, unsigned int funcion, float constante_aprendizaje) {
+//Neurona::Neurona(unsigned int dim, float min = -0.5, float max = 0.5, unsigned int funcion = 1, float constante_aprendizaje = 0.5) {
 	this->dimension = dim;
 	this->constante_aprendizaje = constante_aprendizaje;
 	this->id_funcion_activacion = funcion;
@@ -21,12 +21,12 @@ Neurona::Neurona(unsigned int dim, double min, double max, unsigned int funcion,
 }
 
 //Obtiene la salida de la neurona para una entrada dada
-double Neurona::getResponse(std::vector<double> X){
+float Neurona::getResponse(std::vector<float> X){
 	//Si el tamaño no coincide, cancela la ejecucion y muestra un mensaje 
 	// de error informativo
 	assert(X.size() == dimension);
 	
-	double result = -1*W[0]; //bias
+	float result = -1*W[0]; //bias
 	//Realiza el producto punto entre la entrada y los pesos
 	
 	for(unsigned int i = 0; i < X.size(); i++){
@@ -48,16 +48,16 @@ double Neurona::getResponse(std::vector<double> X){
 
 
 //Devuelve la constante de aprendizaje
-double Neurona::getConstanteAprendizaje() {
+float Neurona::getConstanteAprendizaje() {
 	return this->constante_aprendizaje;
 }
 
 
 //Obtiene por referencia el vector W
-std::vector<double> Neurona::getW() {
+std::vector<float> Neurona::getW() {
 	return this->W;
 }
 //Define por referencia el vector W
-void Neurona::setW(std::vector<double> & W){
+void Neurona::setW(std::vector<float> & W){
 	this->W = W;
 }
