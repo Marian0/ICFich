@@ -13,7 +13,7 @@
 #include "GNUPlot.h"
 
 //Variable global
-Config config("configuracion.cfg"); //lectura de la configuracion
+Config config("configuracion1.cfg"); //lectura de la configuracion
 
 int main (int argc, char *argv[]) {
 	//inicializacion de semilla
@@ -24,23 +24,19 @@ int main (int argc, char *argv[]) {
 	unsigned int cantidad_casos = utils::strToInt(config.getValue("cantidad_casos"));
 	unsigned int cantidad_conjuntos = utils::strToInt(config.getValue("cantidad_conjuntos"));
 	unsigned int tamanio_conjunto = utils::strToInt(config.getValue("tamanio_conjunto"));
-	double desvio = utils::strToDouble(config.getValue("desvio"));
-	double tasa_aprendizaje = utils::strToDouble(config.getValue("tasa_aprendizaje"));
+	float desvio = utils::strToFloat(config.getValue("desvio"));
 	unsigned int porcentaje_entrenamiento = utils::strToInt(config.getValue("porcentaje_entrenamiento"));
 	unsigned int porcentaje_prueba = utils::strToInt(config.getValue("porcentaje_prueba"));
+	float tasa_aprendizaje = utils::strToFloat(config.getValue("tasa_aprendizaje"));
 	unsigned int criterio_max_epocas = utils::strToInt(config.getValue("criterio_max_epocas"));
 	unsigned int invasores = utils::strToInt(config.getValue("invasores"));
-	double criterio_error = utils::strToDouble(config.getValue("criterio_error"));
+	float criterio_error = utils::strToFloat(config.getValue("criterio_error"));
 
     //Impresion de los datos de ejecucion
     std::cout<<"Cantidad de epocas = "<<criterio_max_epocas<<'\n';
     std::cout<<"Cantidad de patrones = "<<cantidad_casos<<'\n';
     std::cout<<"Desvio de los datos = "<<desvio*100<<"\%\n";
     std::cout<<"Tasa de aprendizaje = "<<tasa_aprendizaje<<'\n';
-    std::cout<<"Tamaño de cada conjunto = "<<tamanio_conjunto<<'\n';
-    std::cout<<"Porcentaje para entrenamiento = "<<porcentaje_entrenamiento<<"\%\n";
-    std::cout<<"Porcentaje para validacion = "<<100-porcentaje_entrenamiento-porcentaje_prueba<<"\%\n";
-    std::cout<<"Porcentaje para prueba = "<<porcentaje_prueba<<"\%\n";
 
 	//Inicializamos y configuramos el Graficador
 	GNUPlot plotter2;	
@@ -66,14 +62,11 @@ int main (int argc, char *argv[]) {
     plotter("set multiplot");
 
 	
-	
 	//Vectores temporales para trabajar
-	std::vector<std::vector<double > > patron, entrenamiento, prueba, validacion;
+	std::vector<std::vector<float > > patron, entrenamiento, prueba, validacion;
 	//Vectores temporales para guardar historial errores
-	std::vector<std::vector<float> > error_history_entrenamiento, error_history_validacion;
-	//Vector temporal para guardar el historico de los pesos sinápticos W
-	std::vector<std::vector<Neurona> > neurona_history;
-	
+	std::vector<float> error_history_entrenamiento;
+
 	//Leo los patrones en patron
 	utils::parseCSV(archivo_problema.c_str(), patron);
 	
@@ -90,198 +83,73 @@ int main (int argc, char *argv[]) {
     }
 	random_shuffle(patron.begin() , patron.end());
 
-
-	for (unsigned int i = 0; i < cantidad_conjuntos; i++) {
-        std::cout<<"Conjunto "<<i<<"\t";
-                        
-        //Genero una particion de entrenamiento, prueba y validacion
-		utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
-			porcentaje_prueba, i*std::floor(porcentaje_prueba/100.0*patron.size()));
-	
-		std::vector<std::vector<double> > X, Yd; //Sirve para separar X de Yd
-		utils::splitVector(entrenamiento,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
-
-	    std::string plot_dot1 = "plot \"-\" notitle pt 1 lt 3\n";
-	    std::string plot_dot2 = "plot \"-\" notitle pt 1 lt 1\n";
-		for (unsigned int w=0; w < entrenamiento.size(); w++ ) {
-			if (entrenamiento[w][2] == 1) 
-            	plot_dot1 += utils::doubleToStr(entrenamiento[w][0])+ " " + utils::doubleToStr(entrenamiento[w][1]) + " \n";
-            else
-            	plot_dot2 += utils::doubleToStr(entrenamiento[w][0])+ " " + utils::doubleToStr(entrenamiento[w][1]) + " \n";
-		}
-		plot_dot1 += "e\n";
-		plot_dot2 += "e\n";
-		plotter2(plot_dot1);
-		plotter2(plot_dot2);
-						
-        //Uso del archivo de estructura de la red para cargarla
-        Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA);
-        
-        //Entreno las epocas solicitadas y guardo el error en un vector
-		std::vector<float> temp;
-        
-        //Inicializo el ploteo
-		//Haremos un string para poder plotear al final		
-	    std::string plot2 = "plot \"-\" notitle pt 1 lt 3\n";
-        
-        for (unsigned int j = 0; j < criterio_max_epocas; j++) {
-			
-            //Entrena y calcula error
-            double error = 1-perceptron.train(X,Yd);
-            temp.push_back( (float) error); //Esto puede ser peligroso :D
-					
-            //Guarda historial de neuronas
-			std::vector<Neurona> ntemp;
-			perceptron.getNeurons(ntemp);
-			neurona_history.push_back(ntemp);
-            //std::cout<<"Epoca "<<j<<". Error: "<<error<<std::endl;
-
-            //Dibuja
-            plot2 += utils::intToStr((int)j) + " " + utils::doubleToStr(error*100.0) + " \n";
-
-    //         if (abs(error) < criterio_error)
-				// break; //Se alcanzó el nivel de error deseado
-		}
-		//Guarda error de este conjunto
-        error_history_entrenamiento.push_back(temp);
-		
-		//Verificamos contra el conjunto de validación
-		
-		temp.clear();
-		utils::splitVector(validacion,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
-		
-        //Inicializo el ploteo
-        std::string plot1 = "plot \"-\" notitle pt 1 lt 1\n";
-		
-        for (unsigned int j = 0; j < criterio_max_epocas; j++) {
-            perceptron.setNeurons(neurona_history[j]); //le cambio las neuronas a las que habia en la epoca j
-
-			double error = 1-perceptron.train(X,Yd,false);
-			temp.push_back( (float) error); //Esto puede ser peligroso :D
-			
-            plot1 += utils::intToStr((int) j) + " " + utils::doubleToStr(error*100.0) + " \n";
-		}
-		error_history_validacion.push_back(temp);
-		
-		//Busco el indice donde se dio el menor error de validacion
-		float menor = 1-error_history_validacion[i][0];
-		unsigned int size_validacion = error_history_validacion.size();
-		unsigned int indice_validacion = 0;
-		for (unsigned int j = 1; j < size_validacion; j++) {
-            if (1-error_history_validacion[i][j] < menor) {
-                menor = 1-error_history_validacion[i][j];
-                indice_validacion = j;
-            }
-		}
-        
-        //Prueba con los patrones nunca vistos
-
-        //Primero seteo el perceptron a los pesos que me dieron mejores resultados
-        perceptron.setNeurons(neurona_history[indice_validacion]); 
-        //Cargo el conjunto de prueba
-		utils::splitVector(prueba,X,Yd,1); 
-        
-        double efectividad_esperada = 1-perceptron.train(X,Yd,false);
-        std::cout<<"Efectividad Esperada en este Subconjunto = "<<efectividad_esperada*100.0<<"\%\n";
-
-        //Actualizacion del dibujo
-        plot1 += "e\n";
-		plot2 += "e\n";
-		plotter(plot1);
-		plotter(plot2);
-        std::getchar();
-		plotter("clear"); //limpia dibujo
-		plotter2("clear"); //limpia dibujo
+	//Dibuja los puntos de cada clase en una ventana para ver la dispersion
+	std::string plot_dot1 = "plot \"-\" notitle pt 1 lt 3\n";
+	std::string plot_dot2 = "plot \"-\" notitle pt 1 lt 1\n";
+	for (unsigned int w=0; w < patron.size(); w++ ) {
+		if (patron[w][2] == 1) 
+			plot_dot1 += utils::floatToStr(patron[w][0])+ " " + utils::floatToStr(patron[w][1]) + " \n";
+		else
+			plot_dot2 += utils::floatToStr(patron[w][0])+ " " + utils::floatToStr(patron[w][1]) + " \n";
 	}
+	plot_dot1 += "e\n";
+	plot_dot2 += "e\n";
+	plotter2(plot_dot1);
+	plotter2(plot_dot2);
+					
+	//Inicializo el ploteo
+	//Haremos un string para poder plotear al final		
+	std::string plot2 = "plot \"-\" notitle pt 1 lt 3\n";
 	
-
+ 
+    //Instancio la red
     Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA);
-
-	std::vector<std::vector<double> > X, Yd; //Sirve para separar X de Yd
-	utils::splitVector(patron,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
     
-    double prediccion_efectividad = 1-perceptron.train(X,Yd);
-    std::cout<<"Cantidad de Patrones total = "<<X.size()<<"\n";
-    std::cout<<"Prediccion de desempeño final = "<<prediccion_efectividad*100<<"\%\n";
-	
-	
+
+
+	utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
+			porcentaje_prueba, 0);
+
+	    //Divido en X y Yd los casos
+    std::vector<std::vector<float> > X, Yd;
+    utils::splitVector(entrenamiento, X, Yd);
     
-	return 0;
+	for (unsigned int i = 0 ; i < criterio_max_epocas; i++) {
+		std::vector<Neurona> V;
+        perceptron.getNeurons(V);
+		
+		std::vector<float> W = V[0].getW();
+		
+		//Dibujar la frontera de decision
+		float da  = W[0]/W[2];
+		float da2  = W[1]/W[2];
+		float da3 = rand()%30+1;
+		plotter2("plot " + utils::floatToStr(da) + "-" + utils::floatToStr(da2) + "*x lt "+ utils::floatToStr(da3) +" notitle");
+		
+		//Entrena y calcula error
+		float error = 1-perceptron.train(X, Yd, true);
+		error_history_entrenamiento.push_back(error); 
+				
+		//Dibuja
+		plot2 += utils::intToStr((int) i) + " " + utils::floatToStr(error*100.0) + " \n";
+        //std::getchar();
+
+    }
     
-    //utils::saveCSV("Cache/or_disperso500.csv", salida);
-    //Dibuja
+    //Actualizacion del dibujo
+    plot2 += "e\n";
+    plotter(plot2);
 
 	
-    //Inicializacion de un perceptron simple:
-    //Se crean la matriz de adyacencias para las neuronas y las entradas
-    //Matriz Neuronas = 1x1 con false, porque no se conecta a sí misma
-    //Matriz Entradas = 2x1 con true, hay 2 entradas que se conectan a una sola neurona (true)
+	//Prueba con los patrones nunca vistos
 
-//	//Definición de una Matriz de adyacencias para las neuronas
-//	std::vector<bool> fila;
-//	fila.push_back(false); //una sola neurona
-//	std::vector<std::vector<bool> > adyacencias;
-//	adyacencias.push_back(fila);
-//	
-//	//Definición de una Matriz de adyacencias para las entradas
-//	std::vector<bool> fila_entradas;
-//	fila_entradas.push_back(true); 
-//	std::vector<std::vector<bool> > adyacencias_entradas;
-//	//Se crean 2 entradas para la unica neurona
-//    adyacencias_entradas.push_back(fila_entradas); 
-//	adyacencias_entradas.push_back(fila_entradas);
-//	
-//	//Instancio la red
-//	Red perceptron(adyacencias,adyacencias_entradas,"Red Perceptron", 0.1, Neurona::FUNCION_SIGMOIDEA);
-//	
-//	//Divido en X y Yd los casos
-//	std::vector<std::vector<double> > X, Y;
-//	utils::splitVector(salida, X, Y);
-//	
-//	//Entreno y grafico
-//	
-//	unsigned int npatrones = X.size();
-//	std::<<"asdasdasdasdasdasdas"<<npatrones;
-//	unsigned int epocas = 50;
-//	
-//
-//	
-//	for (unsigned int i = 0 ; i < epocas; i++) {
-//		std::vector<Neurona> V;
-//		perceptron.getNeuronas(V);
-//		
-//		std::vector<double> W = V[0].getW();
-//		
-//		//Dibujar la frontera de decision
-//		double da  = W[0]/W[2];
-//		double da2  = W[1]/W[2];
-//		double da3 = rand()%30+1;
-//		
-//		
-//		plotter("plot " + utils::doubleToStr(da) + "-" + utils::doubleToStr(da2) + "*x lt "+ utils::doubleToStr(da3) +" notitle");
-//		
-//		for (unsigned int j = 0; j < npatrones; j++) {
-//			
-//			//Entreno en base a los patrones
-//			
-//			
-//			perceptron.train(X[j], Y[j]);
-//			
-//		}
-//		getchar();
-//	}
-
-
-	// 	plotter("plot " + utils::doubleToStr(da) + "-" + utils::doubleToStr(da2) + "*x lt "+ utils::doubleToStr(da3) +" notitle");
-		
-	// 	//Entreno en base a los patrones
-		
-		
-	// 	perceptron.train(X[i%n_casos], Y[i%n_casos]);
-	// 	std::getchar();
-	// }
+	//Cargo el conjunto de prueba
+	utils::splitVector(prueba, X, Yd,1); 
 	
+	float efectividad_esperada = perceptron.train(X, Yd, false);
+	std::cout<<"Efectividad Esperada = "<<efectividad_esperada*100.0<<"\%\n";
+    
 	
-	return 0;
+    return 0;
 }
 
