@@ -231,21 +231,36 @@ void utils::genParticiones( std::vector<std::vector<double> > P,
 	std::vector<std::vector<double> > & Entrenamiento,
 	std::vector<std::vector<double> > & Validacion,
 	std::vector<std::vector<double> > & Prueba,
-	unsigned int porcentaje_entrenamiento,	unsigned int porcentaje_prueba) {
+	unsigned int porcentaje_entrenamiento,	unsigned int porcentaje_prueba,
+	unsigned int indice_prueba) {
 		
 		assert(porcentaje_entrenamiento + porcentaje_prueba <= 100);
 		//Limpiamos las salidas
 		Entrenamiento.clear();
 		Validacion.clear();
 		Prueba.clear();
+		//Mezcla
+    	random_shuffle(P.begin(), P.end());
 		
-		//Desordenamos
-		random_shuffle(P.begin(), P.end());
 		//Calculo cantidades
 		unsigned int n_patrones = P.size();
 		unsigned int n_ent = std::ceil((float)porcentaje_entrenamiento/100 * n_patrones);
 		unsigned int n_prueba = std::floor((float)porcentaje_prueba/100 * n_patrones);
 //		unsigned int n_validacion = n_patrones - n_ent - n_prueba;
+		/*
+		unsigned int i = 0;
+		for (; i < n_patrones; i++){
+			if (i < indice_prueba && n_ent > 0){
+				Entrenamiento.push_back(P[i]);
+				n_ent--;
+			}
+			else if (i >= indice_prueba && i < (indice_prueba+n_prueba)) {
+				Prueba.push_back(P[i]);
+			} else {
+				Validacion.push_back(P[i]);
+			}
+		}
+		*/
 		
 		//Lleno los vectores de salida.
 		unsigned int i = 0;
@@ -265,17 +280,20 @@ void utils::genParticiones( std::vector<std::vector<double> > P,
 
 
 //Genera un subconjunto a partir de un conjunto mas grande, con la cantidad de elementos dados en tamanio
-std::vector<std::vector<double> > utils::genSet( std::vector<std::vector<double> > P,
-                                                unsigned int tamanio){
+std::vector<std::vector<double> > utils::genSet( 
+	std::vector<std::vector<double> > P,
+    unsigned int tamanio,
+    unsigned int inicio
+    ) {
     //aseguro que el tamanio del subconjunto sea menor al del conjunto grande
     unsigned int n = P.size();
     assert(tamanio < n); 
     
     //Mezcla
-    random_shuffle(P.begin(), P.end());
+    // random_shuffle(P.begin(), P.end());
     
     //Toma los primeros valores
-    std::vector<std::vector<double> > ret_val (P.begin(), P.begin()+tamanio);
+    std::vector<std::vector<double> > ret_val (P.begin() + inicio, P.begin()+tamanio + inicio );
     return ret_val;
 }
 

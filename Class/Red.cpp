@@ -132,7 +132,7 @@ bool Red::train(std::vector<double> X, std::vector<double> YD, bool update ) {
 	}
 }
 
-//Ejecuta un conjunto de pruebas y devuelve el porcentaje de aciertos
+//Ejecuta un conjunto de pruebas y devuelve el porcentaje de aciertos (efectividad)
 double Red::train(std::vector<std::vector<double> > X,
 				  std::vector<std::vector<double> > YD, bool update){ 
     unsigned int total_aciertos = 0;
