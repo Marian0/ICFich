@@ -28,7 +28,6 @@ float Neurona::getResponse(std::vector<float> X){
 	
 	float result = -1*W[0]; //bias
 	//Realiza el producto punto entre la entrada y los pesos
-	
 	for(unsigned int i = 0; i < X.size(); i++){
 		result += W[i+1] * X[i];
 	}

@@ -45,7 +45,7 @@ float static randomDecimal(float a, float b);
 float static signo(float x);
 
 //Funcion sigmodea
-float static sigmoidea(float x, float param = 0.5);
+float static sigmoidea(float x, float param = 5000);
 
 
 //Funciones de Algebra de Vectores

@@ -24,7 +24,6 @@ int main (int argc, char *argv[]) {
 	std::string archivo_problema = config.getValue("archivo_problema"); //Archivo a leer patrones ej xor.csv
 	unsigned int cantidad_casos = utils::strToInt(config.getValue("cantidad_casos"));
 	unsigned int cantidad_conjuntos = utils::strToInt(config.getValue("cantidad_conjuntos"));
-	unsigned int tamanio_conjunto = utils::strToInt(config.getValue("tamanio_conjunto"));
 	float desvio = utils::strToFloat(config.getValue("desvio"));
 	float tasa_aprendizaje = utils::strToFloat(config.getValue("tasa_aprendizaje"));
 	unsigned int porcentaje_entrenamiento = utils::strToInt(config.getValue("porcentaje_entrenamiento"));
@@ -39,7 +38,6 @@ int main (int argc, char *argv[]) {
     std::cout<<"Cantidad de patrones = "<<cantidad_casos<<'\n';
     std::cout<<"Desvio de los datos = "<<desvio*100<<"\%\n";
     std::cout<<"Tasa de aprendizaje = "<<tasa_aprendizaje<<'\n';
-    std::cout<<"Tamaño de cada conjunto = "<<tamanio_conjunto<<'\n';
     std::cout<<"Porcentaje para entrenamiento = "<<porcentaje_entrenamiento<<"\%\n";
     std::cout<<"Porcentaje para validacion = "<<100-porcentaje_entrenamiento-porcentaje_prueba<<"\%\n";
     std::cout<<"Porcentaje para prueba = "<<porcentaje_prueba<<"\%\n";
@@ -75,10 +73,11 @@ int main (int argc, char *argv[]) {
 	//metemos algunos errores
     random_shuffle(patron.begin() , patron.end());
 	for (unsigned int i = 0; i < invasores; i++) {
-		if (patron[i][2] == 1)
-			patron[i][2] = -1;
+		return 0;
+		if (patron[i][3] == 1)
+			patron[i][3] = -1;
 		else
-			patron[i][2] = 1;
+			patron[i][3] = 1;
     }
 	random_shuffle(patron.begin() , patron.end());
 
@@ -90,23 +89,26 @@ int main (int argc, char *argv[]) {
         //Genero una particion de entrenamiento, prueba y validacion
 		utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
 			porcentaje_prueba, i*std::floor(porcentaje_prueba/100.0*patron.size()));
+
+
 	
 		std::vector<std::vector<float> > X, Yd; //Sirve para separar X de Yd
 		utils::splitVector(entrenamiento,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
 						
+		// utils::printVectorVector(entrenamiento); std::getchar();
         //Uso del archivo de estructura de la red para cargarla
         Red perceptron("red_perceptron2.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA);
         
+
+        // perceptron.printStructure(); getchar();
         //Entreno las epocas solicitadas y guardo el error en un vector
 		std::vector<float> error_epoca;
-		std::string plot2 = "plot \"-\" notitle pt 1 lt 3\n";
+		std::string plot2 = "plot \"-\" notitle pt 2 lt 3\n";
         
         for (unsigned int j = 0; j < criterio_max_epocas; j++) {
-			
-
 			//Entrena y calcula error
             float error = 1-perceptron.train(X,Yd);
-            error_epoca.push_back( (float) error); //Esto puede ser peligroso :D
+            error_epoca.push_back(error); 
 					
             //Guarda historial de neuronas
 			std::vector<Neurona> ntemp;
@@ -120,54 +122,12 @@ int main (int argc, char *argv[]) {
     //         if (abs(error) < criterio_error)
 				// break; //Se alcanzó el nivel de error deseado
 		}
+		plot2 += "e\n";
+		plotter(plot2);
+
 		//Guarda error de este conjunto
         error_history_entrenamiento.push_back(error_epoca);
-		
-		//Verificamos contra el conjunto de validación
-		
-		error_epoca.clear();
-		utils::splitVector(prueba,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
-		
-        //Inicializo el ploteo
-        std::string plot1 = "plot \"-\" notitle pt 1 lt 1\n";
-		
-        for (unsigned int j = 0; j < criterio_max_epocas; j++) {
-            perceptron.setNeurons(neurona_history[j]); //le cambio las neuronas a las que habia en la epoca j
-
-			float error = 1-perceptron.train(X,Yd,false);
-			error_epoca.push_back( (float) error); //Esto puede ser peligroso :D
-			
-            plot1 += utils::intToStr((int) j) + " " + utils::floatToStr(error*100.0) + " \n";
-		}
-		error_history_validacion.push_back(error_epoca);
-		
-		// (Nota: no se usa...... )
-		//Busco el indice donde se dio el menor error de validacion
-		// float menor = 1-error_history_validacion[i][0];
-		// unsigned int size_validacion = error_history_validacion.size();
-		// unsigned int indice_validacion = 0;
-		// for (unsigned int j = 1; j < size_validacion; j++) {
-  //           if (1-error_history_validacion[i][j] < menor) {
-  //               menor = 1-error_history_validacion[i][j];
-  //               indice_validacion = j;
-  //           }
-		// }
-        
-        //Prueba con los patrones nunca vistos
-
-        //Primero seteo el perceptron a los pesos que me dieron mejores resultados
-        // perceptron.setNeurons(neurona_history[indice_validacion]); 
-        //Cargo el conjunto de prueba
-		// utils::splitVector(prueba,X,Yd,1); 
-        
-        // float efectividad_esperada = 1-perceptron.train(X,Yd,false);
-        // std::cout<<"Efectividad Esperada en este Subconjunto = "<<efectividad_esperada*100.0<<"\%\n";
-
-        //Actualizacion del dibujo
-        plot1 += "e\n";
-		plot2 += "e\n";
-		plotter(plot1);
-		plotter(plot2);
+	
         std::getchar();
 		plotter("clear"); //limpia dibujo
 	}

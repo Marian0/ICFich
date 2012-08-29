@@ -173,6 +173,7 @@ bool Red::singleTrain(std::vector<float> X, std::vector<float> YD, bool update) 
         //Estimular una neurona y obtener su respuesta // getResponse ya contempla el x0 = -1
 		float respuesta = this->neuronas[i].getResponse(entradan);
 		
+		 // std::cout<<"Deberia dar: "<<YD[i]<<" Dio: "<<respuesta<<std::endl; std::getchar();
 		//Obtengo los pesos sinápticos actuales
 		std::vector<float> Wi = this->neuronas[i].getW();
         
@@ -192,15 +193,26 @@ bool Red::singleTrain(std::vector<float> X, std::vector<float> YD, bool update) 
 		std::vector<float> vesc; 
 		utils::vectorEscalar(entradan, respuesta, vesc);
 
+
         //Temporal para la suma
 		std::vector<float> Wnuevo; 
 		utils::vectorSuma(Wi, vesc, Wnuevo);
+
+		// std::cout<<"Peso viejo"<<std::endl;
+		// utils::printVector(Wi);
+		// std::cout<<"Peso nuevo"<<std::endl;
+		// utils::printVector(Wnuevo);
+		// std::getchar();
 
         //Actualizar pesos
 		if (update) {
 			this->neuronas[i].setW( Wnuevo );
 		}
 	}
+	// if (salida_sin_error)
+	// 	std::cout<<"Salida sin error"<<std::endl;
+	// else
+	// 	std::cout<<"Salida con error"<<std::endl;
 	return salida_sin_error;
 }
 
