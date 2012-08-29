@@ -37,7 +37,7 @@ void static printVectorVector(std::vector<std::vector<float> > &v, char separato
 //Genera un numero aleatorio en el rango [a,b].
 // NOTA: solo funciona para numeros de punto flotante
 float static randomDecimal(float a, float b);
-
+void static randomCircular(float, float, float, float&, float&);
 
 //Funciones de activacion
 

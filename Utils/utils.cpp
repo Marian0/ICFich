@@ -110,6 +110,14 @@ float utils::randomDecimal(float a, float b) {
 	return a + r;
 }
 
+void utils::randomCircular(float xi, float yi, float desvio, float &newx, float &newy){
+    float modulo_old = sqrt(xi*xi + yi*yi);
+    float angulo = randomDecimal(0, 2*3.14);
+    float modulo = modulo_old*desvio;
+    newx = modulo*cos(angulo);
+    newy = modulo*sin(angulo);
+}
+
 //Funciones de activacion
 
 //Funcion signo

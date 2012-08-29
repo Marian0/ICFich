@@ -4,12 +4,12 @@ FLAGS=  -g2 -Wall -O0 -I../Class -I../Utils  -D_DEBUG
 LIBS=  
 OBJS=Debug/main.o Debug/GNUPlot.o Debug/Neurona.o Debug/Red.o Debug/utils.o Debug/Config.o 
 
-all: Debug Debug/TP1_Perceptron.bin
+all: Debug Debug/TP1_Ej1_Perceptron.bin
 
 clean:
-	rm -rf ${OBJS} Debug/TP1_Perceptron.bin
+	rm -rf ${OBJS} Debug/TP1_Ej1_Perceptron.bin
 
-Debug/TP1_Perceptron.bin: ${OBJS}
+Debug/TP1_Ej1_Perceptron.bin: ${OBJS}
 	${GPP} ${OBJS} ${LIBS} -o $@
 
 Debug:
