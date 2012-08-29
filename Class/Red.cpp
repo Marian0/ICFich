@@ -9,7 +9,7 @@
 //Constructor que lee la estructura desde un archivo
 Red::Red(std::string nombre_archivo,
         std::string identificador,
-		 double tasa_aprendizaje,
+		 float tasa_aprendizaje,
 		 unsigned int int_funcion_activacion
         ) {
     //Lee la estructura desde el archivo
@@ -25,7 +25,7 @@ Red::Red(std::string nombre_archivo,
 Red::Red(std::vector<std::vector<bool> > adyacencias,
 		 std::vector<std::vector<bool> > adyacencias_entradas, 
 		 std::string identificador,
-		 double tasa_aprendizaje,
+		 float tasa_aprendizaje,
 		 unsigned int int_funcion_activacion
 		) {
     
@@ -82,7 +82,7 @@ Red::Red(std::vector<std::vector<bool> > adyacencias,
 }
 
 //Genera la estructura, llamado por los constructores. Crea las neuronas y se las guarda
-void Red::structureGenerator( double tasa_aprendizaje, unsigned int int_funcion_activacion) {
+void Red::structureGenerator( float tasa_aprendizaje, unsigned int int_funcion_activacion) {
     unsigned int n,m,ne,me;
 
     n = adyacencias.size();             //Filas
@@ -124,7 +124,7 @@ void Red::structureGenerator( double tasa_aprendizaje, unsigned int int_funcion_
 
 //Devuelve el error en el entrenamiento
 //Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
-bool Red::train(std::vector<double> X, std::vector<double> YD, bool update ) {	
+bool Red::train(std::vector<float> X, std::vector<float> YD, bool update ) {	
 	if (this->multicapa) {
 		assert(false); //No esta programado asi q mato.
 	} else {
@@ -133,8 +133,8 @@ bool Red::train(std::vector<double> X, std::vector<double> YD, bool update ) {
 }
 
 //Ejecuta un conjunto de pruebas y devuelve el porcentaje de aciertos (efectividad)
-double Red::train(std::vector<std::vector<double> > X,
-				  std::vector<std::vector<double> > YD, bool update){ 
+float Red::train(std::vector<std::vector<float> > X,
+				  std::vector<std::vector<float> > YD, bool update){ 
     unsigned int total_aciertos = 0;
     assert(X.size() == YD.size());
     for (unsigned int i = 0; i < X.size(); i++){
@@ -143,14 +143,14 @@ double Red::train(std::vector<std::vector<double> > X,
             total_aciertos++;
         //guardar historial pesos
     }
-    double porcentaje = ((double) total_aciertos) / ((double) X.size());
+    float porcentaje = ((float) total_aciertos) / ((float) X.size());
     return porcentaje;
 }
 
 //Devuelve true si no hubo error
 // true: la red dio el resultado esperado
 // false: dio resultado incorrecto
-bool Red::singleTrain(std::vector<double> X, std::vector<double> YD, bool update) {
+bool Red::singleTrain(std::vector<float> X, std::vector<float> YD, bool update) {
 	//El single train supone red monocapa 
 	unsigned int n = this->neuronas.size(); //Cantidad de neuronas en la primera capa
 	assert(n>0); //Control de que al menos haya una neurona
@@ -161,7 +161,7 @@ bool Red::singleTrain(std::vector<double> X, std::vector<double> YD, bool update
 	bool salida_sin_error = true;
     //Se recorre cada una de las neuronas
 	for (unsigned int i = 0; i < n ; i++) {
-		std::vector<double> entradan;
+		std::vector<float> entradan;
 	    
         //Recorrer cada entrada y filtrar las entradas que van para cada neurona
 		for (unsigned int j = 0; j < ne; j++) {
@@ -171,14 +171,14 @@ bool Red::singleTrain(std::vector<double> X, std::vector<double> YD, bool update
 		}
 		
         //Estimular una neurona y obtener su respuesta // getResponse ya contempla el x0 = -1
-		double respuesta = this->neuronas[i].getResponse(entradan);
+		float respuesta = this->neuronas[i].getResponse(entradan);
 		
 		//Obtengo los pesos sinápticos actuales
-		std::vector<double> Wi = this->neuronas[i].getW();
+		std::vector<float> Wi = this->neuronas[i].getW();
         
 
         // Verifico si hay error en alguna salida
-        double error = fabs(YD[i] - respuesta);
+        float error = fabs(YD[i] - respuesta);
         
 		if ((salida_sin_error == true) && (error > EPS)) { //no hubo error aun y son != (hay un error)
 			salida_sin_error = false;
@@ -189,11 +189,11 @@ bool Red::singleTrain(std::vector<double> X, std::vector<double> YD, bool update
 
         //Temporal para el producto
 		entradan.insert(entradan.begin(), -1); //Agregamos la entrada correspondiente al Bias
-		std::vector<double> vesc; 
+		std::vector<float> vesc; 
 		utils::vectorEscalar(entradan, respuesta, vesc);
 
         //Temporal para la suma
-		std::vector<double> Wnuevo; 
+		std::vector<float> Wnuevo; 
 		utils::vectorSuma(Wi, vesc, Wnuevo);
 
         //Actualizar pesos

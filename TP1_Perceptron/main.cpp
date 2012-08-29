@@ -24,13 +24,13 @@ int main (int argc, char *argv[]) {
 	unsigned int cantidad_casos = utils::strToInt(config.getValue("cantidad_casos"));
 	unsigned int cantidad_conjuntos = utils::strToInt(config.getValue("cantidad_conjuntos"));
 	unsigned int tamanio_conjunto = utils::strToInt(config.getValue("tamanio_conjunto"));
-	double desvio = utils::strToDouble(config.getValue("desvio"));
-	double tasa_aprendizaje = utils::strToDouble(config.getValue("tasa_aprendizaje"));
+	float desvio = utils::strToFloat(config.getValue("desvio"));
+	float tasa_aprendizaje = utils::strToFloat(config.getValue("tasa_aprendizaje"));
 	unsigned int porcentaje_entrenamiento = utils::strToInt(config.getValue("porcentaje_entrenamiento"));
 	unsigned int porcentaje_prueba = utils::strToInt(config.getValue("porcentaje_prueba"));
 	unsigned int criterio_max_epocas = utils::strToInt(config.getValue("criterio_max_epocas"));
 	unsigned int invasores = utils::strToInt(config.getValue("invasores"));
-	double criterio_error = utils::strToDouble(config.getValue("criterio_error"));
+	float criterio_error = utils::strToFloat(config.getValue("criterio_error"));
 
     //Impresion de los datos de ejecucion
     std::cout<<"Cantidad de epocas = "<<criterio_max_epocas<<'\n';
@@ -68,7 +68,7 @@ int main (int argc, char *argv[]) {
 	
 	
 	//Vectores temporales para trabajar
-	std::vector<std::vector<double > > patron, entrenamiento, prueba, validacion;
+	std::vector<std::vector<float > > patron, entrenamiento, prueba, validacion;
 	//Vectores temporales para guardar historial errores
 	std::vector<std::vector<float> > error_history_entrenamiento, error_history_validacion;
 	//Vector temporal para guardar el historico de los pesos sinápticos W
@@ -98,16 +98,16 @@ int main (int argc, char *argv[]) {
 		utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
 			porcentaje_prueba, i*std::floor(porcentaje_prueba/100.0*patron.size()));
 	
-		std::vector<std::vector<double> > X, Yd; //Sirve para separar X de Yd
+		std::vector<std::vector<float> > X, Yd; //Sirve para separar X de Yd
 		utils::splitVector(entrenamiento,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
 
 	    std::string plot_dot1 = "plot \"-\" notitle pt 1 lt 3\n";
 	    std::string plot_dot2 = "plot \"-\" notitle pt 1 lt 1\n";
 		for (unsigned int w=0; w < entrenamiento.size(); w++ ) {
 			if (entrenamiento[w][2] == 1) 
-            	plot_dot1 += utils::doubleToStr(entrenamiento[w][0])+ " " + utils::doubleToStr(entrenamiento[w][1]) + " \n";
+            	plot_dot1 += utils::floatToStr(entrenamiento[w][0])+ " " + utils::floatToStr(entrenamiento[w][1]) + " \n";
             else
-            	plot_dot2 += utils::doubleToStr(entrenamiento[w][0])+ " " + utils::doubleToStr(entrenamiento[w][1]) + " \n";
+            	plot_dot2 += utils::floatToStr(entrenamiento[w][0])+ " " + utils::floatToStr(entrenamiento[w][1]) + " \n";
 		}
 		plot_dot1 += "e\n";
 		plot_dot2 += "e\n";
@@ -127,7 +127,7 @@ int main (int argc, char *argv[]) {
         for (unsigned int j = 0; j < criterio_max_epocas; j++) {
 			
             //Entrena y calcula error
-            double error = 1-perceptron.train(X,Yd);
+            float error = 1-perceptron.train(X,Yd);
             temp.push_back( (float) error); //Esto puede ser peligroso :D
 					
             //Guarda historial de neuronas
@@ -137,7 +137,7 @@ int main (int argc, char *argv[]) {
             //std::cout<<"Epoca "<<j<<". Error: "<<error<<std::endl;
 
             //Dibuja
-            plot2 += utils::intToStr((int)j) + " " + utils::doubleToStr(error*100.0) + " \n";
+            plot2 += utils::intToStr((int)j) + " " + utils::floatToStr(error*100.0) + " \n";
 
     //         if (abs(error) < criterio_error)
 				// break; //Se alcanzó el nivel de error deseado
@@ -156,10 +156,10 @@ int main (int argc, char *argv[]) {
         for (unsigned int j = 0; j < criterio_max_epocas; j++) {
             perceptron.setNeurons(neurona_history[j]); //le cambio las neuronas a las que habia en la epoca j
 
-			double error = 1-perceptron.train(X,Yd,false);
+			float error = 1-perceptron.train(X,Yd,false);
 			temp.push_back( (float) error); //Esto puede ser peligroso :D
 			
-            plot1 += utils::intToStr((int) j) + " " + utils::doubleToStr(error*100.0) + " \n";
+            plot1 += utils::intToStr((int) j) + " " + utils::floatToStr(error*100.0) + " \n";
 		}
 		error_history_validacion.push_back(temp);
 		
@@ -181,7 +181,7 @@ int main (int argc, char *argv[]) {
         //Cargo el conjunto de prueba
 		utils::splitVector(prueba,X,Yd,1); 
         
-        double efectividad_esperada = 1-perceptron.train(X,Yd,false);
+        float efectividad_esperada = 1-perceptron.train(X,Yd,false);
         std::cout<<"Efectividad Esperada en este Subconjunto = "<<efectividad_esperada*100.0<<"\%\n";
 
         //Actualizacion del dibujo
@@ -197,10 +197,10 @@ int main (int argc, char *argv[]) {
 
     Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA);
 
-	std::vector<std::vector<double> > X, Yd; //Sirve para separar X de Yd
+	std::vector<std::vector<float> > X, Yd; //Sirve para separar X de Yd
 	utils::splitVector(patron,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
     
-    double prediccion_efectividad = 1-perceptron.train(X,Yd);
+    float prediccion_efectividad = 1-perceptron.train(X,Yd);
     std::cout<<"Cantidad de Patrones total = "<<X.size()<<"\n";
     std::cout<<"Prediccion de desempeño final = "<<prediccion_efectividad*100<<"\%\n";
 	
@@ -235,7 +235,7 @@ int main (int argc, char *argv[]) {
 //	Red perceptron(adyacencias,adyacencias_entradas,"Red Perceptron", 0.1, Neurona::FUNCION_SIGMOIDEA);
 //	
 //	//Divido en X y Yd los casos
-//	std::vector<std::vector<double> > X, Y;
+//	std::vector<std::vector<float> > X, Y;
 //	utils::splitVector(salida, X, Y);
 //	
 //	//Entreno y grafico
@@ -250,15 +250,15 @@ int main (int argc, char *argv[]) {
 //		std::vector<Neurona> V;
 //		perceptron.getNeuronas(V);
 //		
-//		std::vector<double> W = V[0].getW();
+//		std::vector<float> W = V[0].getW();
 //		
 //		//Dibujar la frontera de decision
-//		double da  = W[0]/W[2];
-//		double da2  = W[1]/W[2];
-//		double da3 = rand()%30+1;
+//		float da  = W[0]/W[2];
+//		float da2  = W[1]/W[2];
+//		float da3 = rand()%30+1;
 //		
 //		
-//		plotter("plot " + utils::doubleToStr(da) + "-" + utils::doubleToStr(da2) + "*x lt "+ utils::doubleToStr(da3) +" notitle");
+//		plotter("plot " + utils::floatToStr(da) + "-" + utils::floatToStr(da2) + "*x lt "+ utils::floatToStr(da3) +" notitle");
 //		
 //		for (unsigned int j = 0; j < npatrones; j++) {
 //			
@@ -272,7 +272,7 @@ int main (int argc, char *argv[]) {
 //	}
 
 
-	// 	plotter("plot " + utils::doubleToStr(da) + "-" + utils::doubleToStr(da2) + "*x lt "+ utils::doubleToStr(da3) +" notitle");
+	// 	plotter("plot " + utils::floatToStr(da) + "-" + utils::floatToStr(da2) + "*x lt "+ utils::floatToStr(da3) +" notitle");
 		
 	// 	//Entreno en base a los patrones
 		

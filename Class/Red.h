@@ -25,7 +25,7 @@ class Red {
         //Construye la red leyendola desde un archivo pasado por argumento
         Red(std::string nombre_archivo,
             std::string identificador,
-             double tasa_aprendizaje,
+             float tasa_aprendizaje,
              unsigned int int_funcion_activacion
             ); 
 		
@@ -34,12 +34,12 @@ class Red {
 			std::vector<std::vector<bool> > adyacencias,
 			std::vector<std::vector<bool> > adyacencias_entradas, 
 			std::string identificador,
-			double tasa_aprendizaje = 0.5,
+			float tasa_aprendizaje = 0.5,
 			unsigned int int_funcion_activacion = Neurona::FUNCION_SIGNO 
 		);
 
         //Genera la estructura de la red, construyendo cada una de las neuronas
-        void structureGenerator( double tasa_aprendizaje, unsigned int int_funcion_activacion); 
+        void structureGenerator( float tasa_aprendizaje, unsigned int int_funcion_activacion); 
         
         //Imprime las matrices que dan forma a la estructura de la red
         void printStructure();
@@ -49,10 +49,10 @@ class Red {
 
 		//Devuelve el error en el entrenamiento
 		//Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
-		bool train(std::vector<double> X, std::vector<double> YD, bool update = true);
-		double train(std::vector<std::vector<double> > X, std::vector<std::vector<double> > YD, bool update = true);
+		bool train(std::vector<float> X, std::vector<float> YD, bool update = true);
+		float train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, bool update = true);
 
-		bool singleTrain(std::vector<double> X, std::vector<double> YD, bool update = true);
+		bool singleTrain(std::vector<float> X, std::vector<float> YD, bool update = true);
 		void backpropagation() {}; //soon
 		
 		//Devuelvo el arreglo de neuronas para algunas cuestiones de graficación.
