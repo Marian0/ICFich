@@ -23,7 +23,6 @@ int main (int argc, char *argv[]) {
 	std::string archivo_problema = config.getValue("archivo_problema"); //Archivo a leer patrones ej xor.csv
 	unsigned int cantidad_casos = utils::strToInt(config.getValue("cantidad_casos"));
 	unsigned int cantidad_conjuntos = utils::strToInt(config.getValue("cantidad_conjuntos"));
-	unsigned int tamanio_conjunto = utils::strToInt(config.getValue("tamanio_conjunto"));
 	float desvio = utils::strToFloat(config.getValue("desvio"));
 	unsigned int porcentaje_entrenamiento = utils::strToInt(config.getValue("porcentaje_entrenamiento"));
 	unsigned int porcentaje_prueba = utils::strToInt(config.getValue("porcentaje_prueba"));

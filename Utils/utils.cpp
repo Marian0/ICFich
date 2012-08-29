@@ -244,6 +244,7 @@ void utils::genParticiones( std::vector<std::vector<float> > P,
 	unsigned int porcentaje_entrenamiento,	unsigned int porcentaje_prueba,
 	unsigned int indice_prueba) {
 		
+		//Pedimos que los porcentajes sean válidos
 		assert(porcentaje_entrenamiento + porcentaje_prueba <= 100);
 		//Limpiamos las salidas
 		Entrenamiento.clear();
@@ -256,36 +257,31 @@ void utils::genParticiones( std::vector<std::vector<float> > P,
 		unsigned int n_patrones = P.size();
 		unsigned int n_ent = std::ceil((float)porcentaje_entrenamiento/100 * n_patrones);
 		unsigned int n_prueba = std::floor((float)porcentaje_prueba/100 * n_patrones);
-//		unsigned int n_validacion = n_patrones - n_ent - n_prueba;
-		/*
+
+		//Pedimos que el indice sea un offset válido
+		indice_prueba = indice_prueba%(n_patrones - n_prueba); //Limite inicial
+		//comprobar con @fern17 
+		assert(indice_prueba+n_prueba < n_patrones); //Va < o <= ?
+
+		
 		unsigned int i = 0;
 		for (; i < n_patrones; i++){
-			if (i < indice_prueba && n_ent > 0){
+			if (i >= indice_prueba && i < (indice_prueba+n_prueba)) {
+				Prueba.push_back(P[i]);
+			} 
+			else if (n_ent > 0) { 
 				Entrenamiento.push_back(P[i]);
 				n_ent--;
-			}
-			else if (i >= indice_prueba && i < (indice_prueba+n_prueba)) {
-				Prueba.push_back(P[i]);
 			} else {
 				Validacion.push_back(P[i]);
 			}
 		}
-		*/
 		
-		//Lleno los vectores de salida.
-		unsigned int i = 0;
-		for (; i < n_ent; i++)
-			Entrenamiento.push_back(P[i]);
-		
-		for(; i < n_prueba + n_ent; i++)
-			Prueba.push_back(P[i]);
-		
-		for (; i < n_patrones; i++)
-			Validacion.push_back(P[i]);
-		
-//		std::cout<<"numeros:"<<n_ent<<" "<<n_prueba<<" "<<n_patrones - n_ent - n_prueba<<"total:"<<n_patrones<<std::endl;
+
+		unsigned int entrenamiento_n = std::ceil((float)porcentaje_entrenamiento/100 * n_patrones);
+		std::cout<<std::endl<<"numeros:e"<<entrenamiento_n<<" p"<<n_prueba<<" v"<<n_patrones - entrenamiento_n - n_prueba<<"total:"<<n_patrones<<std::endl;
 //		
-//		std::cout<<"numeros:"<<Entrenamiento.size()<<" "<<Prueba.size()<<" "<<Validacion.size()<<"total:"<<P.size();
+		std::cout<<"numeros:e"<<Entrenamiento.size()<<" p"<<Prueba.size()<<" v"<<Validacion.size()<<"total:"<<P.size();
 }
 
 

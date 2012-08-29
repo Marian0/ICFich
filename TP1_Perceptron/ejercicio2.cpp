@@ -87,10 +87,10 @@ int main (int argc, char *argv[]) {
         std::cout<<"Conjunto "<<i<<"\t";
                         
         //Genero una particion de entrenamiento, prueba y validacion
-		utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
-			porcentaje_prueba, i*std::floor(porcentaje_prueba/100.0*patron.size()));
-
-
+		utils::genParticiones(patron, entrenamiento, validacion, prueba, 60, 
+			30, i*std::floor(porcentaje_prueba/100.0*patron.size()));
+		
+		getchar();
 	
 		std::vector<std::vector<float> > X, Yd; //Sirve para separar X de Yd
 		utils::splitVector(entrenamiento,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
