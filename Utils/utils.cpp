@@ -278,10 +278,10 @@ void utils::genParticiones( std::vector<std::vector<float> > P,
 		}
 		
 
-		unsigned int entrenamiento_n = std::ceil((float)porcentaje_entrenamiento/100 * n_patrones);
-		std::cout<<std::endl<<"numeros:e"<<entrenamiento_n<<" p"<<n_prueba<<" v"<<n_patrones - entrenamiento_n - n_prueba<<"total:"<<n_patrones<<std::endl;
-//		
-		std::cout<<"numeros:e"<<Entrenamiento.size()<<" p"<<Prueba.size()<<" v"<<Validacion.size()<<"total:"<<P.size();
+// 		unsigned int entrenamiento_n = std::ceil((float)porcentaje_entrenamiento/100 * n_patrones);
+// 		std::cout<<std::endl<<"numeros:e"<<entrenamiento_n<<" p"<<n_prueba<<" v"<<n_patrones - entrenamiento_n - n_prueba<<"total:"<<n_patrones<<std::endl;
+// //		
+// 		std::cout<<"numeros:e"<<Entrenamiento.size()<<" p"<<Prueba.size()<<" v"<<Validacion.size()<<"total:"<<P.size();
 }
 
 

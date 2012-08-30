@@ -30,7 +30,7 @@ int main (int argc, char *argv[]) {
 	unsigned int porcentaje_prueba = utils::strToInt(config.getValue("porcentaje_prueba"));
 	unsigned int criterio_max_epocas = utils::strToInt(config.getValue("criterio_max_epocas"));
 	unsigned int invasores = utils::strToInt(config.getValue("invasores"));
-	float criterio_error = utils::strToFloat(config.getValue("criterio_error"));
+	float criterio_error_entrenamiento = utils::strToFloat(config.getValue("criterio_error_entrenamiento"));
 
     //Impresion de los datos de ejecucion
     std::cout<<"Bienvenidos al Ejercicio 2 \n ";
@@ -90,14 +90,11 @@ int main (int argc, char *argv[]) {
 		utils::genParticiones(patron, entrenamiento, validacion, prueba, 60, 
 			30, i*std::floor(porcentaje_prueba/100.0*patron.size()));
 		
-		getchar();
-	
 		std::vector<std::vector<float> > X, Yd; //Sirve para separar X de Yd
 		utils::splitVector(entrenamiento,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
 						
-		// utils::printVectorVector(entrenamiento); std::getchar();
         //Uso del archivo de estructura de la red para cargarla
-        Red perceptron("red_perceptron2.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA);
+        Red perceptron("red_perceptron2.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGNO);
         
 
         // perceptron.printStructure(); getchar();
@@ -119,7 +116,7 @@ int main (int argc, char *argv[]) {
             //Dibuja
             plot2 += utils::intToStr((int)j) + " " + utils::floatToStr(error*100.0) + " \n";
 
-    //         if (abs(error) < criterio_error)
+    //         if (abs(error) < criterio_error_entrenamiento)
 				// break; //Se alcanzó el nivel de error deseado
 		}
 		plot2 += "e\n";
@@ -132,94 +129,7 @@ int main (int argc, char *argv[]) {
 		plotter("clear"); //limpia dibujo
 	}
 	
-
- //    Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA);
-
-	// std::vector<std::vector<float> > X, Yd; //Sirve para separar X de Yd
-	// utils::splitVector(patron,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
-    
- //    float prediccion_efectividad = 1-perceptron.train(X,Yd);
- //    std::cout<<"Cantidad de Patrones total = "<<X.size()<<"\n";
- //    std::cout<<"Prediccion de desempeño final = "<<prediccion_efectividad*100<<"\%\n";
 	
-	
-    
-	return 0;
-    
-    //utils::saveCSV("Cache/or_disperso500.csv", salida);
-    //Dibuja
 
-	
-    //Inicializacion de un perceptron simple:
-    //Se crean la matriz de adyacencias para las neuronas y las entradas
-    //Matriz Neuronas = 1x1 con false, porque no se conecta a sí misma
-    //Matriz Entradas = 2x1 con true, hay 2 entradas que se conectan a una sola neurona (true)
-
-//	//Definición de una Matriz de adyacencias para las neuronas
-//	std::vector<bool> fila;
-//	fila.push_back(false); //una sola neurona
-//	std::vector<std::vector<bool> > adyacencias;
-//	adyacencias.push_back(fila);
-//	
-//	//Definición de una Matriz de adyacencias para las entradas
-//	std::vector<bool> fila_entradas;
-//	fila_entradas.push_back(true); 
-//	std::vector<std::vector<bool> > adyacencias_entradas;
-//	//Se crean 2 entradas para la unica neurona
-//    adyacencias_entradas.push_back(fila_entradas); 
-//	adyacencias_entradas.push_back(fila_entradas);
-//	
-//	//Instancio la red
-//	Red perceptron(adyacencias,adyacencias_entradas,"Red Perceptron", 0.1, Neurona::FUNCION_SIGMOIDEA);
-//	
-//	//Divido en X y Yd los casos
-//	std::vector<std::vector<float> > X, Y;
-//	utils::splitVector(salida, X, Y);
-//	
-//	//Entreno y grafico
-//	
-//	unsigned int npatrones = X.size();
-//	std::<<"asdasdasdasdasdasdas"<<npatrones;
-//	unsigned int epocas = 50;
-//	
-//
-//	
-//	for (unsigned int i = 0 ; i < epocas; i++) {
-//		std::vector<Neurona> V;
-//		perceptron.getNeuronas(V);
-//		
-//		std::vector<float> W = V[0].getW();
-//		
-//		//Dibujar la frontera de decision
-//		float da  = W[0]/W[2];
-//		float da2  = W[1]/W[2];
-//		float da3 = rand()%30+1;
-//		
-//		
-//		plotter("plot " + utils::floatToStr(da) + "-" + utils::floatToStr(da2) + "*x lt "+ utils::floatToStr(da3) +" notitle");
-//		
-//		for (unsigned int j = 0; j < npatrones; j++) {
-//			
-//			//Entreno en base a los patrones
-//			
-//			
-//			perceptron.train(X[j], Y[j]);
-//			
-//		}
-//		getchar();
-//	}
-
-
-	// 	plotter("plot " + utils::floatToStr(da) + "-" + utils::floatToStr(da2) + "*x lt "+ utils::floatToStr(da3) +" notitle");
-		
-	// 	//Entreno en base a los patrones
-		
-		
-	// 	perceptron.train(X[i%n_casos], Y[i%n_casos]);
-	// 	std::getchar();
-	// }
-	
-	
 	return 0;
 }
-

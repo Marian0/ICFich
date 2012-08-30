@@ -29,7 +29,7 @@ int main (int argc, char *argv[]) {
 	float tasa_aprendizaje = utils::strToFloat(config.getValue("tasa_aprendizaje"));
 	unsigned int criterio_max_epocas = utils::strToInt(config.getValue("criterio_max_epocas"));
 	unsigned int invasores = utils::strToInt(config.getValue("invasores"));
-	float criterio_error = utils::strToFloat(config.getValue("criterio_error"));
+	float criterio_error_entrenamiento = utils::strToFloat(config.getValue("criterio_error_entrenamiento"));
 
     //Impresion de los datos de ejecucion
     std::cout<<"Cantidad de epocas = "<<criterio_max_epocas<<'\n';
