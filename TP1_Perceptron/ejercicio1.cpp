@@ -29,8 +29,10 @@ int main (int argc, char *argv[]) {
 	float tasa_aprendizaje = utils::strToFloat(config.getValue("tasa_aprendizaje"));
 	unsigned int criterio_max_epocas = utils::strToInt(config.getValue("criterio_max_epocas"));
 	unsigned int invasores = utils::strToInt(config.getValue("invasores"));
-	float criterio_error_entrenamiento = utils::strToFloat(config.getValue("criterio_error_entrenamiento"));
+	float criterio_error = utils::strToFloat(config.getValue("criterio_error"));
     float parametro_sigmoidea = utils::strToFloat(config.getValue("parametro_sigmoidea"));
+    float criterio_error_consecutivo = utils::strToFloat(config.getValue("criterio_error_consecutivo"));
+    std::string criterio_finalizacion = config.getValue("criterio_finalizacion");
 
     //Impresion de los datos de ejecucion
     std::cout<<"Cantidad de epocas = "<<criterio_max_epocas<<'\n';
@@ -101,20 +103,19 @@ int main (int argc, char *argv[]) {
 	//Haremos un string para poder plotear al final		
 	std::string plot2 = "plot \"-\" notitle pt 1 lt 3\n";
 	
- 
     //Instancio la red
     Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
-    
-
 
 	utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
 			porcentaje_prueba, 0);
 
-	    //Divido en X y Yd los casos
+    //Divido en X y Yd los casos
     std::vector<std::vector<float> > X, Yd;
     utils::splitVector(entrenamiento, X, Yd);
-    
-	for (unsigned int i = 0 ; i < criterio_max_epocas; i++) {
+
+    float error_old = 0.0; //para comparar error consecutivo
+    unsigned int i = 0; //contador de epocas
+	for (; i < criterio_max_epocas; i++) {
 		std::vector<Neurona> V;
         perceptron.getNeurons(V);
 		
@@ -125,7 +126,6 @@ int main (int argc, char *argv[]) {
 		float da2  = W[1]/W[2];
 		float da3 = rand()%30+1;
 
-        std::cout<<da<<' '<<da2<<' '<<'\n';
 		plotter2("plot " + utils::floatToStr(da) + "-" + utils::floatToStr(da2) + "*x lt "+ utils::floatToStr(da3) +" notitle");
 		
 		//Entrena y calcula error
@@ -134,9 +134,21 @@ int main (int argc, char *argv[]) {
 				
 		//Dibuja
 		plot2 += utils::intToStr((int) i) + " " + utils::floatToStr(error*100.0) + " \n";
-        std::getchar();
+       
+        if ((criterio_finalizacion.compare("consecutivo") == 0) && fabs(error-error_old) < criterio_error_consecutivo) {
+            std::cout<<"Se termino el entrenamiento temprano a las "<<i<<" epocas porque se llego a un error consecutivo inferior al "<<criterio_error_consecutivo<<'\n';
+            break;
+        }
+        
+        if ((criterio_finalizacion.compare("error") == 0) && fabs(error) < criterio_error) {
+            std::cout<<"Se termino el entrenamiento temprano a las "<<i<<" epocas porque se llego a un error inferior al "<<criterio_error<<'\n';
+            break;
+        }
+        error_old = error; //reemplazo el error anterior
+        //std::getchar();
+
     }
-    
+    std::cout<<"Entrenamiento finalizado a las "<<i<<" epocas.\n\n\n"; 
     //Actualizacion del dibujo
     plot2 += "e\n";
     plotter(plot2);
@@ -145,10 +157,10 @@ int main (int argc, char *argv[]) {
 	//Prueba con los patrones nunca vistos
 
 	//Cargo el conjunto de prueba
-	utils::splitVector(prueba, X, Yd,1); 
+	utils::splitVector(prueba, X, Yd, 1); 
 	
 	float efectividad_esperada = perceptron.train(X, Yd, false);
-	std::cout<<"Efectividad Esperada = "<<efectividad_esperada*100.0<<"\%\n";
+	std::cout<<"Efectividad Esperada (conjunto de prueba) = "<<efectividad_esperada*100.0<<"\%\n";
     
 	
     return 0;
