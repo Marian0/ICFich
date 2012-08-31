@@ -21,7 +21,7 @@ Neurona::Neurona(unsigned int dim, float min, float max, unsigned int funcion, f
 }
 
 //Obtiene la salida de la neurona para una entrada dada
-float Neurona::getResponse(std::vector<float> X){
+float Neurona::getResponse(std::vector<float> X, float parametro_sigmoidea){
 	//Si el tamaño no coincide, cancela la ejecucion y muestra un mensaje 
 	// de error informativo
 	assert(X.size() == dimension);
@@ -39,7 +39,7 @@ float Neurona::getResponse(std::vector<float> X){
 		}
 		case FUNCION_SIGMOIDEA:
 		default:
-			result = utils::sigmoidea(result);
+			result = utils::sigmoidea(result, parametro_sigmoidea);
 	}
 	
 	return result;

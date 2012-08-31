@@ -31,7 +31,8 @@ int main (int argc, char *argv[]) {
 	unsigned int criterio_max_epocas = utils::strToInt(config.getValue("criterio_max_epocas"));
 	unsigned int invasores = utils::strToInt(config.getValue("invasores"));
 	float criterio_error_entrenamiento = utils::strToFloat(config.getValue("criterio_error_entrenamiento"));
-
+    float parametro_sigmoidea = utils::strToFloat(config.getValue("parametro_sigmoidea"));
+    
     //Impresion de los datos de ejecucion
     std::cout<<"Bienvenidos al Ejercicio 2 \n ";
     std::cout<<"Cantidad de epocas = "<<criterio_max_epocas<<'\n';

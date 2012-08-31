@@ -30,6 +30,7 @@ int main (int argc, char *argv[]) {
 	unsigned int criterio_max_epocas = utils::strToInt(config.getValue("criterio_max_epocas"));
 	unsigned int invasores = utils::strToInt(config.getValue("invasores"));
 	float criterio_error_entrenamiento = utils::strToFloat(config.getValue("criterio_error_entrenamiento"));
+    float parametro_sigmoidea = utils::strToFloat(config.getValue("parametro_sigmoidea"));
 
     //Impresion de los datos de ejecucion
     std::cout<<"Cantidad de epocas = "<<criterio_max_epocas<<'\n';
@@ -102,7 +103,7 @@ int main (int argc, char *argv[]) {
 	
  
     //Instancio la red
-    Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA);
+    Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
     
 
 
@@ -123,6 +124,8 @@ int main (int argc, char *argv[]) {
 		float da  = W[0]/W[2];
 		float da2  = W[1]/W[2];
 		float da3 = rand()%30+1;
+
+        std::cout<<da<<' '<<da2<<' '<<'\n';
 		plotter2("plot " + utils::floatToStr(da) + "-" + utils::floatToStr(da2) + "*x lt "+ utils::floatToStr(da3) +" notitle");
 		
 		//Entrena y calcula error
@@ -131,8 +134,7 @@ int main (int argc, char *argv[]) {
 				
 		//Dibuja
 		plot2 += utils::intToStr((int) i) + " " + utils::floatToStr(error*100.0) + " \n";
-        //std::getchar();
-
+        std::getchar();
     }
     
     //Actualizacion del dibujo

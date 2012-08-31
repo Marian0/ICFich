@@ -20,13 +20,17 @@ class Red {
 		//Variable calculada para identificar que algoritmo de entrenamiento usar
 		// en base a la estructura de la Red neuronal
 		bool multicapa;
+
+        //Parametro utilizado en Neurona::getResponse si se usa la funcion sigmoidea
+        float parametro_sigmoidea;
 	public:
 
         //Construye la red leyendola desde un archivo pasado por argumento
         Red(std::string nombre_archivo,
             std::string identificador,
              float tasa_aprendizaje,
-             unsigned int int_funcion_activacion
+             unsigned int int_funcion_activacion,
+             float par_sigmoidea
             ); 
 		
         //En base a las adyacencias construimos la Red y sus interrelaciones con las neuronas y las entradas.
@@ -35,7 +39,8 @@ class Red {
 			std::vector<std::vector<bool> > adyacencias_entradas, 
 			std::string identificador,
 			float tasa_aprendizaje = 0.5,
-			unsigned int int_funcion_activacion = Neurona::FUNCION_SIGNO 
+			unsigned int int_funcion_activacion = Neurona::FUNCION_SIGNO,
+            float par_sigmoidea = 50
 		);
 
         //Genera la estructura de la red, construyendo cada una de las neuronas

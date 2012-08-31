@@ -10,14 +10,16 @@
 Red::Red(std::string nombre_archivo,
         std::string identificador,
 		 float tasa_aprendizaje,
-		 unsigned int int_funcion_activacion
+		 unsigned int int_funcion_activacion,
+         float par_sigmoidea
         ) {
     //Lee la estructura desde el archivo
     readStructure(nombre_archivo); 
     
     //Se guarda el id
 	this->identificador = identificador;
-
+    //Se guarda el parametro para la funcion sigmoidea
+    this->parametro_sigmoidea = par_sigmoidea;
     //Genera la estructura, creando las neuronas
     structureGenerator(tasa_aprendizaje, int_funcion_activacion); 
 }
@@ -26,9 +28,13 @@ Red::Red(std::vector<std::vector<bool> > adyacencias,
 		 std::vector<std::vector<bool> > adyacencias_entradas, 
 		 std::string identificador,
 		 float tasa_aprendizaje,
-		 unsigned int int_funcion_activacion
+		 unsigned int int_funcion_activacion,
+         float par_sigmoidea
 		) {
     
+    //Se guarda el parametro para la funcion sigmoidea
+    this->parametro_sigmoidea = par_sigmoidea;
+ 
     //Guarda la informacion de la estructura
     this->identificador = identificador;
 	this->adyacencias = adyacencias;
@@ -141,7 +147,6 @@ float Red::train(std::vector<std::vector<float> > X,
         bool acierto = train(X[i], YD[i], update);
         if (acierto) 
             total_aciertos++;
-        //guardar historial pesos
     }
     float porcentaje = ((float) total_aciertos) / ((float) X.size());
     return porcentaje;
@@ -153,8 +158,10 @@ float Red::train(std::vector<std::vector<float> > X,
 bool Red::singleTrain(std::vector<float> X, std::vector<float> YD, bool update) {
 	//El single train supone red monocapa 
 	unsigned int n = this->neuronas.size(); //Cantidad de neuronas en la primera capa
-	assert(n>0); //Control de que al menos haya una neurona
-	unsigned int ne = this->adyacencias_entradas.size(); //Filas de adyacencia
+	
+    assert(n>0); //Control de que al menos haya una neurona
+	
+    unsigned int ne = this->adyacencias_entradas.size(); //Filas de adyacencia
 
 	assert(ne == X.size()); //Verificamos que se envien la cantidad de entradas necesarias para el entrenamiento de la RED
 
@@ -171,7 +178,7 @@ bool Red::singleTrain(std::vector<float> X, std::vector<float> YD, bool update) 
 		}
 		
         //Estimular una neurona y obtener su respuesta // getResponse ya contempla el x0 = -1
-		float respuesta = this->neuronas[i].getResponse(entradan);
+		float respuesta = this->neuronas[i].getResponse(entradan, parametro_sigmoidea);
 		
 		 // std::cout<<"Deberia dar: "<<YD[i]<<" Dio: "<<respuesta<<std::endl; std::getchar();
 		//Obtengo los pesos sinápticos actuales

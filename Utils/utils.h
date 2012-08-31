@@ -45,7 +45,7 @@ void static randomCircular(float, float, float, float&, float&);
 float static signo(float x);
 
 //Funcion sigmodea
-float static sigmoidea(float x, float param = 5000);
+float static sigmoidea(float x, float param = 50);
 
 
 //Funciones de Algebra de Vectores
