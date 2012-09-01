@@ -76,7 +76,6 @@ int main (int argc, char *argv[]) {
 	//metemos algunos errores
     random_shuffle(patron.begin() , patron.end());
 	for (unsigned int i = 0; i < invasores; i++) {
-		return 0;
 		if (patron[i][3] == 1)
 			patron[i][3] = -1;
 		else
@@ -84,6 +83,7 @@ int main (int argc, char *argv[]) {
     }
 	random_shuffle(patron.begin() , patron.end());
 
+	std::vector<float> error_prueba;
 
 	//Para cada conjunto de particion (Entrenamiento, prueba, validación)
 	for (unsigned int i = 0; i < cantidad_conjuntos; i++) {
@@ -140,11 +140,21 @@ int main (int argc, char *argv[]) {
 		//Guarda error de este conjunto
         error_history_entrenamiento.push_back(error_epoca);
 	
+        // Validacion cruzada - Prueba
+        // perceptron.setNeurons(neurona_history); 
+        //Cargo el conjunto de prueba
+		utils::splitVector(prueba,X,Yd,1);         
+        float error_esperado = 1-perceptron.train(X,Yd,false);
+        error_prueba.push_back(error_esperado);
+        std::cout<<"Efectividad Esperada en este Subconjunto = "<<error_esperado*100.0<<"\%\n";
+
         std::getchar();
 		plotter("clear"); //limpia dibujo
 	}
+
+	std::cout<<"La validacion cruzada indica que el error esperado para esta Red es: "<<utils::promedio(error_prueba)<<std::endl;
 	
-	
+	getchar();
 
 	return 0;
 }
