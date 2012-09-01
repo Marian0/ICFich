@@ -34,6 +34,7 @@ int main (int argc, char *argv[]) {
     float parametro_sigmoidea = utils::strToFloat(config.getValue("parametro_sigmoidea"));
     float criterio_error_consecutivo = utils::strToFloat(config.getValue("criterio_error_consecutivo"));
     std::string criterio_finalizacion = config.getValue("criterio_finalizacion");
+    unsigned int minima_cantidad_consecutivos = utils::strToInt(config.getValue("minima_cantidad_consecutivos"));
     
     //Impresion de los datos de ejecucion
     std::cout<<"Bienvenidos al Ejercicio 2 \n ";
@@ -106,7 +107,7 @@ int main (int argc, char *argv[]) {
 		std::string plot2 = "plot \"-\" notitle pt 2 lt 3\n";
         
         unsigned int j = 0;
-        float error_old = 0.0;
+        std::vector<float> errores_consecutivos; //usado para calcular los errores consecutivos
         for (; j < criterio_max_epocas; j++) {
 			//Entrena y calcula error
             float error = 1-perceptron.train(X,Yd);
@@ -117,17 +118,28 @@ int main (int argc, char *argv[]) {
 			perceptron.getNeurons(ntemp);
 			neurona_history.push_back(ntemp);
             //std::cout<<"Epoca "<<j<<". Error: "<<error<<std::endl;
-
-			 if (((criterio_finalizacion.compare("consecutivo") == 0) || criterio_finalizacion.compare("todos") == 0) && fabs(error-error_old) < criterio_error_consecutivo) {
-            	 std::cout<<"Se termino el entrenamiento temprano a las "<<j<<" epocas porque se llego a un error consecutivo inferior al "<<criterio_error_consecutivo<<'\n';
-            break;
-	        }
 	        
 	        if (((criterio_finalizacion.compare("error") == 0) || criterio_finalizacion.compare("todos") == 0) && fabs(error) < criterio_error) {
 	            std::cout<<"Se termino el entrenamiento temprano a las "<<j<<" epocas porque se llego a un error inferior al "<<criterio_error<<'\n';
 	            break;
 	        }
-	        error_old = error; //reemplazo el error anterior
+	        
+            if (((criterio_finalizacion.compare("consecutivo") == 0) ||
+                    criterio_finalizacion.compare("todos") == 0) && 
+                    (errores_consecutivos.size() > minima_cantidad_consecutivos)) { 
+
+                std::vector<float> errores_nuevo (errores_consecutivos); //crea una copia
+                errores_nuevo.erase(errores_nuevo.begin()); //borra el mas viejo
+                errores_nuevo.push_back(error); //inserta el nuevo
+                float parecido = utils::vectorPunto(errores_consecutivos, errores_nuevo);
+                
+                if (parecido > criterio_error_consecutivo) {
+                    std::cout<<"Se termino el entrenamiento temprano a las "<<j<<" epocas porque se llego, luego de "<<
+                        minima_cantidad_consecutivos<<" iteraciones consecutivas, a un parecido mayor al "<<criterio_error_consecutivo<<'\n';
+                    break;
+                }
+                errores_consecutivos = errores_nuevo;
+            }
 
             //Dibuja
             plot2 += utils::intToStr((int)j) + " " + utils::floatToStr(error*100.0) + " \n";
@@ -148,7 +160,7 @@ int main (int argc, char *argv[]) {
         error_prueba.push_back(error_esperado);
         std::cout<<"Error esperado en este Subconjunto = "<<error_esperado*100.0<<"\%\n";
 
-        //std::getchar();
+        std::getchar();
 		plotter("clear"); //limpia dibujo
 	}
     float prom = utils::promedio(error_prueba);

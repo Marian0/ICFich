@@ -227,21 +227,19 @@ std::vector<std::vector<float> > utils::genPatrones( std::vector<std::vector<flo
             T[0] = xnuevo;
             T[1] = ynuevo;
 
+        } else { 
+            //Lo desvío en forma cuadrada
+            unsigned int m = T.size();
+            for (unsigned int j = 0; j < m ; j++) {
+                if (j < m-size_y) {
+                    //Se trata de una entrada X => La dispersamos
+                    float rango = fabs( T[j] * desvio );
+                    T[j] = T[j] + utils::randomDecimal(-rango, rango);				
+                } else {
+                    break; //Las y las dejamos inalteradas 
+                }
+            }
         }
-        
-        /*        
-        //Lo desvío en forma cuadrada
-		unsigned int m = T.size();
-		for (unsigned int j = 0; j < m ; j++) {
-			if (j < m-size_y) {
-				//Se trata de una entrada X => La dispersamos
-				float rango = fabs( T[j] * desvio );
-				T[j] = T[j] + utils::randomDecimal(-rango, rango);				
-			} else {
-				break; //Las y las dejamos inalteradas 
-			}
-
-		}*/
 		Salida.push_back(T);		
 	}
 	return Salida;
