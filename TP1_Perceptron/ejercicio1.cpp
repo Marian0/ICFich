@@ -135,12 +135,12 @@ int main (int argc, char *argv[]) {
 		//Dibuja
 		plot2 += utils::intToStr((int) i) + " " + utils::floatToStr(error*100.0) + " \n";
        
-        if ((criterio_finalizacion.compare("consecutivo") == 0) && fabs(error-error_old) < criterio_error_consecutivo) {
+        if (((criterio_finalizacion.compare("consecutivo") == 0) || criterio_finalizacion.compare("todos") == 0) && fabs(error-error_old) < criterio_error_consecutivo) {
             std::cout<<"Se termino el entrenamiento temprano a las "<<i<<" epocas porque se llego a un error consecutivo inferior al "<<criterio_error_consecutivo<<'\n';
             break;
         }
         
-        if ((criterio_finalizacion.compare("error") == 0) && fabs(error) < criterio_error) {
+        if (((criterio_finalizacion.compare("error") == 0) || criterio_finalizacion.compare("todos") == 0) && fabs(error) < criterio_error) {
             std::cout<<"Se termino el entrenamiento temprano a las "<<i<<" epocas porque se llego a un error inferior al "<<criterio_error<<'\n';
             break;
         }
@@ -161,7 +161,6 @@ int main (int argc, char *argv[]) {
 	
 	float efectividad_esperada = perceptron.train(X, Yd, false);
 	std::cout<<"Efectividad Esperada (conjunto de prueba) = "<<efectividad_esperada*100.0<<"\%\n";
-    
 	
     return 0;
 }
