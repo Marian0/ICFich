@@ -60,7 +60,7 @@ void static vectorSuma(std::vector<float> &X, std::vector<float> &Y, std::vector
 void static vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z);
 
 //Producto punto entre dos vectores
-void static vectorPunto(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z);
+void static vectorPunto(std::vector<float> &X, std::vector<float> &Y);
 
 //Calcula la norma de un vector
 float static vectorNorma(std::vector<float> &X);
