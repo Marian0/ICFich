@@ -95,8 +95,7 @@ int main (int argc, char *argv[]) {
 		utils::splitVector(entrenamiento,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
 						
         //Uso del archivo de estructura de la red para cargarla
-        Red perceptron("red_perceptron2.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGNO);
-        
+        Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
 
         // perceptron.printStructure(); getchar();
         //Entreno las epocas solicitadas y guardo el error en un vector

@@ -259,7 +259,7 @@ void utils::genParticiones( std::vector<std::vector<float> > P,
 		unsigned int n_prueba = std::floor((float)porcentaje_prueba/100 * n_patrones);
 
 		//Pedimos que el indice sea un offset válido
-		indice_prueba = indice_prueba%(n_patrones - n_prueba); //Limite inicial
+		indice_prueba = indice_prueba % (n_patrones - n_prueba); //Limite inicial
 		//comprobar con @fern17 
 		assert(indice_prueba+n_prueba < n_patrones); //Va < o <= ?
 
