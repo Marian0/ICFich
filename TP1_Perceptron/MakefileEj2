@@ -2,7 +2,7 @@ GPP=g++
 GCC=gcc
 FLAGS=  -g2 -Wall -O0 -I../Class -I../Utils  -D_DEBUG 
 LIBS=  
-OBJS=Debug/main.o Debug/GNUPlot.o Debug/Neurona.o Debug/Red.o Debug/utils.o Debug/Config.o 
+OBJS=Debug/main2.o Debug/GNUPlot.o Debug/Neurona.o Debug/Red.o Debug/utils.o Debug/Config.o 
 
 all: Debug Debug/TP1_Ej2_Perceptron.bin
 
@@ -15,7 +15,7 @@ Debug/TP1_Ej2_Perceptron.bin: ${OBJS}
 Debug:
 	mkdir Debug
 
-Debug/main.o: ejercicio2.cpp ../Class/Neurona.h ../Utils/utils.h ../Class/GNUPlot.h ../Class/Config.h
+Debug/main2.o: ejercicio2.cpp ../Class/Neurona.h ../Utils/utils.h ../Class/GNUPlot.h ../Class/Config.h
 	${GPP} ${FLAGS} -c ejercicio2.cpp -o $@
 
 Debug/GNUPlot.o: ../Class/GNUPlot.cpp ../Class/GNUPlot.h
