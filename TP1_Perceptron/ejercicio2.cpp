@@ -25,13 +25,15 @@ int main (int argc, char *argv[]) {
 	unsigned int cantidad_casos = utils::strToInt(config.getValue("cantidad_casos"));
 	unsigned int cantidad_conjuntos = utils::strToInt(config.getValue("cantidad_conjuntos"));
 	float desvio = utils::strToFloat(config.getValue("desvio"));
-	float tasa_aprendizaje = utils::strToFloat(config.getValue("tasa_aprendizaje"));
 	unsigned int porcentaje_entrenamiento = utils::strToInt(config.getValue("porcentaje_entrenamiento"));
 	unsigned int porcentaje_prueba = utils::strToInt(config.getValue("porcentaje_prueba"));
+	float tasa_aprendizaje = utils::strToFloat(config.getValue("tasa_aprendizaje"));
 	unsigned int criterio_max_epocas = utils::strToInt(config.getValue("criterio_max_epocas"));
 	unsigned int invasores = utils::strToInt(config.getValue("invasores"));
-	float criterio_error_entrenamiento = utils::strToFloat(config.getValue("criterio_error_entrenamiento"));
+	float criterio_error = utils::strToFloat(config.getValue("criterio_error"));
     float parametro_sigmoidea = utils::strToFloat(config.getValue("parametro_sigmoidea"));
+    float criterio_error_consecutivo = utils::strToFloat(config.getValue("criterio_error_consecutivo"));
+    std::string criterio_finalizacion = config.getValue("criterio_finalizacion");
     
     //Impresion de los datos de ejecucion
     std::cout<<"Bienvenidos al Ejercicio 2 \n ";
@@ -88,21 +90,24 @@ int main (int argc, char *argv[]) {
         std::cout<<"Conjunto "<<i<<"\t";
                         
         //Genero una particion de entrenamiento, prueba y validacion
-		utils::genParticiones(patron, entrenamiento, validacion, prueba, 60, 
-			30, i*std::floor(porcentaje_prueba/100.0*patron.size()));
+		utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_prueba, 
+			porcentaje_entrenamiento, i*std::floor(porcentaje_prueba/100.0*patron.size()));
 		
 		std::vector<std::vector<float> > X, Yd; //Sirve para separar X de Yd
 		utils::splitVector(entrenamiento,X,Yd,1); //Separo X de Y / Ultimo parametro size_y
 						
         //Uso del archivo de estructura de la red para cargarla
-        Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
+        Red perceptron("red_perceptron2.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
+        
 
         // perceptron.printStructure(); getchar();
         //Entreno las epocas solicitadas y guardo el error en un vector
 		std::vector<float> error_epoca;
 		std::string plot2 = "plot \"-\" notitle pt 2 lt 3\n";
         
-        for (unsigned int j = 0; j < criterio_max_epocas; j++) {
+        unsigned int j = 0;
+        float error_old = 0.0;
+        for (; j < criterio_max_epocas; j++) {
 			//Entrena y calcula error
             float error = 1-perceptron.train(X,Yd);
             error_epoca.push_back(error); 
@@ -113,12 +118,22 @@ int main (int argc, char *argv[]) {
 			neurona_history.push_back(ntemp);
             //std::cout<<"Epoca "<<j<<". Error: "<<error<<std::endl;
 
+			 if (((criterio_finalizacion.compare("consecutivo") == 0) || criterio_finalizacion.compare("todos") == 0) && fabs(error-error_old) < criterio_error_consecutivo) {
+            	 std::cout<<"Se termino el entrenamiento temprano a las "<<j<<" epocas porque se llego a un error consecutivo inferior al "<<criterio_error_consecutivo<<'\n';
+            break;
+	        }
+	        
+	        if (((criterio_finalizacion.compare("error") == 0) || criterio_finalizacion.compare("todos") == 0) && fabs(error) < criterio_error) {
+	            std::cout<<"Se termino el entrenamiento temprano a las "<<j<<" epocas porque se llego a un error inferior al "<<criterio_error<<'\n';
+	            break;
+	        }
+	        error_old = error; //reemplazo el error anterior
+
             //Dibuja
             plot2 += utils::intToStr((int)j) + " " + utils::floatToStr(error*100.0) + " \n";
-
-    //         if (abs(error) < criterio_error_entrenamiento)
-				// break; //Se alcanzó el nivel de error deseado
 		}
+		std::cout<<"Entrenamiento finalizado a las "<<j<<" epocas.\n\n\n"; 
+
 		plot2 += "e\n";
 		plotter(plot2);
 
