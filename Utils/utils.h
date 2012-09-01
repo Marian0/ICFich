@@ -98,5 +98,8 @@ float static strToFloat(std::string s);
 
 //Calcula el promedio de un vector
 float static promedio(std::vector<float> &V);
+
+//Calcula la desviación estandar
+float static devest(std::vector<float> &V, float media);
 };
 #endif
