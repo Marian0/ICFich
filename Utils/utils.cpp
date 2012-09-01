@@ -159,12 +159,13 @@ void utils::vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vecto
 	utils::vectorSuma(X, temp ,Z);
 }
 
-void utils::vectorPunto(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z){
+float utils::vectorPunto(std::vector<float> &X, std::vector<float> &Y){
 	assert(X.size() == Y.size());
-	Z.resize(X.size());
+	float suma = 0;
 	for(unsigned int i = 0; i < X.size(); i++){
-		Z[i] = X[i]*Y[i];
+		suma  += X[i]*Y[i];
 	}
+	return suma;
 }
 
 //Calcula la norma euclidea de un vector
