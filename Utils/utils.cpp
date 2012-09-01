@@ -85,6 +85,7 @@ void utils::printVector(std::vector<float> &v, char separator){
 		if(i < v.size()-1) //Si no es el ultimo caso
 			std::cout<<separator;
 	}
+    std::cout<<'\n';
 }
 
 //Imprime un vector de vectores. Sus parametros representan el vector,
@@ -169,22 +170,30 @@ float utils::vectorPunto(std::vector<float> &X, std::vector<float> &Y){
 }
 
 bool utils::vectorParecido(std::vector<float> &X, std::vector<float> &Y, float criterio) {
-	std::vector<float> resta;
-	utils::vectorResta(X,Y,resta);
-
 	float moduloX = utils::vectorNorma(X);
 	float moduloY = utils::vectorNorma(Y);
-	//Los 2 son el vector cero.
-	if ( moduloX < 0.01 && moduloY < 0.01)
+	
+    //Los 2 son el vector cero.
+	if ( moduloX < 0.01 && moduloY < 0.01){
 		return true;
+    }
+
+    std::vector<float> resta;
+	utils::vectorResta(X,Y,resta);
 	
 	//Son 2 vectores iguales
-	if ( fabs( utils::vectorNorma(resta) ) < 0.01 )
+	if ( fabs( utils::vectorNorma(resta) ) < 0.01 ) {
 		return true;
+    }
 
 	//Criterio producto punto
-	if (utils::vectorPunto(X,Y) > criterio)
+    float punto = utils::vectorPunto(X,Y);
+    float parecido = fabs(punto/(moduloX*moduloY));
+
+    if (parecido > criterio) {
+    std::cout<<"Parecido = "<<parecido<<'\n';
 		return true;
+    }
 
 	return false;
 }
@@ -192,9 +201,8 @@ bool utils::vectorParecido(std::vector<float> &X, std::vector<float> &Y, float c
 
 //Calcula la norma euclidea de un vector
 float utils::vectorNorma(std::vector<float> &X){
-    unsigned int n = 0;
     float sum = 0;
-    for (unsigned int i = 0; i < n; i++){
+    for (unsigned int i = 0; i < X.size(); i++){
         sum += X[i]*X[i];
     }
     return sqrt(sum);

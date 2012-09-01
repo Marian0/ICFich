@@ -21,23 +21,24 @@ int main (int argc, char *argv[]) {
 	srand( (unsigned) std::time(NULL)); 
 	
 	//Leemos los valores de configuracion
-	std::string archivo_problema = config.getValue("archivo_problema"); //Archivo a leer patrones ej xor.csv
-	unsigned int cantidad_casos = utils::strToInt(config.getValue("cantidad_casos"));
-	unsigned int cantidad_conjuntos = utils::strToInt(config.getValue("cantidad_conjuntos"));
-	float desvio = utils::strToFloat(config.getValue("desvio"));
-	unsigned int porcentaje_entrenamiento = utils::strToInt(config.getValue("porcentaje_entrenamiento"));
-	unsigned int porcentaje_prueba = utils::strToInt(config.getValue("porcentaje_prueba"));
-	float tasa_aprendizaje = utils::strToFloat(config.getValue("tasa_aprendizaje"));
-	unsigned int criterio_max_epocas = utils::strToInt(config.getValue("criterio_max_epocas"));
-	unsigned int invasores = utils::strToInt(config.getValue("invasores"));
-	float criterio_error = utils::strToFloat(config.getValue("criterio_error"));
-    float parametro_sigmoidea = utils::strToFloat(config.getValue("parametro_sigmoidea"));
-    float criterio_error_consecutivo = utils::strToFloat(config.getValue("criterio_error_consecutivo"));
-    std::string criterio_finalizacion = config.getValue("criterio_finalizacion");
-    unsigned int minima_cantidad_consecutivos = utils::strToInt(config.getValue("minima_cantidad_consecutivos"));
-    
+	std::string     archivo_problema               = config.getValue("archivo_problema"); //Archivo a leer patrones ej xor.csv
+	unsigned int    cantidad_casos                 = utils::strToInt(config.getValue("cantidad_casos"));
+	float           desvio                         = utils::strToFloat(config.getValue("desvio"));
+	unsigned int    porcentaje_entrenamiento       = utils::strToInt(config.getValue("porcentaje_entrenamiento"));
+	unsigned int    porcentaje_prueba              = utils::strToInt(config.getValue("porcentaje_prueba"));
+	float           tasa_aprendizaje               = utils::strToFloat(config.getValue("tasa_aprendizaje"));
+	unsigned int    criterio_max_epocas            = utils::strToInt(config.getValue("criterio_max_epocas"));
+	unsigned int    invasores                      = utils::strToInt(config.getValue("invasores"));
+	float           criterio_error                 = utils::strToFloat(config.getValue("criterio_error"));
+    float           parametro_sigmoidea            = utils::strToFloat(config.getValue("parametro_sigmoidea"));
+    float           criterio_error_consecutivo     = utils::strToFloat(config.getValue("criterio_error_consecutivo"));
+    std::string     criterio_finalizacion          = config.getValue("criterio_finalizacion");
+    unsigned int    minima_cantidad_consecutivos   = utils::strToInt(config.getValue("minima_cantidad_consecutivos"));
+    unsigned int    cantidad_conjuntos             = utils::strToInt(config.getValue("cantidad_conjuntos"));
+
     //Impresion de los datos de ejecucion
-    std::cout<<"Bienvenidos al Ejercicio 2 \n ";
+    std::cout<<"Bienvenidos al Ejercicio 2 \n";
+    std::cout<<"Problema: "<<archivo_problema<<'\n';
     std::cout<<"Cantidad de epocas = "<<criterio_max_epocas<<'\n';
     std::cout<<"Cantidad de patrones = "<<cantidad_casos<<'\n';
     std::cout<<"Desvio de los datos = "<<desvio*100<<"\%\n";
@@ -88,7 +89,7 @@ int main (int argc, char *argv[]) {
 
 	//Para cada conjunto de particion (Entrenamiento, prueba, validación)
 	for (unsigned int i = 0; i < cantidad_conjuntos; i++) {
-        std::cout<<"Conjunto "<<i<<"\t";
+        std::cout<<"Conjunto "<<i<<"\n";
                         
         //Genero una particion de entrenamiento, prueba y validacion
 		utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_prueba, 
@@ -135,8 +136,6 @@ int main (int argc, char *argv[]) {
 
 	            bool parecido = utils::vectorParecido(errores_nuevo, errores_consecutivos, criterio_error_consecutivo);
 
-	            std::cout<<"Parecido = "<<parecido<<'\n'; 
-
 	            //si cumple el criterio
 	            if (parecido) {
 	                std::cout<<"Se termino el entrenamiento temprano a las "<<j<<" epocas porque se llego, luego de "<<
@@ -155,6 +154,7 @@ int main (int argc, char *argv[]) {
 		std::cout<<"Entrenamiento finalizado a las "<<j<<" epocas.\n"; 
 
 		plot2 += "e\n";
+        plotter("set xrange [0:" + utils::intToStr(j)+"]");
 		plotter(plot2);
 
 		//Guarda error de este conjunto
@@ -166,7 +166,7 @@ int main (int argc, char *argv[]) {
 		utils::splitVector(prueba,X,Yd,1);         
         float error_esperado = 1-perceptron.train(X,Yd,false);
         error_prueba.push_back(error_esperado);
-        std::cout<<"Error esperado en este Subconjunto = "<<error_esperado*100.0<<"\%\n";
+        std::cout<<"Error esperado en este Subconjunto (prueba) = "<<error_esperado*100.0<<"\%\n";
 
         std::getchar();
 		plotter("clear"); //limpia dibujo
