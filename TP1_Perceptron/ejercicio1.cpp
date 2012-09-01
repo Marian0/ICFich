@@ -150,12 +150,12 @@ int main (int argc, char *argv[]) {
             errores_nuevo.erase(errores_nuevo.begin()); //borra el mas viejo
             errores_nuevo.push_back(error); //inserta el nuevo
 
-            float parecido = utils::vectorPunto(errores_consecutivos, errores_nuevo);//calcula el parecido
+            bool parecido = utils::vectorParecido(errores_nuevo, errores_consecutivos, criterio_error_consecutivo);
 
             std::cout<<"Parecido = "<<parecido<<'\n'; 
 
             //si cumple el criterio
-            if (parecido > criterio_error_consecutivo) {
+            if (parecido) {
                 std::cout<<"Se termino el entrenamiento temprano a las "<<i<<" epocas porque se llego, luego de "<<
                     minima_cantidad_consecutivos<<" iteraciones consecutivas, a un parecido mayor al "<<criterio_error_consecutivo<<'\n';
                 break;

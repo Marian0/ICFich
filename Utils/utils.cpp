@@ -168,6 +168,28 @@ float utils::vectorPunto(std::vector<float> &X, std::vector<float> &Y){
 	return suma;
 }
 
+bool utils::vectorParecido(std::vector<float> &X, std::vector<float> &Y, float criterio) {
+	std::vector<float> resta;
+	utils::vectorResta(X,Y,resta);
+
+	float moduloX = utils::vectorNorma(X);
+	float moduloY = utils::vectorNorma(Y);
+	//Los 2 son el vector cero.
+	if ( moduloX < 0.01 && moduloY < 0.01)
+		return true;
+	
+	//Son 2 vectores iguales
+	if ( fabs( utils::vectorNorma(resta) ) < 0.01 )
+		return true;
+
+	//Criterio producto punto
+	if (utils::vectorPunto(X,Y) > criterio)
+		return true;
+
+	return false;
+}
+
+
 //Calcula la norma euclidea de un vector
 float utils::vectorNorma(std::vector<float> &X){
     unsigned int n = 0;

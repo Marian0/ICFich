@@ -124,22 +124,30 @@ int main (int argc, char *argv[]) {
 	            break;
 	        }
 	        
-            if (((criterio_finalizacion.compare("consecutivo") == 0) ||
-                    criterio_finalizacion.compare("todos") == 0) && 
-                    (errores_consecutivos.size() > minima_cantidad_consecutivos)) { 
+    	    
+	        if (((criterio_finalizacion.compare("consecutivo") == 0) ||
+	                criterio_finalizacion.compare("todos") == 0) && 
+	                (errores_consecutivos.size() > minima_cantidad_consecutivos)) { 
 
-                std::vector<float> errores_nuevo (errores_consecutivos); //crea una copia
-                errores_nuevo.erase(errores_nuevo.begin()); //borra el mas viejo
-                errores_nuevo.push_back(error); //inserta el nuevo
-                float parecido = utils::vectorPunto(errores_consecutivos, errores_nuevo);
-                
-                if (parecido > criterio_error_consecutivo) {
-                    std::cout<<"Se termino el entrenamiento temprano a las "<<j<<" epocas porque se llego, luego de "<<
-                        minima_cantidad_consecutivos<<" iteraciones consecutivas, a un parecido mayor al "<<criterio_error_consecutivo<<'\n';
-                    break;
-                }
-                errores_consecutivos = errores_nuevo;
-            }
+	            std::vector<float> errores_nuevo (errores_consecutivos); //crea una copia
+	            errores_nuevo.erase(errores_nuevo.begin()); //borra el mas viejo
+	            errores_nuevo.push_back(error); //inserta el nuevo
+
+	            bool parecido = utils::vectorParecido(errores_nuevo, errores_consecutivos, criterio_error_consecutivo);
+
+	            std::cout<<"Parecido = "<<parecido<<'\n'; 
+
+	            //si cumple el criterio
+	            if (parecido) {
+	                std::cout<<"Se termino el entrenamiento temprano a las "<<j<<" epocas porque se llego, luego de "<<
+	                    minima_cantidad_consecutivos<<" iteraciones consecutivas, a un parecido mayor al "<<criterio_error_consecutivo<<'\n';
+	                break;
+	            }
+	            errores_consecutivos = errores_nuevo;
+	        } else {
+	            //guarda el error de esta iteracion
+	            errores_consecutivos.push_back(error);
+	        }
 
             //Dibuja
             plot2 += utils::intToStr((int)j) + " " + utils::floatToStr(error*100.0) + " \n";

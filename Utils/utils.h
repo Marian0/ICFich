@@ -10,8 +10,6 @@
 #include <cassert>
 #include <cmath>
 
-//Constante para comparaciones con cero
-#define EPSILON = 0.000001;
 
 /*
 Entrada: Path al archivo csv
@@ -61,6 +59,9 @@ void static vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vecto
 
 //Producto punto entre dos vectores
 float static vectorPunto(std::vector<float> &X, std::vector<float> &Y);
+
+//Producto punto entre dos vectores
+bool static vectorParecido(std::vector<float> &X, std::vector<float> &Y, float criterio = 0.6);
 
 //Calcula la norma de un vector
 float static vectorNorma(std::vector<float> &X);
