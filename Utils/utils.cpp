@@ -10,7 +10,6 @@
 #include <cmath>
 #include <algorithm>
 //Constante para comparaciones con cero
-#define EPSILON = 0.000001;
 
 /*
 Entrada: Path al archivo csv
@@ -174,7 +173,7 @@ bool utils::vectorParecido(std::vector<float> &X, std::vector<float> &Y, float c
 	float moduloY = utils::vectorNorma(Y);
 	
     //Los 2 son el vector cero.
-	if ( moduloX < 0.01 && moduloY < 0.01){
+	if ( moduloX < utils::EPSILON && moduloY < utils::EPSILON){
 		return true;
     }
 
@@ -182,7 +181,7 @@ bool utils::vectorParecido(std::vector<float> &X, std::vector<float> &Y, float c
 	utils::vectorResta(X,Y,resta);
 	
 	//Son 2 vectores iguales
-	if ( fabs( utils::vectorNorma(resta) ) < 0.01 ) {
+	if ( fabs( utils::vectorNorma(resta) ) < utils::EPSILON ) {
 		return true;
     }
 
@@ -191,7 +190,6 @@ bool utils::vectorParecido(std::vector<float> &X, std::vector<float> &Y, float c
     float parecido = fabs(punto/(moduloX*moduloY));
 
     if (parecido > criterio) {
-    std::cout<<"Parecido = "<<parecido<<'\n';
 		return true;
     }
 
@@ -317,12 +315,6 @@ void utils::genParticiones( std::vector<std::vector<float> > P,
 				Validacion.push_back(P[i]);
 			}
 		}
-		
-
-// 		unsigned int entrenamiento_n = std::ceil((float)porcentaje_entrenamiento/100 * n_patrones);
-// 		std::cout<<std::endl<<"numeros:e"<<entrenamiento_n<<" p"<<n_prueba<<" v"<<n_patrones - entrenamiento_n - n_prueba<<"total:"<<n_patrones<<std::endl;
-// //		
-// 		std::cout<<"numeros:e"<<Entrenamiento.size()<<" p"<<Prueba.size()<<" v"<<Validacion.size()<<"total:"<<P.size();
 }
 
 
@@ -335,9 +327,6 @@ std::vector<std::vector<float> > utils::genSet(
     //aseguro que el tamanio del subconjunto sea menor al del conjunto grande
     unsigned int n = P.size();
     assert(tamanio < n); 
-    
-    //Mezcla
-    // random_shuffle(P.begin(), P.end());
     
     //Toma los primeros valores
     std::vector<std::vector<float> > ret_val (P.begin() + inicio, P.begin()+tamanio + inicio );

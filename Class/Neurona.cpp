@@ -10,7 +10,6 @@
 #include "utils.h"
 
 Neurona::Neurona(unsigned int dim, float min, float max, unsigned int funcion, float constante_aprendizaje) {
-//Neurona::Neurona(unsigned int dim, float min = -0.5, float max = 0.5, unsigned int funcion = 1, float constante_aprendizaje = 0.5) {
 	this->dimension = dim;
 	this->constante_aprendizaje = constante_aprendizaje;
 	this->id_funcion_activacion = funcion;

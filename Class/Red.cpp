@@ -41,50 +41,6 @@ Red::Red(std::vector<std::vector<bool> > adyacencias,
 	this->adyacencias_entradas = adyacencias_entradas;
     //Genera la estructura, creando las neuronas
     structureGenerator(tasa_aprendizaje, int_funcion_activacion);	
-
-    /* Codigo viejo, candidato a ser desterrado de la faz de la tierra
-    unsigned int n,m,ne,me;
-
-    n = adyacencias.size();             //Filas
-	assert(n > 0);                      //Control de que sea una matriz
-	m = adyacencias[0].size();          //Columnas
-	assert(m > 0 && m == n);            //Control de que sea una matriz y cuadrada
-	
-	ne = adyacencias_entradas.size();   //Filas de adyacencia
-	assert(ne > 0);                     //Control de que sea una matriz
-	me = adyacencias_entradas[0].size();
-	assert(me > 0 && me == n);          //Control de que sea una matriz y que esten definidas 
-                                        // la misma cantidad de neuronas en adyacencias_entradas 
-	
-
-    //Guardamos el atributo de identificador de la red.
-	this->identificador = identificador;
-	this->multicapa = false;
-	this->adyacencias = adyacencias;
-	this->adyacencias_entradas = adyacencias_entradas;
-
-    //Instanciamos las neuronas, para ello debemos contar su dimensión.
-	for (unsigned int i = 0; i < n; i++) {
-		unsigned int dimension = 0;
-		//Cuento la dimension debida a Neuronas
-		for (unsigned int j = 0; j < n; j++) {
-			if (adyacencias[j][i]) {
-                //comprobar i != j ?
-				dimension++;
-				this->multicapa = true; //Detectamos que es multicapa ( ver despues, el tema de la identidad, osea que tiene una sola capa pero es recursivo)
-			}
-		}
-		
-		//Cuento la dimension debida a entradas
-		for (unsigned int j = 0; j < ne; j++) {
-			if (adyacencias_entradas[j][i]) {
-				dimension++;
-			}
-		}
-		Neurona neu(dimension, -0.5, 0.5, int_funcion_activacion , tasa_aprendizaje);
-		this->neuronas.push_back(neu);
-	}
-    */
 }
 
 //Genera la estructura, llamado por los constructores. Crea las neuronas y se las guarda
@@ -180,14 +136,12 @@ bool Red::singleTrain(std::vector<float> X, std::vector<float> YD, bool update) 
         //Estimular una neurona y obtener su respuesta // getResponse ya contempla el x0 = -1
 		float respuesta = this->neuronas[i].getResponse(entradan, parametro_sigmoidea);
 		
-		 // std::cout<<"Deberia dar: "<<YD[i]<<" Dio: "<<respuesta<<std::endl; std::getchar();
 		//Obtengo los pesos sinápticos actuales
 		std::vector<float> Wi = this->neuronas[i].getW();
         
 
         // Verifico si hay error en alguna salida
         float error = fabs(YD[i] - respuesta);
-        
 		if ((salida_sin_error == true) && (error > EPS)) { //no hubo error aun y son != (hay un error)
 			salida_sin_error = false;
 		}
@@ -205,22 +159,13 @@ bool Red::singleTrain(std::vector<float> X, std::vector<float> YD, bool update) 
 		std::vector<float> Wnuevo; 
 		utils::vectorSuma(Wi, vesc, Wnuevo);
 
-		// std::cout<<"Peso viejo"<<std::endl;
-		// utils::printVector(Wi);
-		// std::cout<<"Peso nuevo"<<std::endl;
-		// utils::printVector(Wnuevo);
-		// std::getchar();
-
         //Actualizar pesos
 		if (update) {
 			this->neuronas[i].setW( Wnuevo );
 		}
 	}
-	// if (salida_sin_error)
-	// 	std::cout<<"Salida sin error"<<std::endl;
-	// else
-	// 	std::cout<<"Salida con error"<<std::endl;
-	return salida_sin_error;
+    
+    return salida_sin_error;
 }
 
 void backpropagation() {}; //soon
@@ -234,6 +179,7 @@ void Red::getNeurons(std::vector<Neurona> &N) {
 void Red::setNeurons(std::vector<Neurona> &N) {
 	this->neuronas = N;
 }
+
 //Imprime la estructura de la red (adyacencias)
 void Red::printStructure() {
     std::cout<<"Red:\n";

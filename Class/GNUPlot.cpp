@@ -3,7 +3,6 @@
 
 /*
         Class: GNUPlot 
-
         Abre un pipe para graficación en GNUPlot desde C++
 */
 

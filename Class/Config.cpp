@@ -11,7 +11,6 @@ Config::Config(std::string name){
 	std::string line;
 	while (getline(file, line)) {
 		if (line.size() > 0 && line[0] == '#') {//comentario, ignoro
-			//std::cout<<line<<std::endl;
 			continue;
 		}
 		else {

@@ -118,7 +118,6 @@ int main (int argc, char *argv[]) {
 			std::vector<Neurona> ntemp;
 			perceptron.getNeurons(ntemp);
 			neurona_history.push_back(ntemp);
-            //std::cout<<"Epoca "<<j<<". Error: "<<error<<std::endl;
 	        
 	        if (((criterio_finalizacion.compare("error") == 0) || criterio_finalizacion.compare("todos") == 0) && fabs(error) < criterio_error) {
 	            std::cout<<"Se termino el entrenamiento temprano a las "<<j<<" epocas porque se llego a un error inferior al "<<criterio_error<<'\n';
@@ -161,7 +160,7 @@ int main (int argc, char *argv[]) {
         error_history_entrenamiento.push_back(error_epoca);
 	
         // Validacion cruzada - Prueba
-        // perceptron.setNeurons(neurona_history); 
+        
         //Cargo el conjunto de prueba
 		utils::splitVector(prueba,X,Yd,1);         
         float error_esperado = 1-perceptron.train(X,Yd,false);
@@ -175,7 +174,5 @@ int main (int argc, char *argv[]) {
 	std::cout<<"La validacion cruzada indica que el error esperado para esta Red es: "<<prom*100<<'\%'<<std::endl;
 	std::cout<<"La desviacion estandar de la prueba es de : "<<utils::devest(error_prueba, prom)<<std::endl;
 	
-    getchar();
-
 	return 0;
 }
