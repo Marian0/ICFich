@@ -132,7 +132,7 @@ int main (int argc, char *argv[]) {
             //Dibuja
             plot2 += utils::intToStr((int)j) + " " + utils::floatToStr(error*100.0) + " \n";
 		}
-		std::cout<<"Entrenamiento finalizado a las "<<j<<" epocas.\n\n\n"; 
+		std::cout<<"Entrenamiento finalizado a las "<<j<<" epocas.\n"; 
 
 		plot2 += "e\n";
 		plotter(plot2);
@@ -146,15 +146,16 @@ int main (int argc, char *argv[]) {
 		utils::splitVector(prueba,X,Yd,1);         
         float error_esperado = 1-perceptron.train(X,Yd,false);
         error_prueba.push_back(error_esperado);
-        std::cout<<"Efectividad Esperada en este Subconjunto = "<<error_esperado*100.0<<"\%\n";
+        std::cout<<"Error esperado en este Subconjunto = "<<error_esperado*100.0<<"\%\n";
 
-        std::getchar();
+        //std::getchar();
 		plotter("clear"); //limpia dibujo
 	}
-
-	std::cout<<"La validacion cruzada indica que el error esperado para esta Red es: "<<utils::promedio(error_prueba)<<std::endl;
+    float prom = utils::promedio(error_prueba);
+	std::cout<<"La validacion cruzada indica que el error esperado para esta Red es: "<<prom*100<<'\%'<<std::endl;
+	std::cout<<"La desviacion estandar de la prueba es de : "<<utils::devest(error_prueba, prom)<<std::endl;
 	
-	getchar();
+    getchar();
 
 	return 0;
 }

@@ -113,9 +113,10 @@ float utils::randomDecimal(float a, float b) {
 void utils::randomCircular(float xi, float yi, float desvio, float &newx, float &newy){
     float modulo_old = sqrt(xi*xi + yi*yi);
     float angulo = randomDecimal(0, 2*3.14);
-    float modulo = modulo_old*desvio;
-    newx = modulo*cos(angulo);
-    newy = modulo*sin(angulo);
+    float delta = randomDecimal(0, desvio);
+    float modulo = modulo_old*delta; //le sumo el desvio%
+    newx = xi+modulo*cos(angulo);
+    newy = yi+modulo*sin(angulo);
 }
 
 //Funciones de activacion
@@ -218,7 +219,18 @@ std::vector<std::vector<float> > utils::genPatrones( std::vector<std::vector<flo
 		//Obtengo el patron actual
 		std::vector<float> T = P[k%n];
 		
-        //Lo desvío
+        //Solo para el caso 2d
+        if (T.size() == 3) { //x,y + salida esperada
+            //Lo desvio en forma circular
+            float xnuevo, ynuevo;
+            utils::randomCircular(T[0], T[1], desvio, xnuevo, ynuevo);
+            T[0] = xnuevo;
+            T[1] = ynuevo;
+
+        }
+        
+        /*        
+        //Lo desvío en forma cuadrada
 		unsigned int m = T.size();
 		for (unsigned int j = 0; j < m ; j++) {
 			if (j < m-size_y) {
@@ -229,7 +241,7 @@ std::vector<std::vector<float> > utils::genPatrones( std::vector<std::vector<flo
 				break; //Las y las dejamos inalteradas 
 			}
 
-		}
+		}*/
 		Salida.push_back(T);		
 	}
 	return Salida;
