@@ -324,4 +324,11 @@ float utils::strToFloat(std::string s){
     return atof(s.c_str());
 }
 
+float utils::promedio(std::vector<float> &V) {
+    float suma = 0;
+    for (unsigned int i = 0; i < V.size(); i++) {
+        suma += V[i];
+    }
+    return suma/((float) V.size());
+}
 

@@ -96,5 +96,7 @@ int static strToInt(std::string s);
 //Convierte un string a float
 float static strToFloat(std::string s);
 
+//Calcula el promedio de un vector
+float static promedio(std::vector<float> &V) {
 };
 #endif
