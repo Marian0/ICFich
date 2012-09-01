@@ -141,18 +141,31 @@ int main (int argc, char *argv[]) {
             std::cout<<"Se termino el entrenamiento temprano a las "<<i<<" epocas porque se llego a un error inferior al "<<criterio_error<<'\n';
             break;
         }
- 
-        if (((criterio_finalizacion.compare("consecutivo") == 0) || criterio_finalizacion.compare("todos") == 0) && 
-                (errores_consecutivos.size() > minima_cantidad_consecutivos) && 
-                (fabs(utils::promedio(errores_consecutivos)) < criterio_error_consecutivo)) {
-            std::cout<<"Se termino el entrenamiento temprano a las "<<i<<" epocas porque se llego, luego de "<<
-                minima_cantidad_consecutivos<<" iteraciones consecutivas, a un error promedio inferior al "<<criterio_error_consecutivo<<'\n';
-            break;
-        }
+	    
+        if (((criterio_finalizacion.compare("consecutivo") == 0) ||
+                criterio_finalizacion.compare("todos") == 0) && 
+                (errores_consecutivos.size() > minima_cantidad_consecutivos)) { 
 
-        if(errores_consecutivos.size() > 10)
-            errores_consecutivos.erase(errores_consecutivos.begin());
-        errores_consecutivos.push_back(error);
+            std::vector<float> errores_nuevo (errores_consecutivos); //crea una copia
+            errores_nuevo.erase(errores_nuevo.begin()); //borra el mas viejo
+            errores_nuevo.push_back(error); //inserta el nuevo
+
+            float parecido = utils::vectorPunto(errores_consecutivos, errores_nuevo);//calcula el parecido
+
+            std::cout<<"Parecido = "<<parecido<<'\n'; 
+
+            //si cumple el criterio
+            if (parecido > criterio_error_consecutivo) {
+                std::cout<<"Se termino el entrenamiento temprano a las "<<i<<" epocas porque se llego, luego de "<<
+                    minima_cantidad_consecutivos<<" iteraciones consecutivas, a un parecido mayor al "<<criterio_error_consecutivo<<'\n';
+                break;
+            }
+            errores_consecutivos = errores_nuevo;
+        } else {
+            //guarda el error de esta iteracion
+            errores_consecutivos.push_back(error);
+        }
+        
         
         //std::getchar();
 
