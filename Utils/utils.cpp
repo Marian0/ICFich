@@ -325,12 +325,24 @@ float utils::strToFloat(std::string s){
 }
 
 float utils::promedio(std::vector<float> &V) {
-    float suma = 0;
     if (V.empty())
         return 0.0; //para que no devuelva nan
+    
+    float suma = 0.0;
     for (unsigned int i = 0; i < V.size(); i++) {
         suma += V[i];
     }
     return suma/((float) V.size());
 }
 
+float utils::devest(std::vector<float> &V, float media) {
+    if (V.empty())
+        return 0.0; //para que no devuelva NaN
+
+    float suma = 0.0;
+    for (unsigned int i = 0; i < V.size(); i++) {
+        float temp = V[i] - media;
+        suma += temp*temp;
+    }
+    return suma/V.size();
+}
