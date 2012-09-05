@@ -85,7 +85,7 @@ int main (int argc, char *argv[]) {
     }
 	random_shuffle(patron.begin() , patron.end());
 
-	std::vector<float> error_prueba;
+	std::vector<float> error_prueba; //agraficar
 
 	//Para cada conjunto de particion (Entrenamiento, prueba, validación)
 	for (unsigned int i = 0; i < cantidad_conjuntos; i++) {
@@ -101,7 +101,6 @@ int main (int argc, char *argv[]) {
         //Uso del archivo de estructura de la red para cargarla
         Red perceptron("red_perceptron2.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
         
-
         //Entreno las epocas solicitadas y guardo el error en un vector
 		std::vector<float> error_epoca;
 		std::string plot2 = "plot \"-\" notitle pt 2 lt 3\n";
@@ -114,9 +113,9 @@ int main (int argc, char *argv[]) {
             error_epoca.push_back(error); 
 					
             //Guarda historial de neuronas
-			std::vector<Neurona> ntemp;
-			perceptron.getNeurons(ntemp);
-			neurona_history.push_back(ntemp);
+			// std::vector<Neurona> ntemp;
+			// perceptron.getNeurons(ntemp);
+			// neurona_history.push_back(ntemp);
 	        
 	        if (((criterio_finalizacion.compare("error") == 0) || criterio_finalizacion.compare("todos") == 0) && fabs(error) < criterio_error) {
 	            std::cout<<"Se termino el entrenamiento temprano a las "<<j<<" epocas porque se llego a un error inferior al "<<criterio_error<<'\n';
@@ -171,7 +170,7 @@ int main (int argc, char *argv[]) {
 	}
     float prom = utils::promedio(error_prueba);
 	std::cout<<"La validacion cruzada indica que el error esperado para esta Red es: "<<prom*100<<'\%'<<std::endl;
-	std::cout<<"La desviacion estandar de la prueba es de : "<<utils::devest(error_prueba, prom)<<std::endl;
+	std::cout<<"La desviacion estandar de la prueba es de : "<<utils::devest(error_prueba, prom)*100<<'\%'<<std::endl;
 	
 	return 0;
 }

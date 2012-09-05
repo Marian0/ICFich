@@ -132,7 +132,7 @@ int main (int argc, char *argv[]) {
 		//Dibujar la frontera de decision
 		float da  = W[0]/W[2];
 		float da2  = W[1]/W[2];
-		float da3 = rand()%30+1;
+		float da3 = rand()%30+1; //Color de la recta random
         
         //Dibuja la recta
 		plotter2("plot " + utils::floatToStr(da) + "-" + utils::floatToStr(da2) + "*x lt "+ utils::floatToStr(da3) +" notitle");
@@ -190,8 +190,8 @@ int main (int argc, char *argv[]) {
 	//Cargo el conjunto de prueba
 	utils::splitVector(prueba, X, Yd, 1); 
 	
-	float efectividad_esperada = perceptron.train(X, Yd, false);
-	std::cout<<"Efectividad Esperada (conjunto de prueba) = "<<efectividad_esperada*100.0<<"\%\n";
+	float error_esperado = 1-perceptron.train(X, Yd, false);
+	std::cout<<"Error Esperado (conjunto de prueba) = "<<error_esperado*100.0<<"\%\n";
 	
     return 0;
 }
