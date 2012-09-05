@@ -111,7 +111,7 @@ int main (int argc, char *argv[]) {
 	std::string plot2 = "plot \"-\" notitle pt 1 lt 3\n";
 	
     //Instancio la red
-    Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
+    Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGNO, parametro_sigmoidea);
 
     //Genera las particiones de entrenamiento y prueba
 	utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 

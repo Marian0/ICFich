@@ -102,7 +102,6 @@ int main (int argc, char *argv[]) {
         Red perceptron("red_perceptron2.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
         
 
-        // perceptron.printStructure(); getchar();
         //Entreno las epocas solicitadas y guardo el error en un vector
 		std::vector<float> error_epoca;
 		std::string plot2 = "plot \"-\" notitle pt 2 lt 3\n";

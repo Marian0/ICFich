@@ -147,12 +147,12 @@ bool Red::singleTrain(std::vector<float> X, std::vector<float> YD, bool update) 
 		}
 		//Calculo de los nuevos pesos
 		//Parte Escalar
-		respuesta = (YD[i] - respuesta) * ( this->neuronas[i].getConstanteAprendizaje()/2 );
+		float parte_escalar = (YD[i] - respuesta) * ( this->neuronas[i].getConstanteAprendizaje()/2 );
 
         //Temporal para el producto
 		entradan.insert(entradan.begin(), -1); //Agregamos la entrada correspondiente al Bias
 		std::vector<float> vesc; 
-		utils::vectorEscalar(entradan, respuesta, vesc);
+		utils::vectorEscalar(entradan, parte_escalar, vesc);
 
 
         //Temporal para la suma
