@@ -55,6 +55,8 @@ float static signo(float x);
 //Funcion sigmodea
 float static sigmoidea(float x, float param = 50);
 
+//Funcion derivada de sigmoidea
+float static sigmoideaPrima(float x);
 
 //----------------------------------
 //Funciones de Algebra de Vectores

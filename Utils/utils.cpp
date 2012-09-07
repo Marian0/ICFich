@@ -135,6 +135,13 @@ float utils::sigmoidea(float x, float param){
 	return result;
 }
 
+//Derivada de la funcion sigmoidea, en la forma:
+//(2)/(1+e^(-bx)) - 1
+float utils::sigmoideaPrima(float x) {
+    return 0.5*(x + 1)*(x - 1);
+}
+
+
 void utils::vectorEscalar(std::vector<float> &X, float value, std::vector<float> &Z){
 	Z.resize(X.size());
 	for(unsigned int i = 0; i < X.size(); i++){
