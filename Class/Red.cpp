@@ -277,3 +277,66 @@ void Red::readStructure(std::string nombre_archivo) {
     this->adyacencias_entradas = ady_ent;
 
 }
+
+//Devuelve true si la neurona idx es una neurona de salida
+//Su linea de adyacencias es cero.
+//Su columna de adyacencias no es cero. < si no seria una neurona isleña
+bool Red::esSalida(unsigned int idx){
+    assert(idx < adyacencias.size());
+    
+    //Comprobamos que su linea de adyacencias hacia adelante sea cero
+    for (unsigned int j = 0; j < adyacencias[idx].size(); j++) {
+        if (adyacencias[idx][j])
+            //si esta conectada hacia adelante a alguna neurona, 
+            //entonces no es capa de salida
+            return false;
+    }
+
+    //Comprobamos que su columna de adyacencias hacia atras sea distinta de cero
+    for (unsigned int i = 0; i < adyacencias.size(); i++) {
+        if(adyacencias[i][idx])
+            //alguna entrada la tiene a su salida, entonces
+            //podemos decir que es una neurona de salida
+            return true; 
+    }
+    return false; //es una neurona isleña
+}
+
+//Dado un indice de neurona, devuelve las neuronas de su capa siguiente a las que ésta esta conectada
+void Red::getNext(unsigned int idx, std::vector<unsigned int> &V){
+    assert(idx < adyacencias.size());
+    
+    std::vector<unsigned int> temp;
+    //Recorre la fila de las adyacencias y si esta conectada, la agrega al vector
+    for (unsigned int j = 0; j < adyacencias[idx].size(); j++) {
+        if (adyacencias[idx][j])
+            temp.push_back(j);
+    }
+    V = temp;
+}
+
+
+//Dado un indice de neurona, devuelve las neuronas de su capa anterior y las entradas, si las hubiere
+void Red::getPrev(unsigned int idx, std::vector<unsigned int> &neu, std::vector<unsigned int> &ent){
+    assert(idx < adyacencias.size());
+    
+    std::vector<unsigned int> temp;
+    
+    //recorre la fila de las adyacencias y si esta conectada(hacia atras), la agrega al vector
+    for (unsigned int i = 0; i < adyacencias.size(); i++) {
+        if (adyacencias[i][idx])
+            temp.push_back(i);
+    }
+    neu = temp;
+
+    temp.clear();
+    
+    //recorre la fila de las entradas y si esta conectada (hacia atras), la agrega al vector
+    for (unsigned int i = 0; i < adyacencias_entradas.size(); i++) {
+        if (adyacencias_entradas[i][idx])
+            temp.push_back(i);
+    }
+    ent = temp;
+}
+
+

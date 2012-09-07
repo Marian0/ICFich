@@ -65,4 +65,13 @@ class Red {
 		
 		//Grabo las neuronas por cuestiones de Entrenamiento optimo
 		void setNeurons(std::vector<Neurona> &N);
+       
+        //Devuelve true si la neurona de indice idx es neurona de salida
+        bool esSalida(unsigned int idx);
+        
+        //Devuelve un vector de indices de neuronas y otro de entradas que alimentan a la neurona idx
+        void getPrev(unsigned int idx, std::vector<unsigned int> &neu, std::vector<unsigned int> &ent);
+
+        //Devuelve un vector de indices a donde la neurona idx le envia su salida
+        void getNext(unsigned int idx, std::vector<unsigned int> &V);
 };
