@@ -108,7 +108,7 @@ int main (int argc, char *argv[]) {
 					
 	//Inicializo el ploteo
 	//Haremos un string para poder plotear al final		
-	std::string plot2 = "plot \"-\" notitle pt 1 lt 3\n";
+	std::string plot2 = "plot \"-\" notitle pt 5 lt 3\n";
 	
     //Instancio la red
     Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGNO, parametro_sigmoidea);
@@ -182,7 +182,7 @@ int main (int argc, char *argv[]) {
     
     //Actualizacion del dibujo
     plot2 += "e\n";
-	plotter("set xrange [0:" + utils::intToStr(i)+"]");
+	plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
     plotter(plot2);
 	
 	//Prueba con los patrones nunca vistos
