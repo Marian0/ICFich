@@ -14,8 +14,8 @@ class Red {
 		//Matriz de adyacencia para saber las conectividades de las Entradas con las Neuronas.
 		std::vector<std::vector<bool> > adyacencias_entradas;
 
-        //Matriz para identificar la estructura de la Red
-        std::vector<std::vector<unsigned int> > estructura;
+		//Matriz para identificar la estructura de la Red
+		std::vector<std::vector<unsigned int> > estructura;
 
 		// Nombre identificador de la Red (Sirve como nombre de archivo de datos)
 		std::string identificador;
