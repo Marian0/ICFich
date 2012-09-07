@@ -61,8 +61,10 @@ class Red {
 		float train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, bool update = true);
 
 		bool singleTrain(std::vector<float> X, std::vector<float> YD, bool update = true);
-		void backpropagation() {}; //soon
-		
+
+        //Realiza el algoritmo de backpropagation
+	    bool backpropagation(std::vector<float> X, std::vector<float> YD, bool update);
+	
 		//Devuelvo el arreglo de neuronas para algunas cuestiones de graficación.
 		void getNeurons(std::vector<Neurona> &N);
 		

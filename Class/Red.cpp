@@ -166,6 +166,7 @@ bool Red::backpropagation(std::vector<float> X,
             std::vector<unsigned int> entradas_ids; //ids entradas
             std::vector<unsigned int> entradas_ids_neuronas; //ids neuronas
 
+            //Obtenemos las neuronas de la capa anterior que se conectan a la actual
             this->getPrev( this->estructura[i][j], entradas_ids_neuronas, entradas_ids );
 
             std::vector<float> entradas_valor;
@@ -176,43 +177,69 @@ bool Red::backpropagation(std::vector<float> X,
             //Buscamos las respuestas de neuronas anteriores
             for (unsigned int w = 0; entradas_ids_neuronas.size(); w++) {
                 unsigned int capa, posicion;
+                //Obtenemos la posicion de la neurona w en la matriz de respuestas
                 this->getPosition(entradas_ids_neuronas[w], capa, posicion );
+                //Guardo ese valor como una entrada para la siguiente capa
                 entradas_valor.push_back( respuestas[capa][posicion] );           
             }
 
             entradas_por_neurona[i][j] = entradas_valor;
+            
+            //Obtiene la id de la neurona en la capa i, posicion j
             unsigned int id_neurona = this->estructura[i][j];
-
+            
+            //Guarda la respuesta de esta neurona, para utilizarla en las neuronas de la capa siguiente
             respuestatemp.push_back(this->neuronas[id_neurona].getResponse(entradas_valor) );
+
         } //Fin recorrido capa
         respuestas.push_back(respuestatemp);       
     } //Fin de recorrido hacia adelante
+    
+    //Recorrido hacia atras
 
-
+    //Vector donde se almacenaran los deltas del recorrido hacia atras
     std::vector<std::vector<float> > deltas;
-    deltas.resize(n);
+    deltas.resize(n); //reservamos n filas, correspondiente a las n capas
+    
+    //Calculo de los deltas
     for (unsigned int i = n; i > 0; i--) {
         unsigned int m = this->estructura[i].size();
-        deltas[i].resize(m);
+        deltas[i].resize(m); //reservamos m columnas, correspondiente a las m neuronas de esta capa
         for (unsigned int j = 0; j < m; j++) {
-            if (i==n) { 
-                //Capa de salida
+            
+            if (i==n) { //Capa de salida
+
+                //Calculo del error
                 float error = YD[j] - respuesta[i][j];
 
                 std::vector<float> Wj, X;
+                //Obtenemos los pesos de la neurona i,j
                 Wj = this->neuronas[ this->estructura[i][j] ].getW();
+
+                //Obtenemos las entradas de la neurona i,j
                 X = entradas_por_neurona[i][j];
-                X.insert(X.begin(), -1.0); //Agrego el bias
+                //Agrego el bias
+                X.insert(X.begin(), -1.0); 
 
+                //Calculo del v_j (local field)
                 float localfield = utils::vectorPunto(X,Wj);
+                //Evaluamos la derivada de la sigmoidea en el campo escalar
                 float sigprima = utils::sigmoideaPrima(localfield);
+                //Guardamos el delta de esta neurona
                 deltas[i][j] = error * sigprima;
-            } else {
-                //Capa oculta
-
+            } else { //Capa oculta
+                
+                //TODO: 
+                //* obtener los deltas de la capa siguiente
+                //* obtener los pesos que conectan la neurona (i,j) con las neuronas de la capa siguiente (i+1,*)
+                //* hacer producto punto de los deltas y los pesos
+                //* deltas(i,j) = sigprima(localfield)*vectorPunto(deltas(i+1,*),pesos(*,j)
             }
         }
     }
+    //Actualizar pesos
+    //Para cada capa l:
+    //w(n+1) = w(n) + cte_momento*(w(n-1) + cte_aprendizaje*delta(l)*y(l-1)
 
 
 
