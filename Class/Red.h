@@ -14,6 +14,9 @@ class Red {
 		//Matriz de adyacencia para saber las conectividades de las Entradas con las Neuronas.
 		std::vector<std::vector<bool> > adyacencias_entradas;
 
+        //Matriz para identificar la estructura de la Red
+        std::vector<std::vector<unsigned int> > estructura;
+
 		// Nombre identificador de la Red (Sirve como nombre de archivo de datos)
 		std::string identificador;
 		
@@ -74,4 +77,7 @@ class Red {
 
         //Devuelve un vector de indices a donde la neurona idx le envia su salida
         void getNext(unsigned int idx, std::vector<unsigned int> &V);
+        
+        //Devuelve la posicion de la neurona idx en la estructura
+        void getPosition(unsigned int idx, unsigned int &capa, unsigned int &pos );
 };

@@ -339,4 +339,21 @@ void Red::getPrev(unsigned int idx, std::vector<unsigned int> &neu, std::vector<
     ent = temp;
 }
 
+//Devuelve los indices i,j donde esta ubicada la neurona idx
+//capa: capa en la que se ubica
+//pos: posicion dentro de la capa
+void Red::getPosition(unsigned int idx, unsigned int &capa, unsigned int &pos ) {
+    for (unsigned int i = 0; i < this->estructura.size(); i++) {
+        for (unsigned int j = 0; j < this->estructura[i].size(); j++) {
+            if (estructura[i][j] == idx) {
+                capa = i;
+                pos = j;
+                return;
+            }
+        }
+    }
+    std::cout<<"No se encontro la posicion de la neurona. El programa acaba de explotar\n";
+    assert(false);
+}
+
 
