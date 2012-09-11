@@ -104,14 +104,14 @@ int main (int argc, char *argv[]) {
 	
     plot_dot1 += "e\n";
 	plot_dot2 += "e\n";
-	//plotter2(plot_dot1);
-	//plotter2(plot_dot2);
+	plotter2(plot_dot1);
+	plotter2(plot_dot2);
 					
 	//Inicializo el ploteo
 	//Haremos un string para poder plotear al final		
 	std::string plot2 = "plot \"-\" notitle pt 5 lt 3\n";
     //Instancio la red
-    Red perceptron("red_perceptron3.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGNO, parametro_sigmoidea, parametro_momento);
+    Red perceptron("red_perceptron3.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea, parametro_momento);
 
     //Genera las particiones de entrenamiento y prueba
 	utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
@@ -127,15 +127,28 @@ int main (int argc, char *argv[]) {
 		//obtengo los pesos actuales, usados para dibujar la frontera de decision
 		std::vector<Neurona> V;
         perceptron.getNeurons(V);
-		std::vector<float> W = V[0].getW();
+		std::vector<float> W0 = V[0].getW();
+        std::vector<float> W1 = V[1].getW();
+        
+        //utils::printVector(W0);
+
+        //utils::printVector(W1);
 		
 		//Dibujar la frontera de decision
-		float da  = W[0]/W[2];
-		float da2  = W[1]/W[2];
-		float da3 = rand()%30+1; //Color de la recta random
+		float da0  = W0[0]/W0[2];
+		float da0_2  = W0[1]/W0[2];
+		float da0_3 = 8; //Color de la recta random
+       
+        //Dibuja la recta
+		plotter2("plot " + utils::floatToStr(da0) + "-" + utils::floatToStr(da0_2) + "*x lt "+ utils::floatToStr(da0_3) +" notitle");
+
+        //Dibujar la frontera de decision
+		float da1  = W1[0]/W1[2];
+		float da1_2  = W1[1]/W1[2];
+		float da1_3 = 4; //Color de la recta random
         
         //Dibuja la recta
-		plotter2("plot " + utils::floatToStr(da) + "-" + utils::floatToStr(da2) + "*x lt "+ utils::floatToStr(da3) +" notitle");
+		plotter2("plot " + utils::floatToStr(da1) + "-" + utils::floatToStr(da1_2) + "*x lt "+ utils::floatToStr(da1_3) +" notitle");
 		
 		//Entrena y calcula error
 		float error = 1-perceptron.train(X, Yd, true);
@@ -176,14 +189,14 @@ int main (int argc, char *argv[]) {
             //guarda el error de esta iteracion
             errores_consecutivos.push_back(error);
         }
-        //std::getchar();
+        std::getchar();
     }
     std::cout<<"Entrenamiento finalizado a las "<<i<<" epocas.\n"; 
     
     //Actualizacion del dibujo
     plot2 += "e\n";
 	plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
-    //plotter(plot2);
+    plotter(plot2);
 	
 	//Prueba con los patrones nunca vistos
 

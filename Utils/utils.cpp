@@ -100,6 +100,26 @@ void utils::printVectorVector(std::vector<std::vector<float> > &v, char separato
 }
 
 
+//Imprime un vector, separando sus valores con char separator
+void utils::printVector(std::vector<unsigned int> &v, char separator){
+	for (unsigned int i = 0; i < v.size(); i++){
+		std::cout<<v[i];
+		if(i < v.size()-1) //Si no es el ultimo caso
+			std::cout<<separator;
+	}
+    std::cout<<'\n';
+}
+
+//Imprime un vector de vectores. Sus parametros representan el vector,
+// el separador entre elementos(v[i]), y el separador entre casos (v[i][j])
+void utils::printVectorVector(std::vector<std::vector<unsigned int> > &v, char separator, 
+						std::string newcase){
+	for (unsigned int i = 0; i < v.size(); i++){
+		utils::printVector(v[i],separator);
+		std::cout<<newcase;
+	}
+}
+
 //Genera un numero aleatorio en el rango [a,b].
 // NOTA: solo funciona para numeros de punto flotante
 
@@ -138,7 +158,7 @@ float utils::sigmoidea(float x, float param){
 //Derivada de la funcion sigmoidea, en la forma:
 //(2)/(1+e^(-bx)) - 1
 float utils::sigmoideaPrima(float x) {
-    return 0.5*(x + 1)*(x - 1);
+    return 0.5*(1 + x)*(1 - x);
 }
 
 

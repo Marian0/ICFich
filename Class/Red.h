@@ -48,7 +48,8 @@ class Red {
 			std::string identificador,
 			float tasa_aprendizaje = 0.5,
 			unsigned int int_funcion_activacion = Neurona::FUNCION_SIGNO,
-            float par_sigmoidea = 50
+            float par_sigmoidea = 50,
+            float parametro_momento = 0.2
 		);
 
         //Genera la estructura de la red, construyendo cada una de las neuronas

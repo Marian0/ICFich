@@ -35,6 +35,13 @@ void static printVector(std::vector<float> &v, char separator = ' ');
 void static printVectorVector(std::vector<std::vector<float> > &v, char separator = ' ', 
 	std::string newcase = "\n-------\n");
 
+//Imprime un vector, separando sus valores con char separator
+void static printVector(std::vector<unsigned int> &v, char separator = ' ');
+
+//Imprime un vector de vectores. Sus parametros representan el vector,
+// el separador entre elementos(v[i]), y el separador entre casos (v[i][j])
+void static printVectorVector(std::vector<std::vector<unsigned int> > &v, char separator = ' ', 
+	std::string newcase = "\n-------\n");
 
 //----------------------------------
 //Funciones de generacion de numeros aleatorios

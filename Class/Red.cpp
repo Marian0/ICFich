@@ -1,4 +1,5 @@
 #include <vector>
+#include <algorithm>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -19,8 +20,13 @@ Red::Red(std::string nombre_archivo,
     
     //Se guarda el id
 	this->identificador = identificador;
+    
     //Se guarda el parametro para la funcion sigmoidea
     this->parametro_sigmoidea = par_sigmoidea;
+    
+    //Se guarda el parametro de momento
+    this->parametro_momento = parametro_momento;
+    
     //Genera la estructura, creando las neuronas
     structureGenerator(tasa_aprendizaje, int_funcion_activacion); 
 }
@@ -30,12 +36,17 @@ Red::Red(std::vector<std::vector<bool> > adyacencias,
 		 std::string identificador,
 		 float tasa_aprendizaje,
 		 unsigned int int_funcion_activacion,
-         float par_sigmoidea
+         float par_sigmoidea,
+         float parametro_momento
 		) {
-    
+   
+
     //Se guarda el parametro para la funcion sigmoidea
     this->parametro_sigmoidea = par_sigmoidea;
  
+    //Se guarda el parametro de momento
+    this->parametro_momento = parametro_momento;
+
     //Guarda la informacion de la estructura
     this->identificador = identificador;
 	this->adyacencias = adyacencias;
@@ -84,14 +95,14 @@ void Red::structureGenerator( float tasa_aprendizaje, unsigned int int_funcion_a
 	}
 
     //Generaremos la estructura de la red en forma matricial
-    unsigned int n = adyacencias_entradas.size(); //Cantidad de entradas
-    if (n > 0) {
-        unsigned int m = adyacencias_entradas[0].size(); //Cantidad de Neuronas
+    unsigned int na = adyacencias_entradas.size(); //Cantidad de entradas
+    if (na > 0) {
+        unsigned int ma = adyacencias_entradas[0].size(); //Cantidad de Neuronas
 
         //Detectamos la primera capa de neuronas (conectadas con entradas)
         std::vector<unsigned int> temp;
-        for (unsigned int i = 0; i < m; i++ ) {
-            for (unsigned int j=0; j < n ; j++) {
+        for (unsigned int i = 0; i < ma; i++ ) {
+            for (unsigned int j=0; j < na ; j++) {
                 if (adyacencias_entradas[j][i]) {
                     //La neurona i está conectada a la entrada j
                     temp.push_back(i); 
@@ -107,21 +118,20 @@ void Red::structureGenerator( float tasa_aprendizaje, unsigned int int_funcion_a
             for (unsigned int i = 0; i < temp.size(); i++) {
                 std::vector<unsigned int> V;
                 this->getNext(temp[i], V);
-
-                temp2.push_back(V);
+                
+                temp2.insert(temp2.end(), V.begin(), V.end());
             }  
             if (temp2.size() == 0)
                 break; //No hay más capas porque a la derecha no hay nada.
 
             //Eliminamos duplicados
             std::sort(temp2.begin(), temp2.end());
-            std::unique(temp2.begin(), temp2.end());
+            std::vector<unsigned int>::iterator it = std::unique(temp2.begin(), temp2.end());
+            temp2.resize(it - temp2.begin());
             this->estructura.push_back(temp2);
+            temp = temp2;
         }
-
-
     }
-
 }
 
 
@@ -129,7 +139,7 @@ void Red::structureGenerator( float tasa_aprendizaje, unsigned int int_funcion_a
 //Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
 bool Red::train(std::vector<float> X, std::vector<float> YD, bool update ) {	
 	if (this->multicapa) {
-		return backpropagation(X,YD, update);
+		return backpropagation(X, YD, update);
     } else {
         return singleTrain(X,YD, update);
 	}
@@ -151,9 +161,11 @@ float Red::train(std::vector<std::vector<float> > X,
 
 bool Red::backpropagation(std::vector<float> X,
                   std::vector<float> YD, bool update){ 
-
     //Verifico que la cantidad de entradas sea propiamente la que la red necesita
     assert(X.size() == this->adyacencias_entradas.size());    
+    
+    bool salida_sin_error = true;
+    
     //Estimulamos la red y hacemos la corrida hacia adelente
 
     //Respuestas de cada neurona de la red en correspondencia con this->estructura
@@ -177,25 +189,24 @@ bool Red::backpropagation(std::vector<float> X,
 
             std::vector<float> entradas_valor;
             //Buscamos valor de estimulos de las entradas X
-            for (unsigned int w = 0; entradas_ids.size(); w++)
+            for (unsigned int w = 0; w < entradas_ids.size(); w++)
                 entradas_valor.push_back(X[ entradas_ids[w] ]);
-
+            
             //Buscamos las respuestas de neuronas anteriores
-            for (unsigned int w = 0; entradas_ids_neuronas.size(); w++) {
+            for (unsigned int w = 0; w < entradas_ids_neuronas.size(); w++) {
                 unsigned int capa, posicion;
                 //Obtenemos la posicion de la neurona w en la matriz de respuestas
                 this->getPosition(entradas_ids_neuronas[w], capa, posicion );
                 //Guardo ese valor como una entrada para la siguiente capa
                 entradas_valor.push_back( respuestas[capa][posicion] );           
             }
-
             entradas_por_neurona[i][j] = entradas_valor;
             
             //Obtiene la id de la neurona en la capa i, posicion j
             unsigned int id_neurona = this->estructura[i][j];
             
             //Guarda la respuesta de esta neurona, para utilizarla en las neuronas de la capa siguiente
-            respuestatemp.push_back(this->neuronas[id_neurona].getResponse(entradas_valor) );
+            respuestatemp.push_back(this->neuronas[id_neurona].getResponse(entradas_valor, parametro_sigmoidea) );
 
         } //Fin recorrido capa
         respuestas.push_back(respuestatemp);       
@@ -206,18 +217,21 @@ bool Red::backpropagation(std::vector<float> X,
     //Vector donde se almacenaran los deltas del recorrido hacia atras
     std::vector<std::vector<float> > deltas;
     deltas.resize(n); //reservamos n filas, correspondiente a las n capas
-    
+  
     //Calculo de los deltas (el i es el l del libro)
-    for (unsigned int i = n; i >= 0; i--) {
+    for (int i = n-1; i >= 0; i--) {
         unsigned int m = this->estructura[i].size();
         deltas[i].resize(m); //reservamos m columnas, correspondiente a las m neuronas de esta capa
         for (unsigned int j = 0; j < m; j++) {
-            
             std::vector<float> Wj, X;
-            if (i==n) { //Capa de salida
+            if (i == n-1) { //Capa de salida
 
                 //Calculo del error
-                float error = YD[j] - respuesta[i][j];
+                float error = YD[j] - respuestas[i][j];
+                
+                if ((salida_sin_error == true) && (fabs(error) > EPS)) { //no hubo error aun y son != (hay un error)
+        			salida_sin_error = false;
+		        }
 
                 //Obtenemos los pesos de la neurona i,j
                 Wj = this->neuronas[ this->estructura[i][j] ].getW();
@@ -235,8 +249,7 @@ bool Red::backpropagation(std::vector<float> X,
                 deltas[i][j] = error * sigprima;
             } else { //Capa oculta
                 
-                //TODO: 
-                  //Obtenemos los pesos de la neurona i,j
+                //Obtenemos los pesos de la neurona i,j
                 Wj = this->neuronas[ this->estructura[i][j] ].getW();
 
                 //Obtenemos las entradas de la neurona i,j
@@ -249,10 +262,10 @@ bool Red::backpropagation(std::vector<float> X,
                 //Evaluamos la derivada de la sigmoidea en el campo escalar
                 float sigprima = utils::sigmoideaPrima(localfield);
 
-                //* obtener los deltas de la capa siguiente
+                //obtener los deltas de la capa siguiente
                 std::vector<float> deltatemp = deltas[i+1];
                 
-                //* obtener los pesos que conectan la neurona (i,j) con las neuronas de la capa siguiente (i+1,*)
+                //obtener los pesos que conectan la neurona (i,j) con las neuronas de la capa siguiente (i+1,*)
                 std::vector<unsigned int> ids_next;
                 this->getNext( this->estructura[i][j] , ids_next);
 
@@ -262,23 +275,18 @@ bool Red::backpropagation(std::vector<float> X,
                     Wkj.push_back( this->neuronas[ ids_next[k] ].getW()[j] );
                 }                
 
-                //* hacer producto punto de los deltas y los pesos
+                //hacer producto punto de los deltas y los pesos
+
                 float deltak_wkj = utils::vectorPunto(deltas[i+1],Wkj);
 
-                //* deltas(i,j) = sigprima(localfield)*vectorPunto(deltas(i+1,*),pesos(*,j)
+                //deltas(i,j) = sigprima(localfield)*vectorPunto(deltas(i+1,*),pesos(*,j)
                 deltas[i][j] = sigprima * deltak_wkj;
-
             }
         }
     }
     //Actualizar pesos
     //Para cada capa l:
     //w(n+1) = w(n) + cte_momento*(w(n-1) + cte_aprendizaje*delta(l)*y(l-1)
-    
-
-    //**** Reever porque estamos actualizando todos los pesos juntos y no sabemos como obtener y_i^(l-1)
-<<<<<<< HEAD
-
     n = this->estructura.size();
     for (unsigned int i = 0; i < n; i++) { //Recorremos por "capa" sobre la estructura
         unsigned int m = this->estructura[i].size();
@@ -286,35 +294,34 @@ bool Red::backpropagation(std::vector<float> X,
             std::vector<float> term1 = this->neuronas[ this->estructura[i][j] ].getW();
             
             std::vector<float> term2;
-            utils::vectorEscalar(this->neuronas[ this->estructura[i][j] ].getWn_1(), this->parametro_momento, term2);
+            std::vector<float> pesos_anteriores = this->neuronas[ this->estructura[i][j] ].getWn_1();
+            utils::vectorEscalar(pesos_anteriores, this->parametro_momento, term2);
         
             std::vector<float> term3;
+            //entradas por neurona = y_i(l-1)
             utils::vectorEscalar(entradas_por_neurona[i][j], this->neuronas[  this->estructura[i][j] ].getConstanteAprendizaje() * deltas[i][j], term3);
-            
+           
+            term3.insert(term3.begin(), -1); //agrego el bias
             std::vector<float> term12;
             utils::vectorSuma(term1, term2, term12);
             
             std::vector<float> nuevoW;
             utils::vectorSuma(term12, term3, nuevoW);
-=======
-    for (unsigned int i = 0; i < n; i++) { //recorro neurona
-        std::vector<float> term1 = this->neuronas[i].getW();
-        std::vector<float> term2;
-        utils::vectorEscalar(this->neuronas[i].getWn_1(), this->parametro_momento, term2);
-        
-        std::vector<float> term3;
-        unsigned int capa, posicion;
-        this->getPosition(i, capa, posicion);
-        
-        utils::vectorEscalar(respuestas[capa-1], this->neuronas[i].getConstanteAprendizaje() * deltas[capa][posicion], term3);
-
-        this->neuronas[i].setW();
->>>>>>> 772b3a61d6b23d9f2cab40136fbc8ae3ca6e15f7
-
-            this->neuronas[ this->estructura[i][j]  ]->setW(nuevoW);
+           
+            std::cout<<"term1: ";
+            utils::printVector(term1);
+            std::cout<<"term2: ";
+            utils::printVector(term2);
+            std::cout<<"term3: ";
+            utils::printVector(term3);
+            std::cout<<"nuevoW: ";
+            utils::printVector(nuevoW);
+            std::getchar();
+            if (update) //si quiero actualizar...
+                this->neuronas[ this->estructura[i][j] ].setW(nuevoW);
         }
     }
-
+    return salida_sin_error;
 }
 
 //Devuelve true si no hubo error
@@ -404,6 +411,14 @@ void Red::printStructure() {
         }
         std::cout<<std::endl;
     }
+
+    std::cout<<"Estructura por capas:\n";
+    for (unsigned int i = 0; i < this->estructura.size(); i++) {
+        for (unsigned int j = 0; j < this->estructura[i].size(); j++) {
+            std::cout<<this->estructura[i][j]<<' ';
+        }
+        std::cout<<std::endl;
+    }
 }
 
 //Lee la estructura de una red desde un archivo
@@ -427,7 +442,6 @@ void Red::readStructure(std::string nombre_archivo) {
     while(getline(file, line)) {
         if(line.length() > 0 && line[0] == '#')
             break; //termina de leer las adyacencias de las neuronas
-        
         std::vector<bool> fila; //fila de la matriz
         
         //Le mando la linea al string stream
@@ -536,7 +550,7 @@ void Red::getPrev(unsigned int idx, std::vector<unsigned int> &neu, std::vector<
     neu = temp;
 
     temp.clear();
-    
+   
     //recorre la fila de las entradas y si esta conectada (hacia atras), la agrega al vector
     for (unsigned int i = 0; i < adyacencias_entradas.size(); i++) {
         if (adyacencias_entradas[i][idx])
