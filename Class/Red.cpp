@@ -87,11 +87,13 @@ void Red::structureGenerator( float tasa_aprendizaje, unsigned int int_funcion_a
     if (n > 0) {
         unsigned int m = adyacencias_entradas[0].size(); //Cantidad de Neuronas
 
+        //Detectamos la primera capa de neuronas (conectadas con entradas)
         std::vector<unsigned int> temp;
         for (unsigned int i = 0; i < m; i++ ) {
             for (unsigned int j=0; j < n ; j++) {
                 if (adyacencias_entradas[j][i]) {
-                    temp.push_back(i);
+                    //La neurona i está conectada a la entrada j
+                    temp.push_back(i); 
                     break;
                 }
             }
@@ -108,7 +110,10 @@ void Red::structureGenerator( float tasa_aprendizaje, unsigned int int_funcion_a
                 temp2.push_back(V);
             }  
             if (temp2.size() == 0)
-                break;
+                break; //No hay más capas porque a la derecha no hay nada.
+
+            //Eliminamos duplicados
+            std::sort(temp2.begin(), temp2.end());
             std::unique(temp2.begin(), temp2.end());
             this->estructura.push_back(temp2);
         }
@@ -202,7 +207,7 @@ bool Red::backpropagation(std::vector<float> X,
     deltas.resize(n); //reservamos n filas, correspondiente a las n capas
     
     //Calculo de los deltas (el i es el l del libro)
-    for (unsigned int i = n; i > 0; i--) {
+    for (unsigned int i = n; i >= 0; i--) {
         unsigned int m = this->estructura[i].size();
         deltas[i].resize(m); //reservamos m columnas, correspondiente a las m neuronas de esta capa
         for (unsigned int j = 0; j < m; j++) {
@@ -248,18 +253,19 @@ bool Red::backpropagation(std::vector<float> X,
                 
                 //* obtener los pesos que conectan la neurona (i,j) con las neuronas de la capa siguiente (i+1,*)
                 std::vector<unsigned int> ids_next;
-                this->getNext(j, ids_next);
+                this->getNext( this->estructura[i][j] , ids_next);
 
                 std::vector<float> Wkj;
                 for (unsigned int k = 0; k < ids_next.size(); k++ ) {
+                    //Necesito solo los pesos de la conexión de la neurona con la capa siguiente solamente
                     Wkj.push_back( this->neuronas[ ids_next[k] ].getW()[j] );
                 }                
 
                 //* hacer producto punto de los deltas y los pesos
-                float deltak_wkj = utils::vectorPunto(X,Wkj);
+                float deltak_wkj = utils::vectorPunto(deltas[i+1],Wkj);
 
                 //* deltas(i,j) = sigprima(localfield)*vectorPunto(deltas(i+1,*),pesos(*,j)
-                deltas[i][j] = localfield * deltak_wkj;
+                deltas[i][j] = sigprima * deltak_wkj;
 
             }
         }
@@ -270,23 +276,29 @@ bool Red::backpropagation(std::vector<float> X,
     
 
     //**** Reever porque estamos actualizando todos los pesos juntos y no sabemos como obtener y_i^(l-1)
-    for (unsigned int i = 0; i < n; i++) { //recorro neurona
-        std::vector<float> term1 = this->neuronas[i].getW();
-        std::vector<float> term2;
-        utils::vectorEscalar(this->neuronas[i].getWn_1(), this->parametro_momento, term2);
+
+    n = this->estructura.size();
+    for (unsigned int i = 0; i < n; i++) { //Recorremos por "capa" sobre la estructura
+        unsigned int m = this->estructura[i].size();
+        for (unsigned int j = 0 ; j < m ; j++) {
+            std::vector<float> term1 = this->neuronas[ this->estructura[i][j] ].getW();
+            
+            std::vector<float> term2;
+            utils::vectorEscalar(this->neuronas[ this->estructura[i][j] ].getWn_1(), this->parametro_momento, term2);
         
-        std::vector<float> term3;
-        unsigned int capa, posicion;
-        this->getPosition(i, capa, posicion);
-        
+            std::vector<float> term3;
+            utils::vectorEscalar(entradas_por_neurona[i][j], this->neuronas[  this->estructura[i][j] ].getConstanteAprendizaje() * deltas[i][j], term3);
+            
+            std::vector<float> term12;
+            utils::vectorSuma(term1, term2, term12);
+            
+            std::vector<float> nuevoW;
+            utils::vectorSuma(term12, term3, nuevoW);
 
-        utils::vectorEscalar(respuestas[capa-1], this->neuronas[i].getConstanteAprendizaje() * deltas[capa][posicion], term3);
-
-        this->neuronas[i].setW();
-
+            this->neuronas[ this->estructura[i][j]  ]->setW(nuevoW);
+        }
     }
 
-    this->Wn_1 = W;
 }
 
 //Devuelve true si no hubo error
