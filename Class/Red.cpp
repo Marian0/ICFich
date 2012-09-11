@@ -279,7 +279,6 @@ bool Red::backpropagation(std::vector<float> X,
         unsigned int capa, posicion;
         this->getPosition(i, capa, posicion);
         
-
         utils::vectorEscalar(respuestas[capa-1], this->neuronas[i].getConstanteAprendizaje() * deltas[capa][posicion], term3);
 
         this->neuronas[i].setW();
