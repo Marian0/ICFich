@@ -276,6 +276,7 @@ bool Red::backpropagation(std::vector<float> X,
     
 
     //**** Reever porque estamos actualizando todos los pesos juntos y no sabemos como obtener y_i^(l-1)
+<<<<<<< HEAD
 
     n = this->estructura.size();
     for (unsigned int i = 0; i < n; i++) { //Recorremos por "capa" sobre la estructura
@@ -294,6 +295,20 @@ bool Red::backpropagation(std::vector<float> X,
             
             std::vector<float> nuevoW;
             utils::vectorSuma(term12, term3, nuevoW);
+=======
+    for (unsigned int i = 0; i < n; i++) { //recorro neurona
+        std::vector<float> term1 = this->neuronas[i].getW();
+        std::vector<float> term2;
+        utils::vectorEscalar(this->neuronas[i].getWn_1(), this->parametro_momento, term2);
+        
+        std::vector<float> term3;
+        unsigned int capa, posicion;
+        this->getPosition(i, capa, posicion);
+        
+        utils::vectorEscalar(respuestas[capa-1], this->neuronas[i].getConstanteAprendizaje() * deltas[capa][posicion], term3);
+
+        this->neuronas[i].setW();
+>>>>>>> 772b3a61d6b23d9f2cab40136fbc8ae3ca6e15f7
 
             this->neuronas[ this->estructura[i][j]  ]->setW(nuevoW);
         }
