@@ -30,6 +30,7 @@ int main (int argc, char *argv[]) {
 	unsigned int    invasores                      = utils::strToInt(config.getValue("invasores"));
 	float           criterio_error                 = utils::strToFloat(config.getValue("criterio_error"));
     float           parametro_sigmoidea            = utils::strToFloat(config.getValue("parametro_sigmoidea"));
+    float           parametro_momento              = utils::strToFloat(config.getValue("parametro_momento"));
     float           criterio_error_consecutivo     = utils::strToFloat(config.getValue("criterio_error_consecutivo"));
     std::string     criterio_finalizacion          = config.getValue("criterio_finalizacion");
     unsigned int    minima_cantidad_consecutivos   = utils::strToInt(config.getValue("minima_cantidad_consecutivos"));
@@ -103,15 +104,14 @@ int main (int argc, char *argv[]) {
 	
     plot_dot1 += "e\n";
 	plot_dot2 += "e\n";
-	plotter2(plot_dot1);
-	plotter2(plot_dot2);
+	//plotter2(plot_dot1);
+	//plotter2(plot_dot2);
 					
 	//Inicializo el ploteo
 	//Haremos un string para poder plotear al final		
 	std::string plot2 = "plot \"-\" notitle pt 5 lt 3\n";
-	
     //Instancio la red
-    Red perceptron("red_perceptron.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGNO, parametro_sigmoidea);
+    Red perceptron("red_perceptron3.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGNO, parametro_sigmoidea, parametro_momento);
 
     //Genera las particiones de entrenamiento y prueba
 	utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
@@ -183,7 +183,7 @@ int main (int argc, char *argv[]) {
     //Actualizacion del dibujo
     plot2 += "e\n";
 	plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
-    plotter(plot2);
+    //plotter(plot2);
 	
 	//Prueba con los patrones nunca vistos
 
