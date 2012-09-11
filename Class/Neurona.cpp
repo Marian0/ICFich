@@ -57,5 +57,12 @@ std::vector<float> Neurona::getW() {
 }
 //Define por referencia el vector W
 void Neurona::setW(std::vector<float> & W){
+	this->Wn_1 = this->W; //Guardamos una iteración de pesos
 	this->W = W;
 }
+
+
+//Obtiene por referencia el vector W
+std::vector<float> Neurona::getWn_1(){
+	return this->Wn_1;
+}	

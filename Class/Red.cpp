@@ -201,18 +201,18 @@ bool Red::backpropagation(std::vector<float> X,
     std::vector<std::vector<float> > deltas;
     deltas.resize(n); //reservamos n filas, correspondiente a las n capas
     
-    //Calculo de los deltas
+    //Calculo de los deltas (el i es el l del libro)
     for (unsigned int i = n; i > 0; i--) {
         unsigned int m = this->estructura[i].size();
         deltas[i].resize(m); //reservamos m columnas, correspondiente a las m neuronas de esta capa
         for (unsigned int j = 0; j < m; j++) {
             
+            std::vector<float> Wj, X;
             if (i==n) { //Capa de salida
 
                 //Calculo del error
                 float error = YD[j] - respuesta[i][j];
 
-                std::vector<float> Wj, X;
                 //Obtenemos los pesos de la neurona i,j
                 Wj = this->neuronas[ this->estructura[i][j] ].getW();
 
@@ -230,19 +230,63 @@ bool Red::backpropagation(std::vector<float> X,
             } else { //Capa oculta
                 
                 //TODO: 
+                  //Obtenemos los pesos de la neurona i,j
+                Wj = this->neuronas[ this->estructura[i][j] ].getW();
+
+                //Obtenemos las entradas de la neurona i,j
+                X = entradas_por_neurona[i][j];
+                //Agrego el bias
+                X.insert(X.begin(), -1.0); 
+
+                //Calculo del v_j (local field)
+                float localfield = utils::vectorPunto(X,Wj);
+                //Evaluamos la derivada de la sigmoidea en el campo escalar
+                float sigprima = utils::sigmoideaPrima(localfield);
+
                 //* obtener los deltas de la capa siguiente
+                std::vector<float> deltatemp = deltas[i+1];
+                
                 //* obtener los pesos que conectan la neurona (i,j) con las neuronas de la capa siguiente (i+1,*)
+                std::vector<unsigned int> ids_next;
+                this->getNext(j, ids_next);
+
+                std::vector<float> Wkj;
+                for (unsigned int k = 0; k < ids_next.size(); k++ ) {
+                    Wkj.push_back( this->neuronas[ ids_next[k] ].getW()[j] );
+                }                
+
                 //* hacer producto punto de los deltas y los pesos
+                float deltak_wkj = utils::vectorPunto(X,Wkj);
+
                 //* deltas(i,j) = sigprima(localfield)*vectorPunto(deltas(i+1,*),pesos(*,j)
+                deltas[i][j] = localfield * deltak_wkj;
+
             }
         }
     }
     //Actualizar pesos
     //Para cada capa l:
     //w(n+1) = w(n) + cte_momento*(w(n-1) + cte_aprendizaje*delta(l)*y(l-1)
+    
 
+    //**** Reever porque estamos actualizando todos los pesos juntos y no sabemos como obtener y_i^(l-1)
+    for (unsigned int i = 0; i < n; i++) { //recorro neurona
+        std::vector<float> term1 = this->neuronas[i].getW();
+        std::vector<float> term2;
+        utils::vectorEscalar(this->neuronas[i].getWn_1(), this->parametro_momento, term2);
+        
+        std::vector<float> term3;
+        unsigned int capa, posicion;
+        this->getPosition(i, capa, posicion);
+        
 
+        utils::vectorEscalar(respuestas[capa-1], this->neuronas[i].getConstanteAprendizaje() * deltas[capa][posicion], term3);
 
+        this->neuronas[i].setW();
+
+    }
+
+    this->Wn_1 = W;
 }
 
 //Devuelve true si no hubo error
@@ -304,9 +348,6 @@ bool Red::singleTrain(std::vector<float> X, std::vector<float> YD, bool update) 
     
     return salida_sin_error;
 }
-
-void backpropagation() {}; //soon
-
 
 void Red::getNeurons(std::vector<Neurona> &N) {
 	N = this->neuronas;

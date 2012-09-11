@@ -15,6 +15,9 @@ private:
 	//Índice que determina la función de activación
 	unsigned int id_funcion_activacion;
 
+	//Propiedad temporal para guardar la iteración n-1 del backpropagation
+	std::vector<float> Wn_1;
+
 	
 public:
 	static const unsigned int FUNCION_SIGNO = 1;
@@ -34,6 +37,9 @@ public:
 	
 	//Devuelve la constante de aprendizaje
 	float getConstanteAprendizaje();
+
+	//Obtiene por referencia el vector W
+	std::vector<float> getWn_1();
 };
 
 #endif

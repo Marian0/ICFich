@@ -26,6 +26,10 @@ class Red {
 
         //Parametro utilizado en Neurona::getResponse si se usa la funcion sigmoidea
         float parametro_sigmoidea;
+
+        //Constante de Momento alfa
+        float parametro_momento;
+
 	public:
 
         //Construye la red leyendola desde un archivo pasado por argumento
