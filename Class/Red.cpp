@@ -11,7 +11,8 @@ Red::Red(std::string nombre_archivo,
         std::string identificador,
 		 float tasa_aprendizaje,
 		 unsigned int int_funcion_activacion,
-         float par_sigmoidea
+         float par_sigmoidea,
+         float parametro_momento
         ) {
     //Lee la estructura desde el archivo
     readStructure(nombre_archivo); 
