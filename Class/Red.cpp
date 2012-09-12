@@ -170,22 +170,30 @@ bool Red::backpropagation(std::vector<float> X,
 
     //Respuestas de cada neurona de la red en correspondencia con this->estructura
     std::vector<std::vector<float> > respuestas;
+    //Entradas que le entran a cada neurona (salidas de capas anteriores)
     std::vector<std::vector<std::vector<float> > > entradas_por_neurona; //necesario para calculos
 
     unsigned int n = this->estructura.size();
+    //entradas_por_neurona tiene que tener el mismo tamaño que la cantidad de capas
     entradas_por_neurona.resize(n);
+
     for (unsigned int i = 0; i < n; i++) { //Recorremos por "capa" sobre la estructura
         unsigned int m = this->estructura[i].size();
 
         std::vector<float> respuestatemp;
-        entradas_por_neurona[i].resize(m);
+        entradas_por_neurona[i].resize(m); //reservamos espacio para todas las neuronas de esta capa
         for (unsigned int j = 0 ; j < m ; j++) {
             //Recorremos cada neurona de la capa i
             std::vector<unsigned int> entradas_ids; //ids entradas
             std::vector<unsigned int> entradas_ids_neuronas; //ids neuronas
 
             //Obtenemos las neuronas de la capa anterior que se conectan a la actual
+            //Si estan en la primer capa, entradas_ids_neuronas sera vacío
+            //En el caso normal, si estan en una capa distinta a la primera, entradas_ids sera vacío
             this->getPrev( this->estructura[i][j], entradas_ids_neuronas, entradas_ids );
+            
+            //A continuacion recorremos las entradas y neuronas anteriores, quedandonos con sus salidas,
+            //las cuales seran entradas a la neurona i,j
 
             std::vector<float> entradas_valor;
             //Buscamos valor de estimulos de las entradas X
@@ -198,8 +206,12 @@ bool Red::backpropagation(std::vector<float> X,
                 //Obtenemos la posicion de la neurona w en la matriz de respuestas
                 this->getPosition(entradas_ids_neuronas[w], capa, posicion );
                 //Guardo ese valor como una entrada para la siguiente capa
+                //Respuestas ya tiene los valores de las capas anteriores
                 entradas_valor.push_back( respuestas[capa][posicion] );           
             }
+            //en entradas_valor quedaron guardados los valores de las entradas a la neurona actual
+            //(tanto de entradas a la red como de salidas de otras neuronas de capas anteriores)
+            //Guardo esos valores en la matriz entradas_por_neuronas
             entradas_por_neurona[i][j] = entradas_valor;
             
             //Obtiene la id de la neurona en la capa i, posicion j
@@ -209,9 +221,11 @@ bool Red::backpropagation(std::vector<float> X,
             respuestatemp.push_back(this->neuronas[id_neurona].getResponse(entradas_valor, parametro_sigmoidea) );
 
         } //Fin recorrido capa
+        //guarda todas las respuestas de la capa i, que se utilizaran en la capa i+1
         respuestas.push_back(respuestatemp);       
     } //Fin de recorrido hacia adelante
-    
+   
+
     //Recorrido hacia atras
 
     //Vector donde se almacenaran los deltas del recorrido hacia atras
@@ -237,7 +251,8 @@ bool Red::backpropagation(std::vector<float> X,
                 Wj = this->neuronas[ this->estructura[i][j] ].getW();
 
                 //Obtenemos las entradas de la neurona i,j
-                X = entradas_por_neurona[i][j];
+                //que son las salidas de la capa i-1
+                X = entradas_por_neurona[i][j]; //X = y_j^(i-1)
                 //Agrego el bias
                 X.insert(X.begin(), -1.0); 
 
@@ -265,14 +280,18 @@ bool Red::backpropagation(std::vector<float> X,
                 //obtener los deltas de la capa siguiente
                 std::vector<float> deltatemp = deltas[i+1];
                 
-                //obtener los pesos que conectan la neurona (i,j) con las neuronas de la capa siguiente (i+1,*)
+                //Obtener los pesos que conectan la neurona (i,j) con las neuronas de la capa siguiente (i+1,*)
+                
+                //obtenemos los ids de las neuronas de la capa siguiente
                 std::vector<unsigned int> ids_next;
                 this->getNext( this->estructura[i][j] , ids_next);
 
+                //Obtenemos los pesos que queriamos, de la neurona i,j conectada a las neuronas de i+1,*
                 std::vector<float> Wkj;
                 for (unsigned int k = 0; k < ids_next.size(); k++ ) {
                     //Necesito solo los pesos de la conexión de la neurona con la capa siguiente solamente
                     Wkj.push_back( this->neuronas[ ids_next[k] ].getW()[j] );
+                    //REVEER EL [J], no deberia ser j+1 ? por el bias...
                 }                
 
                 //hacer producto punto de los deltas y los pesos
@@ -316,7 +335,7 @@ bool Red::backpropagation(std::vector<float> X,
             utils::printVector(term3);
             std::cout<<"nuevoW: ";
             utils::printVector(nuevoW);
-            std::getchar();
+            //std::getchar();
             if (update) //si quiero actualizar...
                 this->neuronas[ this->estructura[i][j] ].setW(nuevoW);
         }
