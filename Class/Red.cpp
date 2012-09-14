@@ -275,7 +275,7 @@ bool Red::backpropagation(std::vector<float> X,
                 //Calculo del v_j (local field)
                 float localfield = utils::vectorPunto(X,Wj);
                 //Evaluamos la derivada de la sigmoidea en el campo escalar
-                float sigprima = utils::sigmoideaPrima(localfield);
+                float sigprima = utils::sigmoideaPrima(respuestas[i][j]);
 
                 //obtener los deltas de la capa siguiente
                 std::vector<float> deltatemp = deltas[i+1];
@@ -290,7 +290,7 @@ bool Red::backpropagation(std::vector<float> X,
                 std::vector<float> Wkj;
                 for (unsigned int k = 0; k < ids_next.size(); k++ ) {
                     //Necesito solo los pesos de la conexión de la neurona con la capa siguiente solamente
-                    Wkj.push_back( this->neuronas[ ids_next[k] ].getW()[j] );
+                    Wkj.push_back( this->neuronas[ ids_next[k] ].getW()[j+1] );
                     //REVEER EL [J], no deberia ser j+1 ? por el bias...
                 }                
 
@@ -318,24 +318,16 @@ bool Red::backpropagation(std::vector<float> X,
         
             std::vector<float> term3;
             //entradas por neurona = y_i(l-1)
-            utils::vectorEscalar(entradas_por_neurona[i][j], this->neuronas[  this->estructura[i][j] ].getConstanteAprendizaje() * deltas[i][j], term3);
+            std::vector<float> entradas_ij = entradas_por_neurona[i][j];
+            entradas_ij.insert(entradas_ij.begin(), -1); //agrego el bias
+            utils::vectorEscalar(entradas_ij , this->neuronas[  this->estructura[i][j] ].getConstanteAprendizaje() * deltas[i][j], term3);
            
-            term3.insert(term3.begin(), -1); //agrego el bias
             std::vector<float> term12;
             utils::vectorSuma(term1, term2, term12);
             
             std::vector<float> nuevoW;
             utils::vectorSuma(term12, term3, nuevoW);
            
-            std::cout<<"term1: ";
-            utils::printVector(term1);
-            std::cout<<"term2: ";
-            utils::printVector(term2);
-            std::cout<<"term3: ";
-            utils::printVector(term3);
-            std::cout<<"nuevoW: ";
-            utils::printVector(nuevoW);
-            //std::getchar();
             if (update) //si quiero actualizar...
                 this->neuronas[ this->estructura[i][j] ].setW(nuevoW);
         }

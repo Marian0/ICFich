@@ -189,7 +189,6 @@ int main (int argc, char *argv[]) {
             //guarda el error de esta iteracion
             errores_consecutivos.push_back(error);
         }
-        std::getchar();
     }
     std::cout<<"Entrenamiento finalizado a las "<<i<<" epocas.\n"; 
     
