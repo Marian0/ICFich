@@ -91,12 +91,12 @@ void utils::printVector(std::vector<float> &v, char separator){
 // el separador entre elementos(v[i]), y el separador entre casos (v[i][j])
 void utils::printVectorVector(std::vector<std::vector<float> > &v, char separator, 
 						std::string newcase){
-	std::cout<<"Inicio Vector debug: size(" << v.size() << ")"<<std::endl;
+	//std::cout<<"Inicio Vector debug: size(" << v.size() << ")"<<std::endl;
 	for (unsigned int i = 0; i < v.size(); i++){
 		utils::printVector(v[i],separator);
 		std::cout<<newcase;
 	}
-	std::cout<<"Fin Vector debug: size(" << v.size() << ")"<<std::endl;
+	//std::cout<<"Fin Vector debug: size(" << v.size() << ")"<<std::endl;
 }
 
 

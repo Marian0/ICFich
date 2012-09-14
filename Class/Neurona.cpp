@@ -16,7 +16,7 @@ Neurona::Neurona(unsigned int dim, float min, float max, unsigned int funcion, f
 	//dim+1 porque una entrada pertenece al bias (umbral)
 	for(unsigned int i = 0; i < dim+1; i++){
 		W.push_back(utils::randomDecimal(min,max));
-		Wn_1.push_back(utils::randomDecimal(min,max));
+		Wn_1.push_back(0.0); //agrego ceros para que no intervenga en la 1er iteracion
 	}
 }
 

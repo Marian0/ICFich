@@ -44,6 +44,7 @@ int main (int argc, char *argv[]) {
     std::cout<<"Cantidad de patrones invasores = "<<invasores<<'\n';
     std::cout<<"Tasa de aprendizaje = "<<tasa_aprendizaje<<'\n';
     std::cout<<"Criterio de finalizacion: "<<criterio_finalizacion<<'\n';
+    std::cout<<"Parametro Momento = "<<parametro_momento<<'\n';
 
 	//Inicializamos y configuramos el Graficador
     //Graficador para el error
@@ -80,7 +81,7 @@ int main (int argc, char *argv[]) {
 	utils::parseCSV(archivo_problema.c_str(), patron);
 	
     //Genero los casos de pruebas en numero y desvío definidos
-    patron = utils::genPatrones( patron , cantidad_casos, desvio);
+    //patron = utils::genPatrones( patron , cantidad_casos, desvio);
 	
 	//metemos algunos errores
     random_shuffle(patron.begin() , patron.end());

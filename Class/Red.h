@@ -1,3 +1,4 @@
+#include <map>
 #include <vector>
 #include <string>
 #include "Neurona.h"
@@ -30,6 +31,9 @@ class Red {
         //Constante de Momento alfa
         float parametro_momento;
 
+        //Se guardaran los delta w_ji anteriores
+        //Map de id_neurona a vector de deltas w
+        std::map<unsigned int, std::vector<float> > deltas_w_ji;
 	public:
 
         //Construye la red leyendola desde un archivo pasado por argumento

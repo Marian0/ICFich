@@ -132,6 +132,20 @@ void Red::structureGenerator( float tasa_aprendizaje, unsigned int int_funcion_a
             temp = temp2;
         }
     }
+
+    //Inicializa el map
+    for (unsigned int i = 0; i < this->estructura.size(); i++) {
+        for (unsigned int j = 0; j < this->estructura[i].size(); j++) {
+            unsigned int id_neurona = this->estructura[i][j];
+            std::vector<float> v_t;
+            unsigned int cantidad_pesos = this->neuronas[id_neurona].getW().size();
+            //le insertamos todos ceros
+            for (unsigned int k = 0; k < cantidad_pesos; k++) {
+                v_t.push_back(0.0);
+            }
+            this->deltas_w_ji[ id_neurona ] = v_t;
+        }
+    }
 }
 
 
@@ -261,7 +275,10 @@ bool Red::backpropagation(std::vector<float> X,
                 //Evaluamos la derivada de la sigmoidea en el campo escalar
                 float sigprima = utils::sigmoideaPrima(localfield);
                 //Guardamos el delta de esta neurona
-                deltas[i][j] = error * sigprima;
+                
+                deltas[i][j] = sigprima * error;
+                
+                //std::cout<<"holaaaaaaaaaa\n"; std::cout<<sigprima<<' '<<error<<'\n';
             } else { //Capa oculta
                 
                 //Obtenemos los pesos de la neurona i,j
@@ -291,7 +308,6 @@ bool Red::backpropagation(std::vector<float> X,
                 for (unsigned int k = 0; k < ids_next.size(); k++ ) {
                     //Necesito solo los pesos de la conexión de la neurona con la capa siguiente solamente
                     Wkj.push_back( this->neuronas[ ids_next[k] ].getW()[j+1] );
-                    //REVEER EL [J], no deberia ser j+1 ? por el bias...
                 }                
 
                 //hacer producto punto de los deltas y los pesos
@@ -299,39 +315,63 @@ bool Red::backpropagation(std::vector<float> X,
                 float deltak_wkj = utils::vectorPunto(deltas[i+1],Wkj);
 
                 //deltas(i,j) = sigprima(localfield)*vectorPunto(deltas(i+1,*),pesos(*,j)
+                
                 deltas[i][j] = sigprima * deltak_wkj;
+                
+                //std::cout<<sigprima<<' '<<deltak_wkj<<"\n";
             }
         }
     }
+
+    //utils::printVectorVector(deltas);
+    //
     //Actualizar pesos
     //Para cada capa l:
-    //w(n+1) = w(n) + cte_momento*(w(n-1) + cte_aprendizaje*delta(l)*y(l-1)
+    //delta(w(n)) = cte_aprendizaje*delta(l)*y(l-1)
+    //w(n+1) = w(n) + cte_momento*delta(w(n-1)) + cte_aprendizaje*delta(l)*y(l-1)
     n = this->estructura.size();
     for (unsigned int i = 0; i < n; i++) { //Recorremos por "capa" sobre la estructura
         unsigned int m = this->estructura[i].size();
         for (unsigned int j = 0 ; j < m ; j++) {
-            std::vector<float> term1 = this->neuronas[ this->estructura[i][j] ].getW();
+            unsigned int id_neurona = this->estructura[i][j];
+
+            std::vector<float> term1 = this->neuronas[ id_neurona ].getW();
             
-            std::vector<float> term2;
-            std::vector<float> pesos_anteriores = this->neuronas[ this->estructura[i][j] ].getWn_1();
-            utils::vectorEscalar(pesos_anteriores, this->parametro_momento, term2);
+            std::vector<float> term2, term2_t;
+            term2_t = this->deltas_w_ji[ id_neurona ];
+
+            utils::vectorEscalar(term2_t, this->parametro_momento, term2);
+
+            //std::vector<float> pesos_anteriores = this->neuronas[ this->estructura[i][j] ].getWn_1();
+//            utils::vectorEscalar(pesos_anteriores, this->parametro_momento, term2);
+    
+            //std::cout<<"term1: "; utils::printVector(term1);
+            //std::cout<<"term2: "; utils::printVector(term2);
         
             std::vector<float> term3;
             //entradas por neurona = y_i(l-1)
             std::vector<float> entradas_ij = entradas_por_neurona[i][j];
             entradas_ij.insert(entradas_ij.begin(), -1); //agrego el bias
-            utils::vectorEscalar(entradas_ij , this->neuronas[  this->estructura[i][j] ].getConstanteAprendizaje() * deltas[i][j], term3);
+            utils::vectorEscalar(entradas_ij , this->neuronas[  id_neurona ].getConstanteAprendizaje() * deltas[i][j], term3);
            
             std::vector<float> term12;
             utils::vectorSuma(term1, term2, term12);
-            
+                
+            //Guarda el delta actual para la sgte iteracion
+            std::vector<float> term23;
+            utils::vectorSuma(term2, term3, term23);
+            this->deltas_w_ji[ id_neurona ] = term23;
+
+
             std::vector<float> nuevoW;
             utils::vectorSuma(term12, term3, nuevoW);
            
-            if (update) //si quiero actualizar...
-                this->neuronas[ this->estructura[i][j] ].setW(nuevoW);
+            if (update) { //si quiero actualizar...
+                this->neuronas[ id_neurona ].setW(nuevoW);
+            }
         }
     }
+//    std::getchar();
     return salida_sin_error;
 }
 
@@ -588,3 +628,67 @@ void Red::getPosition(unsigned int idx, unsigned int &capa, unsigned int &pos ) 
 }
 
 
+void Red::genFullStructure(unsigned int entradas, std::vector<unsigned int> neuronas_por_capa) {
+    unsigned int n = cantidad_capas = neuronas_por_capa.size();
+    std::vector<std::vector<unsigned int> > ady_ent;
+    std::vector<std::vector<unsigned int> > ady;
+
+    unsigned int neuronas_primer_capa = neuronas_por_capa[0];
+
+    //Cuento la cantidad de neuronas total
+    unsigned int cantidad_neuronas = 0;
+    for (unsigned int i = 0; i < neuronas_por_capa.size(); i++)
+        cantidad_neuronas += neuronas_por_capa[i];
+
+    //en cada capa_neurona[i] especifica la capa en la que esta la neurona i
+    std::vector<unsigned int> capa_neurona;
+    for (unsigned int i = 0; i < neuronas_por_capa; i++) {
+
+    }
+
+
+    //Generacion de la matriz de adyacencias para entradas
+
+    //genero el array de adyacencias para cada una de las entradas
+    unsigned int *ady = new unsigned int[cantidad_neuronas];
+    for (unsigned int i = 0; i < cantidad_neuronas; i++) {
+        if (i < neuronas_primer_capa)//si estoy en la primer capa
+            ady[i] = 1;
+        else //si estoy en una capa oculta
+            ady[i] = 0;
+    }
+
+    for (unsigned int i = 0; i < neuronas_primer_capa; i++) 
+        ady_ent.push_back(ady);
+
+    unsigned int *ady_ocultas = new unsigned int[cantidad_neuronas];
+    for (unsigned int i = 0; i < cantidad_neuronas; i++) {
+        ady_ent.push_back(ady_ocultas);
+    }
+
+    //Generacion de la matriz de adyacencias
+
+    for (unsigned int k = 0; k < cantidad_neuronas; k++) {
+
+        //encuentra la capa donde esta esta neurona
+        unsigned int neuronas_hasta_aca = 0;
+        unsigned int capa = -1;
+        for (unsigned int w = 0; w < neuronas_por_capa.size(); w++) {
+            if(neuronas_hasta_aca >= neuronas_por_capa[w])
+                capa = w;
+        }
+
+        if(capa == -1) {
+            std::cout<<"No se pudo encontrar la capa de la neurona "<<k<<". El programa acaba de explotar.\n";
+            assert(false);
+        }
+
+        unsigned int *ady_neuronas = new unsigned int[cantidad_neuronas];
+        for (unsigned int i = 0; i < cantidad_neuronas; i++) {
+
+        }
+    }
+ }
+    
+    this->adyacencias_entradas = ady_ent;
+}
