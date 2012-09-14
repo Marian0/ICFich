@@ -65,6 +65,9 @@ class Red {
         //Lee la estructura del archivo dado, modificando las matrices adyacencias y adyacencias_entradas
         void readStructure(std::string nombre_archivo);
 
+        //Crea la estructura a partir de expresarle la cantidad de neuronas por capa  y la cantidad de entradas
+        void genFullStructure(std::string nombre_archivo);
+
 		//Devuelve el error en el entrenamiento
 		//Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
 		bool train(std::vector<float> X, std::vector<float> YD, bool update = true);

@@ -1,4 +1,5 @@
 #include <vector>
+#include <numeric>
 #include <algorithm>
 #include <string>
 #include <fstream>
@@ -16,7 +17,8 @@ Red::Red(std::string nombre_archivo,
          float parametro_momento
         ) {
     //Lee la estructura desde el archivo
-    readStructure(nombre_archivo); 
+    genFullStructure(nombre_archivo);
+//    readStructure(nombre_archivo); 
     
     //Se guarda el id
 	this->identificador = identificador;
@@ -628,67 +630,95 @@ void Red::getPosition(unsigned int idx, unsigned int &capa, unsigned int &pos ) 
 }
 
 
-void Red::genFullStructure(unsigned int entradas, std::vector<unsigned int> neuronas_por_capa) {
-    unsigned int n = cantidad_capas = neuronas_por_capa.size();
-    std::vector<std::vector<unsigned int> > ady_ent;
-    std::vector<std::vector<unsigned int> > ady;
-
-    unsigned int neuronas_primer_capa = neuronas_por_capa[0];
-
-    //Cuento la cantidad de neuronas total
-    unsigned int cantidad_neuronas = 0;
-    for (unsigned int i = 0; i < neuronas_por_capa.size(); i++)
-        cantidad_neuronas += neuronas_por_capa[i];
-
-    //en cada capa_neurona[i] especifica la capa en la que esta la neurona i
-    std::vector<unsigned int> capa_neurona;
-    for (unsigned int i = 0; i < neuronas_por_capa; i++) {
-
-    }
-
-
-    //Generacion de la matriz de adyacencias para entradas
-
-    //genero el array de adyacencias para cada una de las entradas
-    unsigned int *ady = new unsigned int[cantidad_neuronas];
-    for (unsigned int i = 0; i < cantidad_neuronas; i++) {
-        if (i < neuronas_primer_capa)//si estoy en la primer capa
-            ady[i] = 1;
-        else //si estoy en una capa oculta
-            ady[i] = 0;
-    }
-
-    for (unsigned int i = 0; i < neuronas_primer_capa; i++) 
-        ady_ent.push_back(ady);
-
-    unsigned int *ady_ocultas = new unsigned int[cantidad_neuronas];
-    for (unsigned int i = 0; i < cantidad_neuronas; i++) {
-        ady_ent.push_back(ady_ocultas);
-    }
-
-    //Generacion de la matriz de adyacencias
-
-    for (unsigned int k = 0; k < cantidad_neuronas; k++) {
-
-        //encuentra la capa donde esta esta neurona
-        unsigned int neuronas_hasta_aca = 0;
-        unsigned int capa = -1;
-        for (unsigned int w = 0; w < neuronas_por_capa.size(); w++) {
-            if(neuronas_hasta_aca >= neuronas_por_capa[w])
-                capa = w;
-        }
-
-        if(capa == -1) {
-            std::cout<<"No se pudo encontrar la capa de la neurona "<<k<<". El programa acaba de explotar.\n";
-            assert(false);
-        }
-
-        unsigned int *ady_neuronas = new unsigned int[cantidad_neuronas];
-        for (unsigned int i = 0; i < cantidad_neuronas; i++) {
-
-        }
-    }
- }
+//Lee una estructura toda conexa desde un archivo
+//La primer linea es la cantidad de entradas e
+//La segunda linea es la cantidad de capas c
+//En la tercer linea hay c valores, correspondientes a la cantidad de neuronas que hay en esa capa.
+//Genera las matrices de adyacencias y adyacencias_entradas
+void Red::genFullStructure(std::string nombre_archivo) {
+    std::ifstream file(nombre_archivo.c_str());
+    assert(file.is_open());
+    unsigned int cant_entradas;
+    unsigned int cant_capas;
+    std::vector<unsigned int> neuronas_por_capa;
     
+    file>>cant_entradas;
+    file>>cant_capas;
+
+    for (unsigned int i = 0; i < cant_capas; i++) {
+        unsigned int new_val;
+        file>>new_val;
+        neuronas_por_capa.push_back(new_val);
+    }
+    file.close();
+    
+    std::cout<<"Lectura del archivo "<<nombre_archivo<<"\nCantidad de Capas = "<<
+        cant_capas<<"\nCantidad de Entradas = "<<cant_entradas<<"\nNeuronas por capa: ";
+    utils::printVector(neuronas_por_capa);
+
+    unsigned int cant_neuronas = std::accumulate(neuronas_por_capa.begin(), neuronas_por_capa.end(), 0);
+
+    std::vector<unsigned int> posiciones;
+    //posiciones.resize(cant_neuronas);
+    //en cada posicion de posiciones[i], pone la capa a la que pertenece
+    for (unsigned int i = 0; i < cant_capas; i++) {
+        //inserta el numero de capa tantas veces como neuronas haya en esa capa
+        posiciones.insert(posiciones.end(), neuronas_por_capa[i], i);
+    }
+
+    std::cout<<"Posiciones: ";
+    utils::printVector(posiciones);
+    
+    //Redimensiona la matriz
+    std::vector<std::vector<bool> > ady;
+    ady.resize(cant_neuronas);
+    for (unsigned int i = 0; i < cant_neuronas; i++) ady[i].resize(cant_neuronas,0);
+
+    //Para cada neurona, me fijo cuales neuronas tiene en su capa siguiente y le asigno 1
+    for (unsigned int i = 0; i < cant_neuronas; i++) {
+        unsigned int capa_neurona_i = posiciones[i];
+        for (unsigned int j = i+1; j < cant_neuronas; j++) {
+            unsigned int capa_neurona_j = posiciones[j];
+            if (capa_neurona_j == capa_neurona_i+1) { //si la neurona j esta en la capa siguiente
+                ady[i][j] = 1;
+            }
+        }
+    }
+
+    std::vector<std::vector<bool> > ady_ent;
+    //Generacion de la matriz de entradas
+    ady_ent.resize(cant_entradas);
+    for (unsigned int i = 0; i < cant_entradas; i++) ady_ent[i].resize(cant_neuronas, 0);
+    
+    for (unsigned int i = 0; i < cant_neuronas; i++) {
+        unsigned int capa_neurona_i = posiciones[i];
+        if (capa_neurona_i == 0) { //si la neurona i esta en la primer capa
+            for (unsigned int k = 0; k < cant_entradas; k++) //le pongo en 1 cada una de las entradas
+                ady_ent[k][i] = 1;
+        }
+    }
+   
+
+    //limpieza por las dudas
+    this->adyacencias.clear();
+    this->adyacencias_entradas.clear();
+
+    //Asigna la nueva estructura
+    this->adyacencias = ady;
     this->adyacencias_entradas = ady_ent;
+
+    std::cout<<"Adyacencias:\n";
+    for(unsigned int i = 0; i < this->adyacencias.size(); i++){
+        for (unsigned int j = 0; j < this->adyacencias[i].size(); j++)
+            std::cout<<this->adyacencias[i][j]<<' ';
+        std::cout<<'\n';
+    }
+    
+    std::cout<<"Adyacencias Entradas:\n";
+    for(unsigned int i = 0; i < this->adyacencias_entradas.size(); i++){
+        for (unsigned int j = 0; j < this->adyacencias_entradas[i].size(); j++)
+            std::cout<<this->adyacencias_entradas[i][j]<<' ';
+        std::cout<<'\n';
+    }
+    //std::getchar();
 }
