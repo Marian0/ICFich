@@ -34,6 +34,9 @@ class Red {
         //Se guardaran los delta w_ji anteriores
         //Map de id_neurona a vector de deltas w
         std::map<unsigned int, std::vector<float> > deltas_w_ji;
+
+        //Vector con las ultimas salidas calculadas, necesario para graficación.
+        std::vector<float> last_output;
 	public:
 
         //Construye la red leyendola desde un archivo pasado por argumento
@@ -68,10 +71,15 @@ class Red {
         //Crea la estructura a partir de expresarle la cantidad de neuronas por capa  y la cantidad de entradas
         void genFullStructure(std::string nombre_archivo);
 
+        //Wrapper
+		float train(std::vector<std::vector<float> > X,
+                  		std::vector<std::vector<float> > YD, bool update);
+
+		float train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, std::vector<std::vector<float> > & last_output, bool update = true );
 		//Devuelve el error en el entrenamiento
 		//Comprueba la estructura y forma de la red para utilizar uno u otro algoritmo de entrenamiento
 		bool train(std::vector<float> X, std::vector<float> YD, bool update = true);
-		float train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, bool update = true);
+		
 
 		bool singleTrain(std::vector<float> X, std::vector<float> YD, bool update = true);
 
