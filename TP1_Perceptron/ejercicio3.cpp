@@ -66,8 +66,8 @@ int main (int argc, char *argv[]) {
 	GNUPlot plotter2;	
 	plotter2("set xzeroaxis lt -1");
 	plotter2("set yzeroaxis lt -1");	
-	plotter2("set xrange [-0.5:1.5]");
-	plotter2("set yrange [-0.5:1.5]");
+	plotter2("set xrange [-0.1:1.1]");
+	plotter2("set yrange [-0.1:1.1]");
     plotter2("set multiplot");
 	plotter2("set grid back");	
 	plotter2("set pointsize 1");
@@ -93,7 +93,7 @@ int main (int argc, char *argv[]) {
 			patron[i][2] = 1;
     }
 	random_shuffle(patron.begin() , patron.end());
-
+/*
 	//Dibuja los puntos de cada clase en una ventana para ver la dispersion
 	std::string plot_dot1 = "plot \"-\" notitle pt 1 lt 3\n";
 	std::string plot_dot2 = "plot \"-\" notitle pt 1 lt 1\n";
@@ -108,7 +108,7 @@ int main (int argc, char *argv[]) {
 	plot_dot2 += "e\n";
 	plotter2(plot_dot1);
 	plotter2(plot_dot2);
-					
+*/					
 	//Inicializo el ploteo
 	//Haremos un string para poder plotear al final		
 	std::string plot2 = "plot \"-\" notitle pt 5 lt 3\n";
@@ -134,10 +134,16 @@ int main (int argc, char *argv[]) {
 	for (; i < criterio_max_epocas; i++) {
 
         std::vector<std::vector<float> > ultimas_salidas;
-        //Entrena y calcula error
-        float error = 1-perceptron.train(X, Yd, true, ultimas_salidas);
 
-        
+        //Entrena y calcula error
+        float error = 1-perceptron.train(X, Yd, ultimas_salidas, true);
+
+
+        if(i % intervalo_dibujo == 0) {
+                    //Graficador para la dispersion de puntos
+            plotter2("clear\n");
+            utils::drawPlot(X, Yd, ultimas_salidas, plotter2);
+        }
 
 		error_history_entrenamiento.push_back(error); 
 				
