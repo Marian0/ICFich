@@ -134,5 +134,17 @@ float static promedio(std::vector<float> &V);
 
 //Calcula la desviación estandar
 float static devest(std::vector<float> &V, float media);
+
+//Funcion para graficar el conjuto de patrones
+void static drawPlot(
+		std::vector<std::vector<float> > & X,
+		std::vector<std::vector<float> > & YD,
+		std::vector<std::vector<float> > & YC,
+		GNUPlot & plotter
+	);
+
+//Funcion que toma un vector de valores, los interpreta binarios y lo transforma a entero
+unsigned int static binary2int( std::vector<float> & input );
+
 };
 #endif

@@ -417,3 +417,81 @@ float utils::devest(std::vector<float> &V, float media) {
     }
     return suma/V.size();
 }
+
+//Funcion para graficar el conjuto de patrones
+void utils::drawPlot(
+		std::vector<std::vector<float> > & X,
+		std::vector<std::vector<float> > & YD,
+		std::vector<std::vector<float> > & YC,
+		GNUPlot & plotter
+	) {
+	//Verifico la cantidad de entradas sean iguales
+	unsigned int nX = X.size();
+	unsigned int nYC = YC.size();
+	unsigned int nYD = YD.size();
+	assert( nX > 0 && nX == nYD && nX == nYC ); 
+
+	//Verifico que X sea graficable (2D)
+	assert( X.[0].size() == 2 ); 
+
+	//Vefifico que tengan la misma dimension las salidas
+	unsigned int dimension_salida = YD[0].size();
+	assert( dimension_salida == YC[0].size() );
+
+	//Calculo cantidad de clases 2^n
+	unsigned int cantidad_clases = pow(2, nYC[0].size() );
+
+	//Vectores temporales para guardar los comandos de gnuplot para graficación.
+	std::vector<std::string> str2plot_good; //Bien clasificados
+	std::vector<std::string> str2plot_bad;  //Mal Clasificados
+
+	//Inicializo el vector de string para graficación
+	for (unsigned int i = 0; i < cantidad_clases; i++) {
+		str2plot_good[i] = "plot \"-\" notitle pt " + utils::intToStr(i) + " lt 3\n";
+		str2plot_bad[i] = "plot \"-\" notitle pt " + utils::intToStr(i) + " lt 1\n";
+	}
+	//Lenght minimo para decir que es una clase vacía (no graficar)
+	unsigned int lenght_minimo = str2plot_good[0].size() + 5;
+
+	//Recorro los patrones
+	for (unsigned int i = 0; i < nX; i++) {
+		unsigned int salida_real = utils::binary2int(YC[i]);
+		unsigned int salida_deseada = utils::binary2int(YD[i]);
+
+		std::string punto = utils::floatToStr( X[i][0] ) + " " + utils::floatToStr( X[i][1] ) + " \n";
+		if (salida_real - salida_deseada == 0) {
+			//Esta bien clasificado
+			str2plot_good[salida_deseada] += punto;
+		} else {
+			str2plot_bad[salida_deseada] += punto;
+		}
+	}
+
+	std::string output = "set multiplot\n";
+	//Cerramos los strings de graficacion
+	for (unsigned int i = 0; i < cantidad_clases; i++) {
+		//Los strings que hayan añadido algun punto tendran mayor size que el lenght minimo
+		if ( str2plot_good[i].size() > lenght_minimo )
+			output += str2plot_good[i] + "e\n";
+
+		if ( str2plot_bad[i].size() > lenght_minimo )
+			output += str2plot_bad[i] + "e\n";
+	}
+	//Enviamos al pipe de graficacion :D
+	plotter(output);
+}
+
+//Funcion que toma un vector de valores, los interpreta binarios y lo transforma a entero
+unsigned int utils::binary2int( std::vector<float> & input ) {
+	unsigned int n = input.size();
+
+	unsigned int count = 0;
+	for (unsigned int i = 0; i < n; i++) {
+		if (input[i] > 0.5) {
+			//Interpreto un 1
+			count += pow(2,i);
+		}
+		//else interpreto un 0 => no sumo
+	}
+	return count;
+}
