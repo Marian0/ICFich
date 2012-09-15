@@ -223,18 +223,27 @@ bool Red::backpropagation(std::vector<float> X,
                 this->getPosition(entradas_ids_neuronas[w], capa, posicion );
                 //Guardo ese valor como una entrada para la siguiente capa
                 //Respuestas ya tiene los valores de las capas anteriores
-                entradas_valor.push_back( respuestas[capa][posicion] );           
+                entradas_valor.push_back( respuestas[capa][posicion] );
             }
+
             //en entradas_valor quedaron guardados los valores de las entradas a la neurona actual
             //(tanto de entradas a la red como de salidas de otras neuronas de capas anteriores)
             //Guardo esos valores en la matriz entradas_por_neuronas
             entradas_por_neurona[i][j] = entradas_valor;
             
+            
             //Obtiene la id de la neurona en la capa i, posicion j
             unsigned int id_neurona = this->estructura[i][j];
-            
+           
             //Guarda la respuesta de esta neurona, para utilizarla en las neuronas de la capa siguiente
             respuestatemp.push_back(this->neuronas[id_neurona].getResponse(entradas_valor, parametro_sigmoidea) );
+            
+            /*
+            std::cout<<"\t\t\t\t\t\t\t\t\t\t\t\tId neurona: "<<id_neurona<<'\n';
+            std::cout<<"Entradas por neurona (i,j): ("<<i<<','<<j<<')'; utils::printVector(entradas_por_neurona[i][j]);
+            std::cout<<"Entradas_Valor: "; utils::printVector(entradas_valor);
+            std::cout<<"Respuesta: "; utils::printVector(respuestatemp);
+            */
 
         } //Fin recorrido capa
         //guarda todas las respuestas de la capa i, que se utilizaran en la capa i+1
@@ -277,12 +286,18 @@ bool Red::backpropagation(std::vector<float> X,
                 //Calculo del v_j (local field)
                 float localfield = utils::vectorPunto(X,Wj);
                 //Evaluamos la derivada de la sigmoidea en el campo escalar
-                float sigprima = utils::sigmoideaPrima(localfield);
-                //Guardamos el delta de esta neurona
                 
+                float sigprima = utils::sigmoideaPrima(localfield, parametro_sigmoidea);
+                //float sigprima = utils::sigmoideaPrima(respuestas[i][j]);
+                
+                /*
+                std::cout<<"(i,j) = "<<i<<' '<<j<<"\nX: ";utils::printVector(X); std::cout<<"Wj: "; utils::printVector(Wj); 
+                std::cout<<"Localfield = "<<localfield<<" Sigprima = "<<sigprima<<'\n';
+                */
+
+                //Guardamos el delta de esta neurona
                 deltas[i][j] = sigprima * error;
                 
-                //std::cout<<"holaaaaaaaaaa\n"; std::cout<<sigprima<<' '<<error<<'\n';
             } else { //Capa oculta
                 
                 //Obtenemos los pesos de la neurona i,j
@@ -297,7 +312,14 @@ bool Red::backpropagation(std::vector<float> X,
                 //Calculo del v_j (local field)
                 float localfield = utils::vectorPunto(X,Wj);
                 //Evaluamos la derivada de la sigmoidea en el campo escalar
-                float sigprima = utils::sigmoideaPrima(respuestas[i][j]);
+                
+                //float sigprima = utils::sigmoideaPrima(respuestas[i][j]);
+                float sigprima = utils::sigmoideaPrima(localfield, parametro_sigmoidea);
+                
+                /*
+                std::cout<<"(i,j) = "<<i<<' '<<j<<"\nX: ";utils::printVector(X); std::cout<<"Wj: "; utils::printVector(Wj); 
+                std::cout<<"Localfield = "<<localfield<<" Sigprima = "<<sigprima<<'\n';
+                */
 
                 //obtener los deltas de la capa siguiente
                 std::vector<float> deltatemp = deltas[i+1];
@@ -350,8 +372,6 @@ bool Red::backpropagation(std::vector<float> X,
             //std::vector<float> pesos_anteriores = this->neuronas[ this->estructura[i][j] ].getWn_1();
 //            utils::vectorEscalar(pesos_anteriores, this->parametro_momento, term2);
     
-            //std::cout<<"term1: "; utils::printVector(term1);
-            //std::cout<<"term2: "; utils::printVector(term2);
         
             std::vector<float> term3;
             //entradas por neurona = y_i(l-1)
@@ -368,7 +388,12 @@ bool Red::backpropagation(std::vector<float> X,
             std::vector<float> term23;
             utils::vectorSuma(term2, term3, term23);
             this->deltas_w_ji[ id_neurona ] = term23;
-
+            
+            /*
+            std::cout<<"(i,j) = "<<i<<' '<<j<<'\n';
+            std::cout<<"term1: "; utils::printVector(term1);
+            std::cout<<"term3: "; utils::printVector(term3);
+         */
 
             std::vector<float> nuevoW;
             utils::vectorSuma(term12, term3, nuevoW);

@@ -60,10 +60,10 @@ void static randomCircular(float xi, float yi, float desvio, float & newx, float
 float static signo(float x);
 
 //Funcion sigmodea
-float static sigmoidea(float x, float param = 50);
+float static sigmoidea(float x, float param = 5);
 
 //Funcion derivada de sigmoidea
-float static sigmoideaPrima(float x);
+float static sigmoideaPrima(float x, float param = 5);
 
 //----------------------------------
 //Funciones de Algebra de Vectores

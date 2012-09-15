@@ -151,14 +151,28 @@ float utils::signo(float x){
 
 //Funcion sigmodea
 float utils::sigmoidea(float x, float param){
+    //fixes de overflow y underflow
+    //La sigmoidea da 1 y -1 para valores alejados del origen
+    if(x < -param) return -1.0;
+    if(x > param) return  1.0;
+    
 	float result = (1-exp(-param*x))/(1+exp(-param*x));
+    //std::cout<<"X = "<<x<<"Result = "<<result<<'\n';
 	return result;
 }
 
 //Derivada de la funcion sigmoidea, en la forma:
 //(2)/(1+e^(-bx)) - 1
-float utils::sigmoideaPrima(float x) {
-    return 0.5*(1 + x)*(1 - x);
+float utils::sigmoideaPrima(float x, float param) {
+    double num = exp(-param*x);
+    double den = 1+exp(-param*x);
+    den *= den;
+    //std::cout<<"Sigmoidea prima: "; std::cout<<num<<'/'<<den<<'='<<num/den<<'\n';
+
+    double ret_val = num/den;
+    return (float) ret_val;
+
+    //return 0.5*(1 + x)*(1 - x);
 }
 
 

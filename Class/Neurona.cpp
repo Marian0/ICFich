@@ -28,11 +28,16 @@ float Neurona::getResponse(std::vector<float> X, float parametro_sigmoidea){
 	
 	//float result = -1.0*W[0]; //bias
 	float result = 1.0*W[0]; //bias
-	
+
+    //std::cout<<"X: "; utils::printVector(X);
+    //std::cout<<"W: "; utils::printVector(W);
+    
     //Realiza el producto punto entre la entrada y los pesos
 	for(unsigned int i = 0; i < X.size(); i++){
 		result += W[i+1] * X[i];
 	}
+
+    //std::cout<<"Result A = "<<result<<'\n';
 
 	switch(this->id_funcion_activacion) {
 		case FUNCION_SIGNO: {
@@ -42,6 +47,7 @@ float Neurona::getResponse(std::vector<float> X, float parametro_sigmoidea){
 		case FUNCION_SIGMOIDEA:
 		default:
 			result = utils::sigmoidea(result, parametro_sigmoidea);
+            //std::cout<<"Result B= "<<result<<'\n';
 	}
 	
 	return result;
