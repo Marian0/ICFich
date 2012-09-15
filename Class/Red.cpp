@@ -257,6 +257,7 @@ bool Red::backpropagation(std::vector<float> X,
             if (i == n-1) { //Capa de salida
 
                 //Calculo del error
+                //float error = respuestas[i][j] - YD[j];
                 float error = YD[j] - respuestas[i][j];
                 
                 if ((salida_sin_error == true) && (fabs(error) > EPS)) { //no hubo error aun y son != (hay un error)
@@ -270,7 +271,8 @@ bool Red::backpropagation(std::vector<float> X,
                 //que son las salidas de la capa i-1
                 X = entradas_por_neurona[i][j]; //X = y_j^(i-1)
                 //Agrego el bias
-                X.insert(X.begin(), -1.0); 
+                //X.insert(X.begin(), -1.0); 
+                X.insert(X.begin(), 1.0); 
 
                 //Calculo del v_j (local field)
                 float localfield = utils::vectorPunto(X,Wj);
@@ -289,7 +291,8 @@ bool Red::backpropagation(std::vector<float> X,
                 //Obtenemos las entradas de la neurona i,j
                 X = entradas_por_neurona[i][j];
                 //Agrego el bias
-                X.insert(X.begin(), -1.0); 
+                //X.insert(X.begin(), -1.0); 
+                X.insert(X.begin(), 1.0); 
 
                 //Calculo del v_j (local field)
                 float localfield = utils::vectorPunto(X,Wj);
@@ -353,7 +356,9 @@ bool Red::backpropagation(std::vector<float> X,
             std::vector<float> term3;
             //entradas por neurona = y_i(l-1)
             std::vector<float> entradas_ij = entradas_por_neurona[i][j];
-            entradas_ij.insert(entradas_ij.begin(), -1); //agrego el bias
+            //entradas_ij.insert(entradas_ij.begin(), -1.0); //agrego el bias
+            entradas_ij.insert(entradas_ij.begin(), 1.0); //agrego el bias
+            
             utils::vectorEscalar(entradas_ij , this->neuronas[  id_neurona ].getConstanteAprendizaje() * deltas[i][j], term3);
            
             std::vector<float> term12;
@@ -652,10 +657,7 @@ void Red::genFullStructure(std::string nombre_archivo) {
     }
     file.close();
     
-    std::cout<<"Lectura del archivo "<<nombre_archivo<<"\nCantidad de Capas = "<<
-        cant_capas<<"\nCantidad de Entradas = "<<cant_entradas<<"\nNeuronas por capa: ";
-    utils::printVector(neuronas_por_capa);
-
+    
     unsigned int cant_neuronas = std::accumulate(neuronas_por_capa.begin(), neuronas_por_capa.end(), 0);
 
     std::vector<unsigned int> posiciones;
@@ -666,8 +668,6 @@ void Red::genFullStructure(std::string nombre_archivo) {
         posiciones.insert(posiciones.end(), neuronas_por_capa[i], i);
     }
 
-    std::cout<<"Posiciones: ";
-    utils::printVector(posiciones);
     
     //Redimensiona la matriz
     std::vector<std::vector<bool> > ady;
@@ -707,6 +707,12 @@ void Red::genFullStructure(std::string nombre_archivo) {
     this->adyacencias = ady;
     this->adyacencias_entradas = ady_ent;
 
+    
+    /* Impresiones educativas
+    std::cout<<"Lectura del archivo "<<nombre_archivo<<"\nCantidad de Capas = "<<
+            cant_capas<<"\nCantidad de Entradas = "<<cant_entradas<<"\nNeuronas por capa: ";
+    utils::printVector(neuronas_por_capa);
+    std::cout<<"Posiciones: "; utils::printVector(posiciones);
     std::cout<<"Adyacencias:\n";
     for(unsigned int i = 0; i < this->adyacencias.size(); i++){
         for (unsigned int j = 0; j < this->adyacencias[i].size(); j++)
@@ -720,5 +726,6 @@ void Red::genFullStructure(std::string nombre_archivo) {
             std::cout<<this->adyacencias_entradas[i][j]<<' ';
         std::cout<<'\n';
     }
+    */
     //std::getchar();
 }

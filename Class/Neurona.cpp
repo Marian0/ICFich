@@ -26,8 +26,10 @@ float Neurona::getResponse(std::vector<float> X, float parametro_sigmoidea){
 	// de error informativo
 	assert(X.size() == dimension);
 	
-	float result = -1*W[0]; //bias
-	//Realiza el producto punto entre la entrada y los pesos
+	//float result = -1.0*W[0]; //bias
+	float result = 1.0*W[0]; //bias
+	
+    //Realiza el producto punto entre la entrada y los pesos
 	for(unsigned int i = 0; i < X.size(); i++){
 		result += W[i+1] * X[i];
 	}

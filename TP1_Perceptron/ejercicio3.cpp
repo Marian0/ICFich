@@ -34,6 +34,7 @@ int main (int argc, char *argv[]) {
     float           criterio_error_consecutivo     = utils::strToFloat(config.getValue("criterio_error_consecutivo"));
     std::string     criterio_finalizacion          = config.getValue("criterio_finalizacion");
     unsigned int    minima_cantidad_consecutivos   = utils::strToInt(config.getValue("minima_cantidad_consecutivos"));
+    unsigned int    intervalo_dibujo               = utils::strToInt(config.getValue("intervalo_dibujo"));
 
     //Impresion de los datos de ejecucion
     std::cout<<"Bienvenidos al Ejercicio 3 \n";
@@ -81,7 +82,7 @@ int main (int argc, char *argv[]) {
 	utils::parseCSV(archivo_problema.c_str(), patron);
 	
     //Genero los casos de pruebas en numero y desvío definidos
-    //patron = utils::genPatrones( patron , cantidad_casos, desvio);
+    patron = utils::genPatrones( patron , cantidad_casos, desvio);
 	
 	//metemos algunos errores
     random_shuffle(patron.begin() , patron.end());
@@ -142,7 +143,8 @@ int main (int argc, char *argv[]) {
 		float da0_3 = 8; //Color de la recta random
        
         //Dibuja la recta
-		plotter2("plot " + utils::floatToStr(da0) + "-" + utils::floatToStr(da0_2) + "*x lt "+ utils::floatToStr(da0_3) +" notitle");
+		if (i < intervalo_dibujo or i % intervalo_dibujo == 0)
+            plotter2("plot " + utils::floatToStr(da0) + "-" + utils::floatToStr(da0_2) + "*x lt "+ utils::floatToStr(da0_3) +" notitle");
 
         //Dibujar la frontera de decision
 		float da1  = W1[0]/W1[2];
@@ -150,7 +152,8 @@ int main (int argc, char *argv[]) {
 		float da1_3 = 4; //Color de la recta random
         
         //Dibuja la recta
-		plotter2("plot " + utils::floatToStr(da1) + "-" + utils::floatToStr(da1_2) + "*x lt "+ utils::floatToStr(da1_3) +" notitle");
+		if (i < intervalo_dibujo or i % intervalo_dibujo == 0)
+		    plotter2("plot " + utils::floatToStr(da1) + "-" + utils::floatToStr(da1_2) + "*x lt "+ utils::floatToStr(da1_3) +" notitle");
 		
 		//Entrena y calcula error
 		float error = 1-perceptron.train(X, Yd, true);
