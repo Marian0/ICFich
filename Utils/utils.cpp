@@ -417,3 +417,36 @@ float utils::devest(std::vector<float> &V, float media) {
     }
     return suma/V.size();
 }
+
+//
+void utils::convertirEntrada(std::vector<std::vector<float> > &in, std::vector<std::vector<float> > &out) {
+    if (in[0].size() > 1) { //la salida ya viene codificada, no tengo que hacer nada
+        std::vector<std::vector<float> > V = in;
+        utils::printVectorVector(V);
+        out = V;
+        return;
+    }
+    out.clear();
+    
+    unsigned int cant_casos = in.size();
+    std::vector<float> inn;
+    inn.resize(cant_casos);
+    //Convierto un vector de vector de float (con un solo elemento) en un vector de float
+    for (unsigned int i = 0; i < cant_casos; i++) {
+        inn[i] = in[i][0];
+    }
+
+    unsigned int maximo_clases = 1+(unsigned int) *(std::max_element(inn.begin(), inn.end())); //obtiene la ultima clase, para saber cuantas tengo
+
+    for (unsigned int i = 0; i < cant_casos; i++) {
+        unsigned int val = (unsigned int) inn[i]; //warning, danger casting
+        out.push_back(utils::int2binary(val, maximo_clases));
+    }
+}
+
+std::vector<float> utils::int2binary(unsigned int val, unsigned int max_clases) {
+    std::vector<float> temp;
+    temp.resize(max_clases, -1.0);
+    temp[val] = 1.0;
+    return temp;
+}

@@ -66,8 +66,8 @@ int main (int argc, char *argv[]) {
 	GNUPlot plotter2;	
 	plotter2("set xzeroaxis lt -1");
 	plotter2("set yzeroaxis lt -1");	
-	plotter2("set xrange [-2:2]");
-	plotter2("set yrange [-2:2]");
+	plotter2("set xrange [-0.5:1.5]");
+	plotter2("set yrange [-0.5:1.5]");
     plotter2("set multiplot");
 	plotter2("set grid back");	
 	plotter2("set pointsize 1");
@@ -82,7 +82,7 @@ int main (int argc, char *argv[]) {
 	utils::parseCSV(archivo_problema.c_str(), patron);
 	
     //Genero los casos de pruebas en numero y desvío definidos
-    patron = utils::genPatrones( patron , cantidad_casos, desvio);
+    //patron = utils::genPatrones( patron , cantidad_casos, desvio);
 	
 	//metemos algunos errores
     random_shuffle(patron.begin() , patron.end());
@@ -124,6 +124,12 @@ int main (int argc, char *argv[]) {
     std::vector<std::vector<float> > X, Yd;
     utils::splitVector(entrenamiento, X, Yd);
 
+    //Decodifica las salidas
+    std::vector<std::vector<float> > Ycodificados;
+    utils::convertirEntrada(Yd, Ycodificados);
+    Yd = Ycodificados;
+    
+
     unsigned int i = 0; //contador de epocas
     std::vector<float> errores_consecutivos; //usado para calcular los errores consecutivos
 	for (; i < criterio_max_epocas; i++) {
@@ -144,7 +150,7 @@ int main (int argc, char *argv[]) {
        
         //Dibuja la recta
 		if (i < intervalo_dibujo or i % intervalo_dibujo == 0) {
-            //plotter2("plot " + utils::floatToStr(da0) + "-" + utils::floatToStr(da0_2) + "*x lt "+ utils::floatToStr(da0_3) +" notitle");
+            plotter2("plot " + utils::floatToStr(da0) + "-" + utils::floatToStr(da0_2) + "*x lt "+ utils::floatToStr(da0_3) +" notitle");
         }
 
         //Dibujar la frontera de decision
@@ -154,7 +160,7 @@ int main (int argc, char *argv[]) {
         
         //Dibuja la recta
 		if (i < intervalo_dibujo or i % intervalo_dibujo == 0) {
-		    //plotter2("plot " + utils::floatToStr(da1) + "-" + utils::floatToStr(da1_2) + "*x lt "+ utils::floatToStr(da1_3) +" notitle");
+		    plotter2("plot " + utils::floatToStr(da1) + "-" + utils::floatToStr(da1_2) + "*x lt "+ utils::floatToStr(da1_3) +" notitle");
         }
 		
 		//Entrena y calcula error
