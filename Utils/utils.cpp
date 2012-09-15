@@ -464,6 +464,7 @@ void utils::drawPlot(
 	unsigned int nYD = YD.size();
 	assert( nX > 0 && nX == nYD && nX == nYC ); 
 
+
 	//Verifico que X sea graficable (2D)
 	assert( X[0].size() == 2 ); 
 
@@ -472,23 +473,31 @@ void utils::drawPlot(
 	assert( dimension_salida == YC[0].size() );
 
 	//Calculo cantidad de clases 2^n
-	unsigned int cantidad_clases = pow(2, YC[0].size() );
+	//unsigned int cantidad_clases = pow(2, YC[0].size() );
+    unsigned int cantidad_clases = YC[0].size();
 
 	//Vectores temporales para guardar los comandos de gnuplot para graficación.
 	std::vector<std::string> str2plot_good; //Bien clasificados
 	std::vector<std::string> str2plot_bad;  //Mal Clasificados
+    
+    str2plot_good.resize(cantidad_clases);
+    str2plot_bad.resize(cantidad_clases);
 
-	//Inicializo el vector de string para graficación
+    std::cout<<cantidad_clases<<'\n';
+
+    //Inicializo el vector de string para graficación
 	for (unsigned int i = 0; i < cantidad_clases; i++) {
-		str2plot_good[i] = "plot \"-\" notitle pt " + utils::intToStr(i) + " lt 3\n";
+		str2plot_good[i] = "plot \"-\" notitle pt " + utils::intToStr(i+1) + " lt 3\n";
 		str2plot_bad[i] = "plot \"-\" notitle pt " + utils::intToStr(i) + " lt 1\n";
 	}
+
 	//Lenght minimo para decir que es una clase vacía (no graficar)
 	unsigned int lenght_minimo = str2plot_good[0].size() + 5;
 
 	//Recorro los patrones
 	for (unsigned int i = 0; i < nX; i++) {
 		unsigned int salida_real = utils::binary2int(YC[i]);
+		//unsigned int salida_deseada = utils::binary2int(YD[i]);
 		unsigned int salida_deseada = utils::binary2int(YD[i]);
 
 		std::string punto = utils::floatToStr( X[i][0] ) + " " + utils::floatToStr( X[i][1] ) + " \n";
@@ -516,6 +525,18 @@ void utils::drawPlot(
 
 //Funcion que toma un vector de valores, los interpreta binarios y lo transforma a entero
 unsigned int utils::binary2int( std::vector<float> & input ) {
+
+    for (unsigned int i = 0; i < input.size(); i++) {
+        if (input[i] > 0.5)
+            return i;
+    }
+    return 0;
+    std::cout<<"No se pudo definir la clase de la salida = ";
+    utils::printVector(input);
+    assert(false);
+
+
+
 	unsigned int n = input.size();
 
 	unsigned int count = 0;
