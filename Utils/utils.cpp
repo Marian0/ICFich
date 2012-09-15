@@ -488,7 +488,7 @@ void utils::drawPlot(
     //Inicializo el vector de string para graficación
 	for (unsigned int i = 0; i < cantidad_clases; i++) {
 		str2plot_good[i] = "plot \"-\" notitle pt " + utils::intToStr(i+1) + " lt 3\n";
-		str2plot_bad[i] = "plot \"-\" notitle pt " + utils::intToStr(i) + " lt 1\n";
+		str2plot_bad[i] = "plot \"-\" notitle pt " + utils::intToStr(i+1) + " lt 1\n";
 	}
 
 	//Lenght minimo para decir que es una clase vacía (no graficar)
@@ -496,9 +496,14 @@ void utils::drawPlot(
 
 	//Recorro los patrones
 	for (unsigned int i = 0; i < nX; i++) {
+		// std::cout<<"la calculada ";
+		utils::printVector(YC[i]);
+		
 		unsigned int salida_real = utils::binary2int(YC[i]);
 		//unsigned int salida_deseada = utils::binary2int(YD[i]);
 		unsigned int salida_deseada = utils::binary2int(YD[i]);
+		// std::cout<<"la clase real"<<salida_real<<" la deseada"<<salida_deseada<<std::endl; 
+		// getchar();
 
 		std::string punto = utils::floatToStr( X[i][0] ) + " " + utils::floatToStr( X[i][1] ) + " \n";
 		if (salida_real - salida_deseada == 0) {
@@ -526,11 +531,16 @@ void utils::drawPlot(
 //Funcion que toma un vector de valores, los interpreta binarios y lo transforma a entero
 unsigned int utils::binary2int( std::vector<float> & input ) {
 
+	float maximo = input[0];
+	unsigned int imax = 0;
     for (unsigned int i = 0; i < input.size(); i++) {
-        if (input[i] > 0.5)
-            return i;
+        if (input[i] > maximo) {
+            maximo = input[i];
+            imax = i;
+        }
     }
-    return 0;
+    return imax;
+
     std::cout<<"No se pudo definir la clase de la salida = ";
     utils::printVector(input);
     assert(false);

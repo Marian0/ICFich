@@ -139,7 +139,7 @@ int main (int argc, char *argv[]) {
         float error = 1-perceptron.train(X, Yd, ultimas_salidas, true);
 
 
-        if(i % intervalo_dibujo == 0) {
+        if(i < intervalo_dibujo || i % intervalo_dibujo == 0) {
                     //Graficador para la dispersion de puntos
             plotter2("clear\n");
             utils::drawPlot(X, Yd, ultimas_salidas, plotter2);
