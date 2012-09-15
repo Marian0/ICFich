@@ -161,9 +161,19 @@ bool Red::train(std::vector<float> X, std::vector<float> YD, bool update ) {
 	}
 }
 
+//Wrapper
+float Red::train(std::vector<std::vector<float> > X,
+                  std::vector<std::vector<float> > YD, bool update){
+    
+    std::vector<std::vector<float> > ultimas_salidas;
+    return this->train(X,YD, ultimas_salidas, update);
+
+
+} 
+
 //Ejecuta un conjunto de pruebas y devuelve el porcentaje de aciertos (efectividad)
 float Red::train(std::vector<std::vector<float> > X,
-				  std::vector<std::vector<float> > YD, bool update, std::vector<std::vector<float> > & last_output){ 
+				  std::vector<std::vector<float> > YD, std::vector<std::vector<float> > & last_output, bool update){ 
     unsigned int total_aciertos = 0;
     assert(X.size() == YD.size());
     last_output.clear(); //limpio el historico de salidas reales
