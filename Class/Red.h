@@ -34,6 +34,9 @@ class Red {
         //Se guardaran los delta w_ji anteriores
         //Map de id_neurona a vector de deltas w
         std::map<unsigned int, std::vector<float> > deltas_w_ji;
+
+        //Vector con las ultimas salidas calculadas, necesario para graficación.
+        std::vector<float> last_output;
 	public:
 
         //Construye la red leyendola desde un archivo pasado por argumento

@@ -163,11 +163,13 @@ bool Red::train(std::vector<float> X, std::vector<float> YD, bool update ) {
 
 //Ejecuta un conjunto de pruebas y devuelve el porcentaje de aciertos (efectividad)
 float Red::train(std::vector<std::vector<float> > X,
-				  std::vector<std::vector<float> > YD, bool update){ 
+				  std::vector<std::vector<float> > YD, bool update, std::vector<std::vector<float> > & last_output){ 
     unsigned int total_aciertos = 0;
     assert(X.size() == YD.size());
+    last_output.clear(); //limpio el historico de salidas reales
     for (unsigned int i = 0; i < X.size(); i++){
         bool acierto = train(X[i], YD[i], update);
+        last_output.push_back(this->last_output); //agrego la salida de cada entrenamiento
         if (acierto) 
             total_aciertos++;
     }
@@ -257,6 +259,9 @@ bool Red::backpropagation(std::vector<float> X,
     std::vector<std::vector<float> > deltas;
     deltas.resize(n); //reservamos n filas, correspondiente a las n capas
   
+    //Limpio la ultima salida.
+    this->last_output.clear();
+
     //Calculo de los deltas (el i es el l del libro)
     for (int i = n-1; i >= 0; i--) {
         unsigned int m = this->estructura[i].size();
@@ -268,6 +273,9 @@ bool Red::backpropagation(std::vector<float> X,
                 //Calculo del error
                 //float error = respuestas[i][j] - YD[j];
                 float error = YD[j] - respuestas[i][j];
+
+                //Voy guardando las ultimas salidas por cuestiones de graficacion
+                this->last_output.push_back(respuestas[i][j]);
                 
                 if ((salida_sin_error == true) && (fabs(error) > EPS)) { //no hubo error aun y son != (hay un error)
         			salida_sin_error = false;
