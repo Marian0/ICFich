@@ -465,14 +465,14 @@ void utils::drawPlot(
 	assert( nX > 0 && nX == nYD && nX == nYC ); 
 
 	//Verifico que X sea graficable (2D)
-	assert( X.[0].size() == 2 ); 
+	assert( X[0].size() == 2 ); 
 
 	//Vefifico que tengan la misma dimension las salidas
 	unsigned int dimension_salida = YD[0].size();
 	assert( dimension_salida == YC[0].size() );
 
 	//Calculo cantidad de clases 2^n
-	unsigned int cantidad_clases = pow(2, nYC[0].size() );
+	unsigned int cantidad_clases = pow(2, YC[0].size() );
 
 	//Vectores temporales para guardar los comandos de gnuplot para graficación.
 	std::vector<std::string> str2plot_good; //Bien clasificados

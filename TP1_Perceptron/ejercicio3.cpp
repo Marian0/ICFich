@@ -128,43 +128,17 @@ int main (int argc, char *argv[]) {
     std::vector<std::vector<float> > Ycodificados;
     utils::convertirEntrada(Yd, Ycodificados);
     Yd = Ycodificados;
-    
 
     unsigned int i = 0; //contador de epocas
     std::vector<float> errores_consecutivos; //usado para calcular los errores consecutivos
 	for (; i < criterio_max_epocas; i++) {
-		//obtengo los pesos actuales, usados para dibujar la frontera de decision
-		std::vector<Neurona> V;
-        perceptron.getNeurons(V);
-		std::vector<float> W0 = V[0].getW();
-        std::vector<float> W1 = V[1].getW();
-        
-        //utils::printVector(W0);
 
-        //utils::printVector(W1);
-		
-		//Dibujar la frontera de decision
-		float da0  = W0[0]/W0[2];
-		float da0_2  = W0[1]/W0[2];
-		float da0_3 = 8; //Color de la recta random
-       
-        //Dibuja la recta
-		if (i < intervalo_dibujo or i % intervalo_dibujo == 0) {
-            plotter2("plot " + utils::floatToStr(da0) + "-" + utils::floatToStr(da0_2) + "*x lt "+ utils::floatToStr(da0_3) +" notitle");
-        }
+        std::vector<std::vector<float> > ultimas_salidas;
+        //Entrena y calcula error
+        float error = 1-perceptron.train(X, Yd, true, ultimas_salidas);
 
-        //Dibujar la frontera de decision
-		float da1  = W1[0]/W1[2];
-		float da1_2  = W1[1]/W1[2];
-		float da1_3 = 4; //Color de la recta random
         
-        //Dibuja la recta
-		if (i < intervalo_dibujo or i % intervalo_dibujo == 0) {
-		    plotter2("plot " + utils::floatToStr(da1) + "-" + utils::floatToStr(da1_2) + "*x lt "+ utils::floatToStr(da1_3) +" notitle");
-        }
-		
-		//Entrena y calcula error
-		float error = 1-perceptron.train(X, Yd, true);
+
 		error_history_entrenamiento.push_back(error); 
 				
 		//Dibuja el error

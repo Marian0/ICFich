@@ -9,7 +9,7 @@
 #include <cstdlib> 
 #include <cassert>
 #include <cmath>
-
+#include "GNUPlot.h"
 
 class utils{
 public:
