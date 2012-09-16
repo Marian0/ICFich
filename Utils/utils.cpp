@@ -482,8 +482,8 @@ void utils::drawPlot(
 
     //Inicializo el vector de string para graficación
 	for (unsigned int i = 0; i < cantidad_clases; i++) {
-		str2plot_good[i] = "plot \"-\" notitle pt " + utils::intToStr(i+1) + " lt 3\n";
-		str2plot_bad[i] = "plot \"-\" notitle pt " + utils::intToStr(i+1) + " lt 1\n";
+		str2plot_good[i] = "plot \"-\" notitle pt " + utils::intToStr(i+3) + " lt 3\n";
+		str2plot_bad[i] = "plot \"-\" notitle pt " + utils::intToStr(i+3) + " lt 1\n";
 	}
 
 	//Lenght minimo para decir que es una clase vacía (no graficar)
