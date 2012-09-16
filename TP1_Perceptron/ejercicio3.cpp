@@ -185,6 +185,9 @@ int main (int argc, char *argv[]) {
 
 	//Cargo el conjunto de prueba
 	utils::splitVector(prueba, X, Yd, 1); 
+    utils::convertirSalida(Yd, Ycodificados);
+    Yd = Ycodificados;
+
 	
 	float error_esperado = 1-perceptron.train(X, Yd, false);
 	std::cout<<"Error Esperado (conjunto de prueba) = "<<error_esperado*100.0<<"\%\n";
