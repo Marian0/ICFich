@@ -51,7 +51,6 @@ int main (int argc, char *argv[]) {
 	plotter("set yrange [-0.1:100]");
     plotter("set xlabel \"Epocas\"");
     plotter("set ylabel \"Error\"");
-    plotter("set format y \"\%g \%\%\""); //formato porcentaje en ylabel
     plotter("set title \"Error durante N Epocas\"");
     plotter("set multiplot");
 
@@ -59,8 +58,6 @@ int main (int argc, char *argv[]) {
 	//Vectores temporales para trabajar
 	std::vector<std::vector<float > > patron;
 	
-    //Vectores temporales para guardar historial errores
-	std::vector<float> error_history_entrenamiento;
 
 	//Leo los patrones en patron
 	utils::parseCSV(archivo_problema.c_str(), patron);
@@ -86,7 +83,6 @@ int main (int argc, char *argv[]) {
         //Genero el conjunto de entrenamiento
         entrenamiento = patron;
 
-        //REVEER
         std::vector<std::vector<float> >::iterator p = entrenamiento.begin()+j*leave_k_out; //inicio del tramo
         std::vector<std::vector<float> >::iterator q = entrenamiento.begin()+(j+1)*leave_k_out; //fin del tramo
     
@@ -107,10 +103,9 @@ int main (int argc, char *argv[]) {
         unsigned int i = 0; //contador de epocas
         std::vector<float> errores_consecutivos; //usado para calcular los errores consecutivos
 
-        plotter("clear\n");
-        //Inicializo el ploteo
-    	//Haremos un string para poder plotear al final		
-	    std::string plot = "plot \"-\" notitle pt 2 lt 3\n";
+        //Vectores temporales para guardar historial errores
+        std::vector<float> error_history_entrenamiento;
+        
         for (; i < criterio_max_epocas; i++) {
 
             //Entrena y calcula error
@@ -118,9 +113,8 @@ int main (int argc, char *argv[]) {
 
             error_history_entrenamiento.push_back(error); 
                     
-            //Dibuja el error
-            plot += utils::intToStr((int) i) + " " + utils::floatToStr(error*100.0) + " \n";
-           
+            //plot2 += utils::intToStr((int) k) + " " + utils::floatToStr(errores_normalizados[k]*100.0) + " \n";
+
             //Comprueba si se llego a un error muy chico
             if (((criterio_finalizacion.compare("error") == 0) || criterio_finalizacion.compare("todos") == 0) && 
                     fabs(error) < criterio_error) {
@@ -156,12 +150,35 @@ int main (int argc, char *argv[]) {
         }
         //std::cout<<"Entrenamiento finalizado a las "<<i<<" epocas.\n"; 
         
-        //Actualizacion del dibujo
-        plot += "e\n";
-    	plotter("set xrange [-1:" + utils::intToStr(i + 2) +"]");
-        //plotter(plot);
+        //------------
+        //Dibuja los errores
+        //Obtiene el maximo de los errores
+        float max_val = *(std::max_element(error_history_entrenamiento.begin(), error_history_entrenamiento.end()));
+        
+        std::vector<float> errores_normalizados;
+        if (fabs(max_val) > criterio_error) { //si el error es 0, no normalizo nada
+        //normaliza los errores
+            utils::vectorEscalar(error_history_entrenamiento, 1/max_val, errores_normalizados);
+        } else {
+            errores_normalizados = error_history_entrenamiento;
+        }
+        
+        plotter("clear\n");
+        //Haremos un string para poder plotear al final		
+        std::string plot2 = "plot \"-\" notitle pt 5 lt 3\n";
 
-    	//Cargo el conjunto de validacion
+        for (unsigned int k = 0; k < errores_normalizados.size(); k++) {
+            plot2 += utils::intToStr((int) k) + " " + utils::floatToStr(errores_normalizados[k]) + " \n";
+        }
+
+        plot2 += "e\n";
+        plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
+        plotter("set yrange [0:1]");
+        
+        plotter(plot2);
+
+    	//-----------
+        //Cargo el conjunto de validacion
 	    utils::splitVector(validacion, X, Yd, 1); 
         
         //Decodifica las salidas

@@ -133,9 +133,6 @@ int main (int argc, char *argv[]) {
 
 		error_history_entrenamiento.push_back(error); 
 				
-		//Dibuja el error
-		//plot2 += utils::intToStr((int) i) + " " + utils::floatToStr(error*100.0) + " \n";
-       
         //Comprueba si se llego a un error muy chico
         if (((criterio_finalizacion.compare("error") == 0) || criterio_finalizacion.compare("todos") == 0) && 
                 fabs(error) < criterio_error) {
@@ -177,7 +174,7 @@ int main (int argc, char *argv[]) {
     float max_val = *(std::max_element(error_history_entrenamiento.begin(), error_history_entrenamiento.end()));
     
     std::vector<float> errores_normalizados;
-    if (fabs(max_val) < criterio_error) { //si el error es 0, no normalizo nada
+    if (fabs(max_val) > criterio_error) { //si el error es 0, no normalizo nada
     //normaliza los errores
         utils::vectorEscalar(error_history_entrenamiento, 1/max_val, errores_normalizados);
     } else {
