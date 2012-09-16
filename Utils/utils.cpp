@@ -272,7 +272,6 @@ void  utils::splitVector( std::vector<std::vector<float> > &V,
 		X.push_back(Xtemp);
 		Y.push_back(Ytemp);
 	}
-	
 }
 
 //Devuelve la cantidad de patrones especificados con el desvio especificado tomando como base el patron P.
@@ -419,10 +418,9 @@ float utils::devest(std::vector<float> &V, float media) {
 }
 
 //Convierte unos valores {0, 1, 2, 3...} en una codificacion {[1,-1,-1,-1,...], [-1,1,-1,-1,...], ... }
-void utils::convertirEntrada(std::vector<std::vector<float> > &in, std::vector<std::vector<float> > &out) {
+void utils::convertirSalida(std::vector<std::vector<float> > &in, std::vector<std::vector<float> > &out) {
     if (in[0].size() > 1) { //la salida ya viene codificada, no tengo que hacer nada
         std::vector<std::vector<float> > V = in;
-        utils::printVectorVector(V);
         out = V;
         return;
     }
@@ -483,8 +481,6 @@ void utils::drawPlot(
     str2plot_good.resize(cantidad_clases);
     str2plot_bad.resize(cantidad_clases);
 
-    std::cout<<cantidad_clases<<'\n';
-
     //Inicializo el vector de string para graficación
 	for (unsigned int i = 0; i < cantidad_clases; i++) {
 		str2plot_good[i] = "plot \"-\" notitle pt " + utils::intToStr(i+1) + " lt 3\n";
@@ -497,7 +493,6 @@ void utils::drawPlot(
 	//Recorro los patrones
 	for (unsigned int i = 0; i < nX; i++) {
 		// std::cout<<"la calculada ";
-		utils::printVector(YC[i]);
 		
 		unsigned int salida_real = utils::binary2int(YC[i]);
 		//unsigned int salida_deseada = utils::binary2int(YD[i]);

@@ -22,12 +22,10 @@ int main (int argc, char *argv[]) {
 	//Leemos los valores de configuracion
 	std::string     archivo_problema               = config.getValue("archivo_problema"); //Archivo a leer patrones ej xor.csv
 	unsigned int    cantidad_casos                 = utils::strToInt(config.getValue("cantidad_casos"));
-	float           desvio                         = utils::strToFloat(config.getValue("desvio"));
 	unsigned int    porcentaje_entrenamiento       = utils::strToInt(config.getValue("porcentaje_entrenamiento"));
 	unsigned int    porcentaje_prueba              = utils::strToInt(config.getValue("porcentaje_prueba"));
 	float           tasa_aprendizaje               = utils::strToFloat(config.getValue("tasa_aprendizaje"));
 	unsigned int    criterio_max_epocas            = utils::strToInt(config.getValue("criterio_max_epocas"));
-	unsigned int    invasores                      = utils::strToInt(config.getValue("invasores"));
 	float           criterio_error                 = utils::strToFloat(config.getValue("criterio_error"));
     float           parametro_sigmoidea            = utils::strToFloat(config.getValue("parametro_sigmoidea"));
     float           parametro_momento              = utils::strToFloat(config.getValue("parametro_momento"));
@@ -41,8 +39,6 @@ int main (int argc, char *argv[]) {
     std::cout<<"Problema: "<<archivo_problema<<'\n';
     std::cout<<"Cantidad de epocas = "<<criterio_max_epocas<<'\n';
     std::cout<<"Cantidad de patrones = "<<cantidad_casos<<'\n';
-    std::cout<<"Desvio de los datos = "<<desvio*100<<"\%\n";
-    std::cout<<"Cantidad de patrones invasores = "<<invasores<<'\n';
     std::cout<<"Tasa de aprendizaje = "<<tasa_aprendizaje<<'\n';
     std::cout<<"Criterio de finalizacion: "<<criterio_finalizacion<<'\n';
     std::cout<<"Parametro Momento = "<<parametro_momento<<'\n';
@@ -84,14 +80,6 @@ int main (int argc, char *argv[]) {
     //Genero los casos de pruebas en numero y desvío definidos
     //patron = utils::genPatrones( patron , cantidad_casos, desvio);
 	
-	//metemos algunos errores
-    random_shuffle(patron.begin() , patron.end());
-	for (unsigned int i = 0; i < invasores; i++) {
-		if (patron[i][2] == 1)
-			patron[i][2] = -1;
-		else
-			patron[i][2] = 1;
-    }
 	random_shuffle(patron.begin() , patron.end());
 /*
 	//Dibuja los puntos de cada clase en una ventana para ver la dispersion
@@ -116,6 +104,9 @@ int main (int argc, char *argv[]) {
     //Red perceptron("red_perceptron3.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea, parametro_momento);
     Red perceptron("estructura3.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea, parametro_momento);
 
+    std::cout<<"Estructura de la Red:\n";
+    perceptron.printStructure();
+
     //Genera las particiones de entrenamiento y prueba
 	utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
 			porcentaje_prueba, 0);
@@ -126,7 +117,7 @@ int main (int argc, char *argv[]) {
 
     //Decodifica las salidas
     std::vector<std::vector<float> > Ycodificados;
-    utils::convertirEntrada(Yd, Ycodificados);
+    utils::convertirSalida(Yd, Ycodificados);
     Yd = Ycodificados;
 
     unsigned int i = 0; //contador de epocas

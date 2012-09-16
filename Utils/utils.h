@@ -114,7 +114,7 @@ std::vector<std::vector<float> > static genSet( std::vector<std::vector<float> >
 std::vector<float> static int2binary(unsigned int val, unsigned int max_clases);
 
 //Convierte unos valores {0, 1, 2, 3...} en una codificacion {[1,-1,-1,-1,...], [-1,1,-1,-1,...], ... }
-void static convertirEntrada(std::vector<std::vector<float> > &in, std::vector<std::vector<float> > &out);
+void static convertirSalida(std::vector<std::vector<float> > &in, std::vector<std::vector<float> > &out);
 
 
 //--------------------------------
