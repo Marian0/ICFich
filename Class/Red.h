@@ -37,6 +37,9 @@ class Red {
 
         //Vector con las ultimas salidas calculadas, necesario para graficación.
         std::vector<float> last_output;
+
+        //Vector que guardara el error instantaneo en cada iteracion
+        std::vector<float> error_instantaneo;
 	public:
 
         //Construye la red leyendola desde un archivo pasado por argumento

@@ -178,15 +178,26 @@ float Red::train(std::vector<std::vector<float> > X,
     assert(X.size() == YD.size());
     unsigned int total_aciertos = 0;
 
+    //Aqui se guardan los errores instantaneos
+    std::vector<float> error_energia;
+
     last_output.clear(); //limpio el historico de salidas reales
     for (unsigned int i = 0; i < X.size(); i++){
         bool acierto = train(X[i], YD[i], update);
+        
+        float error_inst = 0.5*utils::vectorPunto(this->error_instantaneo, this->error_instantaneo);
+        error_energia.push_back(error_inst);
+
         last_output.push_back(this->last_output); //agrego la salida de cada entrenamiento
         if (acierto) 
             total_aciertos++;
     }
-    float porcentaje = ((float) total_aciertos) / ((float) X.size());
-    return porcentaje;
+    float promedio_error = utils::promedio(error_energia);
+    //std::cout<<"Error = "<<promedio_error<<'\n';
+    return 1-promedio_error;
+
+//    float porcentaje = ((float) total_aciertos) / ((float) X.size());
+  //  return porcentaje;
 }
 
 bool Red::backpropagation(std::vector<float> X,
@@ -273,6 +284,8 @@ bool Red::backpropagation(std::vector<float> X,
   
     //Limpio la ultima salida.
     this->last_output.clear();
+    //Limpio el vector de errores instantaneos
+    this->error_instantaneo.clear();
 
     //Calculo de los deltas (el i es el l del libro)
     for (int i = n-1; i >= 0; i--) {
@@ -285,7 +298,10 @@ bool Red::backpropagation(std::vector<float> X,
                 //Calculo del error
                 //float error = respuestas[i][j] - YD[j];
                 float error = YD[j] - respuestas[i][j];
-
+                
+                //guardo el error instantaneo para luego graficar
+                this->error_instantaneo.push_back(error);
+                
                 //Voy guardando las ultimas salidas por cuestiones de graficacion
                 this->last_output.push_back(respuestas[i][j]);
                 
@@ -333,8 +349,8 @@ bool Red::backpropagation(std::vector<float> X,
                 float localfield = utils::vectorPunto(X,Wj);
                 //Evaluamos la derivada de la sigmoidea en el campo escalar
                 
-                //float sigprima = utils::sigmoideaPrima(respuestas[i][j]);
                 float sigprima = utils::sigmoideaPrima(localfield, parametro_sigmoidea);
+                //float sigprima = utils::sigmoideaPrima(respuestas[i][j], parametro_sigmoidea);
                 
                 /*
                 std::cout<<"(i,j) = "<<i<<' '<<j<<"\nX: ";utils::printVector(X); std::cout<<"Wj: "; utils::printVector(Wj); 
@@ -362,7 +378,6 @@ bool Red::backpropagation(std::vector<float> X,
                 float deltak_wkj = utils::vectorPunto(deltas[i+1],Wkj);
 
                 //deltas(i,j) = sigprima(localfield)*vectorPunto(deltas(i+1,*),pesos(*,j)
-                
                 deltas[i][j] = sigprima * deltak_wkj;
                 
                 //std::cout<<sigprima<<' '<<deltak_wkj<<"\n";
@@ -371,7 +386,8 @@ bool Red::backpropagation(std::vector<float> X,
     }
 
     //utils::printVectorVector(deltas);
-    //
+    
+
     //Actualizar pesos
     //Para cada capa l:
     //delta(w(n)) = cte_aprendizaje*delta(l)*y(l-1)
@@ -390,12 +406,13 @@ bool Red::backpropagation(std::vector<float> X,
             utils::vectorEscalar(term2_t, this->parametro_momento, term2);
 
             //std::vector<float> pesos_anteriores = this->neuronas[ this->estructura[i][j] ].getWn_1();
-//            utils::vectorEscalar(pesos_anteriores, this->parametro_momento, term2);
+            //utils::vectorEscalar(pesos_anteriores, this->parametro_momento, term2);
     
         
             std::vector<float> term3;
             //entradas por neurona = y_i(l-1)
             std::vector<float> entradas_ij = entradas_por_neurona[i][j];
+            
             //entradas_ij.insert(entradas_ij.begin(), -1.0); //agrego el bias
             entradas_ij.insert(entradas_ij.begin(), 1.0); //agrego el bias
             

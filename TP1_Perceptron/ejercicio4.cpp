@@ -182,7 +182,7 @@ int main (int argc, char *argv[]) {
 
     std::cout<<"Errores obtenidos en las k pruebas: ";
     utils::printVector(errores_lko);
-    std::cout<<"Valores medidos luego de las k pruebas:\n";
+    std::cout<<"Valores medidos luego de las k pruebas (errores):\n";
     std::cout<<"Media = "<<media<<"\nDesviacion estandar = "<<devest<<"\n";
 
 

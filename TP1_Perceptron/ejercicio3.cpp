@@ -21,7 +21,6 @@ int main (int argc, char *argv[]) {
 	
 	//Leemos los valores de configuracion
 	std::string     archivo_problema               = config.getValue("archivo_problema"); //Archivo a leer patrones ej xor.csv
-	unsigned int    cantidad_casos                 = utils::strToInt(config.getValue("cantidad_casos"));
 	unsigned int    porcentaje_entrenamiento       = utils::strToInt(config.getValue("porcentaje_entrenamiento"));
 	unsigned int    porcentaje_prueba              = utils::strToInt(config.getValue("porcentaje_prueba"));
 	float           tasa_aprendizaje               = utils::strToFloat(config.getValue("tasa_aprendizaje"));
@@ -38,7 +37,6 @@ int main (int argc, char *argv[]) {
     std::cout<<"Bienvenidos al Ejercicio 3 \n";
     std::cout<<"Problema: "<<archivo_problema<<'\n';
     std::cout<<"Cantidad de epocas = "<<criterio_max_epocas<<'\n';
-    std::cout<<"Cantidad de patrones = "<<cantidad_casos<<'\n';
     std::cout<<"Tasa de aprendizaje = "<<tasa_aprendizaje<<'\n';
     std::cout<<"Criterio de finalizacion: "<<criterio_finalizacion<<'\n';
     std::cout<<"Parametro Momento = "<<parametro_momento<<'\n';
@@ -54,7 +52,7 @@ int main (int argc, char *argv[]) {
 	plotter("set yrange [-0.1:100]");
     plotter("set xlabel \"Epocas\"");
     plotter("set ylabel \"Error\"");
-    plotter("set format y \"\%g \%\%\""); //formato porcentaje en ylabel
+    //plotter("set format y \"\%g \%\%\""); //formato porcentaje en ylabel
     plotter("set title \"Error durante N Epocas\"");
     plotter("set multiplot");
 
@@ -62,8 +60,8 @@ int main (int argc, char *argv[]) {
 	GNUPlot plotter2;	
 	plotter2("set xzeroaxis lt -1");
 	plotter2("set yzeroaxis lt -1");	
-	plotter2("set xrange [-0.1:1.1]");
-	plotter2("set yrange [-0.1:1.1]");
+	//plotter2("set xrange [-4:4]"); plotter2("set yrange [-4:4]");
+	plotter2("set xrange [-0.1:1.1]"); plotter2("set yrange [-0.1:1.1]");
     plotter2("set multiplot");
 	plotter2("set grid back");	
 	plotter2("set pointsize 1");
@@ -77,8 +75,7 @@ int main (int argc, char *argv[]) {
 	//Leo los patrones en patron
 	utils::parseCSV(archivo_problema.c_str(), patron);
 	
-    //Genero los casos de pruebas en numero y desvío definidos
-    //patron = utils::genPatrones( patron , cantidad_casos, desvio);
+    std::cout<<"Cantidad de patrones = "<<patron.size()<<'\n';
 	
 	random_shuffle(patron.begin() , patron.end());
 /*
@@ -97,11 +94,8 @@ int main (int argc, char *argv[]) {
 	plotter2(plot_dot1);
 	plotter2(plot_dot2);
 */					
-	//Inicializo el ploteo
-	//Haremos un string para poder plotear al final		
-	std::string plot2 = "plot \"-\" notitle pt 5 lt 3\n";
+	    
     //Instancio la red
-    //Red perceptron("red_perceptron3.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea, parametro_momento);
     Red perceptron("estructura3.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea, parametro_momento);
 
     std::cout<<"Estructura de la Red:\n";
@@ -111,12 +105,14 @@ int main (int argc, char *argv[]) {
 	utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
 			porcentaje_prueba, 0);
 
+
     //Divido en X y Yd los casos de entrenamiento
     std::vector<std::vector<float> > X, Yd;
+    std::vector<std::vector<float> > Ycodificados;
+    
     utils::splitVector(entrenamiento, X, Yd);
 
     //Decodifica las salidas
-    std::vector<std::vector<float> > Ycodificados;
     utils::convertirSalida(Yd, Ycodificados);
     Yd = Ycodificados;
 
@@ -125,7 +121,6 @@ int main (int argc, char *argv[]) {
 	for (; i < criterio_max_epocas; i++) {
 
         std::vector<std::vector<float> > ultimas_salidas;
-
         //Entrena y calcula error
         float error = 1-perceptron.train(X, Yd, ultimas_salidas, true);
 
@@ -139,7 +134,7 @@ int main (int argc, char *argv[]) {
 		error_history_entrenamiento.push_back(error); 
 				
 		//Dibuja el error
-		plot2 += utils::intToStr((int) i) + " " + utils::floatToStr(error*100.0) + " \n";
+		//plot2 += utils::intToStr((int) i) + " " + utils::floatToStr(error*100.0) + " \n";
        
         //Comprueba si se llego a un error muy chico
         if (((criterio_finalizacion.compare("error") == 0) || criterio_finalizacion.compare("todos") == 0) && 
@@ -176,15 +171,41 @@ int main (int argc, char *argv[]) {
     }
     std::cout<<"Entrenamiento finalizado a las "<<i<<" epocas.\n"; 
     
-    //Actualizacion del dibujo
+    //Dibuja los errores
+    
+    //Obtiene el maximo de los errores
+    float max_val = *(std::max_element(error_history_entrenamiento.begin(), error_history_entrenamiento.end()));
+    
+    std::vector<float> errores_normalizados;
+    if (fabs(max_val) < criterio_error) { //si el error es 0, no normalizo nada
+    //normaliza los errores
+        utils::vectorEscalar(error_history_entrenamiento, 1/max_val, errores_normalizados);
+    } else {
+        errores_normalizados = error_history_entrenamiento;
+    }
+    
+    //Haremos un string para poder plotear al final		
+	std::string plot2 = "plot \"-\" notitle pt 5 lt 3\n";
+
+	for (unsigned int k = 0; k < errores_normalizados.size(); k++) {
+		plot2 += utils::intToStr((int) k) + " " + utils::floatToStr(errores_normalizados[k]*100.0) + " \n";
+    }
+
     plot2 += "e\n";
+    unsigned int max_value = (unsigned int) 100*max_val;
 	plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
+	plotter("set yrange [0:"+ utils::floatToStr(max_val*100) +"]");
+    
     plotter(plot2);
 	
 	//Prueba con los patrones nunca vistos
 
 	//Cargo el conjunto de prueba
 	utils::splitVector(prueba, X, Yd, 1); 
+    
+    //Decodifica las salidas
+    utils::convertirSalida(Yd, Ycodificados);
+    Yd = Ycodificados;
 	
 	float error_esperado = 1-perceptron.train(X, Yd, false);
 	std::cout<<"Error Esperado (conjunto de prueba) = "<<error_esperado*100.0<<"\%\n";

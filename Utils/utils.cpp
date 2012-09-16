@@ -172,7 +172,6 @@ float utils::sigmoideaPrima(float x, float param) {
     double ret_val = num/den;
     return (float) ret_val;
 
-    //return 0.5*(1 + x)*(1 - x);
 }
 
 
