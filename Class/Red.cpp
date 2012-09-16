@@ -174,8 +174,10 @@ float Red::train(std::vector<std::vector<float> > X,
 //Ejecuta un conjunto de pruebas y devuelve el porcentaje de aciertos (efectividad)
 float Red::train(std::vector<std::vector<float> > X,
 				  std::vector<std::vector<float> > YD, std::vector<std::vector<float> > & last_output, bool update){ 
-    unsigned int total_aciertos = 0;
+
     assert(X.size() == YD.size());
+    unsigned int total_aciertos = 0;
+
     last_output.clear(); //limpio el historico de salidas reales
     for (unsigned int i = 0; i < X.size(); i++){
         bool acierto = train(X[i], YD[i], update);

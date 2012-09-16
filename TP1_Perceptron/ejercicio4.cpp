@@ -57,7 +57,7 @@ int main (int argc, char *argv[]) {
 
     
 	//Vectores temporales para trabajar
-	std::vector<std::vector<float > > patron, entrenamiento, validacion;
+	std::vector<std::vector<float > > patron;
 	
     //Vectores temporales para guardar historial errores
 	std::vector<float> error_history_entrenamiento;
@@ -68,11 +68,7 @@ int main (int argc, char *argv[]) {
     unsigned int cantidad_casos = patron.size();
     std::cout<<"Cantidad de casos = "<<cantidad_casos<<'\n';
 	random_shuffle(patron.begin() , patron.end());
-
-    
-    //Instancio la red
-    Red perceptron("estructura4.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea, parametro_momento);
-
+   
     std::vector<std::vector<float> > X, Yd;
     std::vector<std::vector<float> > Ycodificados;
     
@@ -81,6 +77,12 @@ int main (int argc, char *argv[]) {
     
     unsigned int cantidad_subconjuntos = cantidad_casos/leave_k_out; //division entera, REVEER
     for (unsigned int j = 0; j < cantidad_subconjuntos; j++) {
+   
+        //Instancio la red
+        Red perceptron("estructura4.txt","Red Perceptron", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea, parametro_momento);
+      
+	    std::vector<std::vector<float> > entrenamiento, validacion;
+
         //Genero el conjunto de entrenamiento
         entrenamiento = patron;
 
@@ -88,7 +90,7 @@ int main (int argc, char *argv[]) {
         std::vector<std::vector<float> >::iterator p = entrenamiento.begin()+j*leave_k_out; //inicio del tramo
         std::vector<std::vector<float> >::iterator q = entrenamiento.begin()+(j+1)*leave_k_out; //fin del tramo
     
-        if (q > entrenamiento.end()) q = entrenamiento.end();
+        if (q > entrenamiento.end()) q = entrenamiento.end(); //fix si se fue de rango
 
         //Inserto k valores para validacion
         validacion.insert   (validacion.begin(), p, q); 
@@ -152,12 +154,12 @@ int main (int argc, char *argv[]) {
                 errores_consecutivos.push_back(error);
             }
         }
-        std::cout<<"Entrenamiento finalizado a las "<<i<<" epocas.\n"; 
+        //std::cout<<"Entrenamiento finalizado a las "<<i<<" epocas.\n"; 
         
         //Actualizacion del dibujo
         plot += "e\n";
     	plotter("set xrange [-1:" + utils::intToStr(i + 2) +"]");
-        plotter(plot);
+        //plotter(plot);
 
     	//Cargo el conjunto de validacion
 	    utils::splitVector(validacion, X, Yd, 1); 
@@ -168,7 +170,7 @@ int main (int argc, char *argv[]) {
 
         //Prueba con los patrones nunca vistos
     	float error_esperado = 1-perceptron.train(X, Yd, false);
-    	std::cout<<"Error Esperado (conjunto de validacion) = "<<error_esperado*100.0<<"\%\n";
+    	std::cout<<"Error Esperado (conjunto de validacion "<<j<<") = "<<error_esperado*100.0<<"\%\n";
 
         //Guardo el error para sacar promedio al final
         errores_lko.push_back(error_esperado);
