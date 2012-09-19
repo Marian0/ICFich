@@ -122,7 +122,9 @@ int main (int argc, char *argv[]) {
 
         std::vector<std::vector<float> > ultimas_salidas;
         //Entrena y calcula error
-        float error = 1-perceptron.train(X, Yd, ultimas_salidas, true);
+        perceptron.train(X, Yd, ultimas_salidas, true);
+        
+        float error = 1-perceptron.train(X, Yd, ultimas_salidas, false);
 
 
         if(i < intervalo_dibujo || i % intervalo_dibujo == 0) {
