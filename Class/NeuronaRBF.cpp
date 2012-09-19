@@ -9,7 +9,7 @@
 
 #include "utils.h"
 
-Neurona::NeuronaRBF( unsigned int dim ) {
+NeuronaRBF::NeuronaRBF( unsigned int dim, float min, float max) {
 	this->dimension = dim;
 	//dim+1 porque una entrada pertenece al bias (umbral)
 	for(unsigned int i = 0; i < dim; i++){

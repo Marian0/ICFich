@@ -3,28 +3,31 @@
 #include <fstream>
 #include <iostream>
 #include <cassert>
+#include <algorithm>
 
 #include "RedRBF.h"
-RedRBF::RedRBF(std::string nombre_archivo, std::string nombre_red, unsigned int funcion_activacion, float tasa_aprendizaje) {
+
+RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_aprendizaje, unsigned int funcion_activacion, float par_sigmoidea ) {
     //Leo los parametros de la red desde un archivo
     std::ifstream file (nombre_archivo.c_str());
     assert(file.is_open());
-    unsigned int c_e, c_rbf, c_n, k;
-    file>>c_e>>c_rbf>>c_n>>k;
+    unsigned int c_e, c_rbf, c_n;
+    file>>c_e>>c_rbf>>c_n;
     file.close();
     
-    std::cout<<"Parametros de la red: "<<c_e<<' '<<c_rbf<<' '<<c_n<<' '<<k<<'\n';
+    std::cout<<"Parametros de la red: "<<c_e<<' '<<c_rbf<<' '<<c_n<<'\n';
 
     //Asigno la cantidad de cada uno de los parametros de la red
     this->cantidad_entradas = c_e;
     this->cantidad_rbf = c_rbf;
     this->cantidad_n = c_n;
-    this->cantidad_clases = k;
+    this->cantidad_clases = c_n;
+    this->parametro_sigmoidea = par_sigmoidea;
     
     //Creo las neuronas tipo rbf
     for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
         NeuronaRBF neuRBF(this->cantidad_entradas);
-        this->neuronasRBF.push_back(neuRBF);
+        this->neuronasRBF.push_back(neuRBF, -0.5, 0.5);
     }
 
     //Creo las neuronas tipo perceptron
@@ -34,19 +37,121 @@ RedRBF::RedRBF(std::string nombre_archivo, std::string nombre_red, unsigned int 
     }
 }
 
-float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > Yd) {
+float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > Yd, bool entrena) {
     //Asegura que sean del mismo tamaño
     assert(X.size() == Yd.size());
 
     //Llama a kmeans para aproximar los centroides
-    this->kmeans(X);
-    
-}
-void RedRBF::kmeans(std::vector<std::vector<float> > &entradas) {
-    std::vector<std::set<std::vector<float> > > conjuntos;
+    if(entrena == true)
+        this->kmeans(X);
+
+
+
     
 }
 
+
+void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
     
-    
-    
+    //guardo los centroides viejos para comparar y salir del while true
+    std::vector<std::vector<float> > centroides_viejos;
+    for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
+        //obtengo el mu actual
+        std::vector<float> mu_i = this->neuronasRBF[i].getMu();
+        //lo pushbackeo
+        centroides_viejos.push_back(mu_i);
+    }
+
+    unsigned int cantidad_casos = entradas.size();
+    unsigned int iteraciones = 0;
+
+    while (true) { //hasta que el delta_mu sea menor que un EPS
+  
+        //vector de conjuntos de puntos
+        //En cada conjuntos[i] se almacena la posicion dentro de 
+        //  entradas de cada uno de los puntos que pertenecen al conjunto i
+        std::vector<std::vector<unsigned int> conjuntos;
+        conjuntos.resize(this->cantidad_clases);
+       
+        for (unsigned int w = 0; w < cantidad_casos; w++) { //para cada patron
+            std::vector<float> distancias; //aqui se guardaran las distancias de este caso a todas las neuronas
+            
+            //mido distancias a cada neuronaRBF
+            for (unsigned int k = 0; k < this->cantidad_rbf; k++) { //recorro las neuronas RBF
+                
+                //Le pido el centro actual a la neurona k
+                std::vector<float> V = neuronasRBF[k].getMu();
+                
+                //calculo la distancia entre la neurona y el patron k
+                float dist = utils::vectorDistancia(V, entradas[w]);
+                
+                distancias.push_back(dist);
+            }
+            
+            //obtengo donde ocurrio la menor de las distancias 
+            unsigned int indice_menor = utils::getMinIdx(distancias); //este patron tiene esta clase
+            conjuntos[indice_menor].push_back(w);
+        }
+        
+        //recalcular centroide
+        for (unsigned int i = 0; i < this->cantidad_clases; i++) {
+            unsigned int c_size = conjuntos[i].size(); //cantidad de patrones en esta clase
+            
+            if (c_size == 0) continue; //si no tengo ningun patron en esta clase, continuo
+
+            std::vector<float> sumas = entradas[ conjuntos[i][0] ]; //asigno el primero
+           
+            //sumo todos los patrones
+            for (unsigned int j = 1; j < c_size; j++) {
+                unsigned int posicion_patron = conjuntos[i][j];
+                std::vector<float> temp;
+                utils::vectorSuma(sumas, entradas[posicion_patron], temp);
+                sumas = temp;
+                
+            }
+            //divido por la cantidad de patrones
+            std::vector<float> centroide_nuevo = utils::vectorEscalar(sumas, 1.0/((float)c_size));
+                
+            this->neuronasRBF[i].setMu(centroide_nuevo);
+        }
+
+        //Calculo las distancias entre los mu nuevos y los viejos
+        std::vector<float> distancias_ceros;
+        for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
+            std::vector<float> mu_i = this->neuronasRBF[i].getMu();
+            float dist_i = utils::vectorDistancia(mu_i, centroides_viejos[i]);
+            distancias_ceros.push_back(dist_i);
+        }
+
+        //Sumo todas las distancias obtenidas
+        float suma_distancias = 0.0;
+        for (unsigned int i = 0; i < distancias_ceros.size(); i++) {
+            suma_distancias += distancias_ceros[i];
+        }
+
+        //Si la suma es muy chica, quiere decir que se movieron poco, salgo del while true
+        if (suma_distancias < EPS) 
+            break;
+        
+        //actualizo los centroides viejos
+        for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
+            std::vector<float> mu_i = this->neuronasRBF[i].getMu();
+            centroides_viejos[i] = mu_i;
+        }
+
+        iteraciones++;
+    }
+    std::cout<<"Termino el K-Means luego de "<<iteraciones<<" iteraciones.\n";
+}
+
+
+//Devuelve un vector con todos los mu de esta red
+std::vector<std::vector<float> > RedRBF::getMus(){
+    std::vector<std::vector<float> > ret_val;
+    for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
+        std::vector<float> mu_i = this->neuronasRBF.getMu();
+        ret_val.push_back(mu_i);
+    }
+    return ret_val;
+
+}

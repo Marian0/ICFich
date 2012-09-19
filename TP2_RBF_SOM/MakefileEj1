@@ -1,0 +1,38 @@
+GPP=g++
+GCC=gcc
+FLAGS=  -g2 -Wall -O0 -I../Class -I../Utils  -D_DEBUG 
+LIBS=  
+OBJS=Debug/main1.o Debug/GNUPlot.o Debug/Neurona.o Debug/NeuronaRBF.o Debug/RedRBF.o Debug/utils.o Debug/Config.o 
+
+all: Debug Debug/TP2_Ej1_RBF_SOM.bin
+
+clean:
+	rm -rf ${OBJS} Debug/TP2_Ej1_RBF_SOM.bin
+
+Debug/TP2_Ej1_RBF_SOM.bin: ${OBJS}
+	${GPP} ${OBJS} ${LIBS} -o $@
+
+Debug:
+	mkdir Debug
+
+Debug/main1.o: ejercicio1.cpp ../Class/Neurona.h ../Class/NeuronaRBF.h ../Utils/utils.h ../Class/GNUPlot.h ../Class/Config.h
+	${GPP} ${FLAGS} -c ejercicio1.cpp -o $@
+
+Debug/GNUPlot.o: ../Class/GNUPlot.cpp ../Class/GNUPlot.h
+	${GPP} ${FLAGS} -c ../Class/GNUPlot.cpp -o $@
+
+Debug/Neurona.o: ../Class/Neurona.cpp ../Class/Neurona.h ../Utils/utils.h
+	${GPP} ${FLAGS} -c ../Class/Neurona.cpp -o $@
+
+Debug/NeuronaRBF.o: ../Class/NeuronaRBF.cpp ../Class/NeuronaRBF.h ../Utils/utils.h
+	${GPP} ${FLAGS} -c ../Class/NeuronaRBF.cpp -o $@
+
+Debug/RedRBF.o: ../Class/RedRBF.cpp ../Class/RedRBF.h ../Class/NeuronaRBF.h ../Class/Neurona.h ../Utils/utils.h
+	${GPP} ${FLAGS} -c ../Class/RedRBF.cpp -o $@
+
+Debug/utils.o: ../Utils/utils.cpp ../Utils/utils.h
+	${GPP} ${FLAGS} -c ../Utils/utils.cpp -o $@
+
+Debug/Config.o: ../Class/Config.cpp ../Class/Config.h
+	${GPP} ${FLAGS} -c ../Class/Config.cpp -o $@
+
