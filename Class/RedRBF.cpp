@@ -5,6 +5,7 @@
 #include <cassert>
 #include <algorithm>
 
+#include "utils.h"
 #include "RedRBF.h"
 
 RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_aprendizaje, unsigned int funcion_activacion, float par_sigmoidea ) {
@@ -26,8 +27,8 @@ RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_a
     
     //Creo las neuronas tipo rbf
     for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
-        NeuronaRBF neuRBF(this->cantidad_entradas);
-        this->neuronasRBF.push_back(neuRBF, -0.5, 0.5);
+        NeuronaRBF neuRBF(this->cantidad_entradas, -1, 1);
+        this->neuronasRBF.push_back(neuRBF);
     }
 
     //Creo las neuronas tipo perceptron
@@ -70,7 +71,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         //vector de conjuntos de puntos
         //En cada conjuntos[i] se almacena la posicion dentro de 
         //  entradas de cada uno de los puntos que pertenecen al conjunto i
-        std::vector<std::vector<unsigned int> conjuntos;
+        std::vector<std::vector<unsigned int> > conjuntos;
         conjuntos.resize(this->cantidad_clases);
        
         for (unsigned int w = 0; w < cantidad_casos; w++) { //para cada patron

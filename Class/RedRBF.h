@@ -37,7 +37,7 @@ class RedRBF {
     float train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > Yd, bool entrena);
     
     //Realiza el algoritmo de k-means
-    void kmeans(std::vector<std::vector<float> > &entradas);
+    void kmeans(std::vector<std::vector<float> > entradas);
 
     std::vector<std::vector<float> > getMus();
 };
