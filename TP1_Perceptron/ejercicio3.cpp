@@ -40,6 +40,10 @@ int main (int argc, char *argv[]) {
     std::cout<<"Tasa de aprendizaje = "<<tasa_aprendizaje<<'\n';
     std::cout<<"Criterio de finalizacion: "<<criterio_finalizacion<<'\n';
     std::cout<<"Parametro Momento = "<<parametro_momento<<'\n';
+    
+    std::cout<<"Porcentaje para entrenamiento = "<<porcentaje_entrenamiento<<"\%\n";
+    std::cout<<"Porcentaje para validacion = "<<100-porcentaje_entrenamiento-porcentaje_prueba<<"\%\n";
+    std::cout<<"Porcentaje para prueba = "<<porcentaje_prueba<<"\%\n";
 
 	//Inicializamos y configuramos el Graficador
     //Graficador para el error
@@ -122,7 +126,8 @@ int main (int argc, char *argv[]) {
 
         std::vector<std::vector<float> > ultimas_salidas;
         //Entrena y calcula error
-        float error = 1-perceptron.train(X, Yd, ultimas_salidas, true);
+        perceptron.train(X, Yd, ultimas_salidas, true);
+        float error = 1-perceptron.train(X, Yd, ultimas_salidas, false);
 
 
         if(i < intervalo_dibujo || i % intervalo_dibujo == 0) {

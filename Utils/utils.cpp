@@ -522,7 +522,8 @@ void utils::drawPlot(
 	plotter(output);
 }
 
-//Funcion que toma un vector de valores, los interpreta binarios y lo transforma a entero
+//Funcion que dado un arreglo de valores, devuelve el id del mayor
+//Se usa para determinar cual de las neuronas es la que más se activo pasandole el vector de las salidas.
 unsigned int utils::binary2int( std::vector<float> & input ) {
 
 	float maximo = input[0];
@@ -534,22 +535,4 @@ unsigned int utils::binary2int( std::vector<float> & input ) {
         }
     }
     return imax;
-
-    std::cout<<"No se pudo definir la clase de la salida = ";
-    utils::printVector(input);
-    assert(false);
-
-
-
-	unsigned int n = input.size();
-
-	unsigned int count = 0;
-	for (unsigned int i = 0; i < n; i++) {
-		if (input[i] > 0.5) {
-			//Interpreto un 1
-			count += pow(2,i);
-		}
-		//else interpreto un 0 => no sumo
-	}
-	return count;
 }
