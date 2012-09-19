@@ -536,3 +536,27 @@ unsigned int utils::binary2int( std::vector<float> & input ) {
     }
     return imax;
 }
+
+
+//Distancia entre vectores 
+float utils::vectorDistancia(std::vector<float> &X, std::vector<float> &Y ) {
+	std::vector<float> temp;
+	utils::vectorResta(X,Y,temp);
+	return utils::vectorNorma(temp);
+}
+
+//Dado un vector, devuelve el índice de menor elemento del vector 
+unsigned int utils::getMinIdx(std::vector<float> &V ) {
+	unsigned int n = V.size();
+	assert(n > 0);
+	unsigned int imin = 0;
+	float min = V[imin];
+
+	for (unsigned int i = 1; i < n; i++) {
+		if (V[i] < min) {
+			min = V[i];
+			imin = i;
+		}
+	}
+	return imin;
+}
