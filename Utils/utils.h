@@ -89,6 +89,8 @@ float static vectorNorma(std::vector<float> &X);
 //Se parar un vector en 2
 void static splitVector( std::vector<std::vector<float> > &V, std::vector<std::vector<float> > &X, std::vector<std::vector<float> > &Y, unsigned int size_y = 1);
 
+//Calcula la distancia entre dos vectores
+float static vectorDistancia(std::vector<float> &X, std::vector<float> &Y );
 
 //---------------------------------
 //Funciones para la creacion de conjuntos y subconjuntos
@@ -152,5 +154,6 @@ void static drawPlot(
 //Funcion que toma un vector de valores, los interpreta binarios y lo transforma a entero
 unsigned int static binary2int( std::vector<float> & input );
 
+unsigned int static getMinIdx(std::vector<float> &V );
 };
 #endif

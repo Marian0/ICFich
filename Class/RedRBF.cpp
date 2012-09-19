@@ -47,7 +47,7 @@ float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<
         this->kmeans(X);
 
 
-
+    return 1.0;
     
 }
 
@@ -72,7 +72,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         //En cada conjuntos[i] se almacena la posicion dentro de 
         //  entradas de cada uno de los puntos que pertenecen al conjunto i
         std::vector<std::vector<unsigned int> > conjuntos;
-        conjuntos.resize(this->cantidad_clases);
+        conjuntos.resize(this->cantidad_rbf);
        
         for (unsigned int w = 0; w < cantidad_casos; w++) { //para cada patron
             std::vector<float> distancias; //aqui se guardaran las distancias de este caso a todas las neuronas
@@ -83,7 +83,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
                 //Le pido el centro actual a la neurona k
                 std::vector<float> V = neuronasRBF[k].getMu();
                 
-                //calculo la distancia entre la neurona y el patron k
+                //calculo la distancia entre la neurona y el patron w
                 float dist = utils::vectorDistancia(V, entradas[w]);
                 
                 distancias.push_back(dist);
@@ -91,6 +91,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
             
             //obtengo donde ocurrio la menor de las distancias 
             unsigned int indice_menor = utils::getMinIdx(distancias); //este patron tiene esta clase
+            //esto esta mal
             conjuntos[indice_menor].push_back(w);
         }
         
@@ -111,7 +112,8 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
                 
             }
             //divido por la cantidad de patrones
-            std::vector<float> centroide_nuevo = utils::vectorEscalar(sumas, 1.0/((float)c_size));
+            std::vector<float> centroide_nuevo;
+            utils::vectorEscalar(sumas, 1.0/((float)c_size), centroide_nuevo);
                 
             this->neuronasRBF[i].setMu(centroide_nuevo);
         }
@@ -150,7 +152,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
 std::vector<std::vector<float> > RedRBF::getMus(){
     std::vector<std::vector<float> > ret_val;
     for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
-        std::vector<float> mu_i = this->neuronasRBF.getMu();
+        std::vector<float> mu_i = this->neuronasRBF[i].getMu();
         ret_val.push_back(mu_i);
     }
     return ret_val;
