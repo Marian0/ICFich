@@ -536,3 +536,11 @@ unsigned int utils::binary2int( std::vector<float> & input ) {
     }
     return imax;
 }
+
+
+//Distancia entre vectores 
+float utils::vectorDistancia(std::vector<float> &X, std::vector<float> &Y ) {
+	std::vector<float> temp;
+	utils::vectorResta(X,Y,temp);
+	return utils::vectorNorma(temp);
+}
