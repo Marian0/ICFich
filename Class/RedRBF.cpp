@@ -71,7 +71,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         //vector de conjuntos de puntos
         //En cada conjuntos[i] se almacena la posicion dentro de 
         //  entradas de cada uno de los puntos que pertenecen al conjunto i
-        std::vector<std::vector<unsigned int> > conjuntos;
+        std::vector<std::vector<std::vector<float> > > conjuntos;
         conjuntos.resize(this->cantidad_rbf);
        
         for (unsigned int w = 0; w < cantidad_casos; w++) { //para cada patron
@@ -91,25 +91,24 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
             
             //obtengo donde ocurrio la menor de las distancias 
             unsigned int indice_menor = utils::getMinIdx(distancias); //este patron tiene esta clase
-            //esto esta mal
-            conjuntos[indice_menor].push_back(w);
+
+            //Agrego el patron a la clase indice_menor
+            conjuntos[indice_menor].push_back(entradas[w]);
         }
         
         //recalcular centroide
-        for (unsigned int i = 0; i < this->cantidad_clases; i++) {
+        for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
             unsigned int c_size = conjuntos[i].size(); //cantidad de patrones en esta clase
             
             if (c_size == 0) continue; //si no tengo ningun patron en esta clase, continuo
 
-            std::vector<float> sumas = entradas[ conjuntos[i][0] ]; //asigno el primero
+            std::vector<float> sumas = conjuntos[i][0]; //asigno el primero
            
             //sumo todos los patrones
             for (unsigned int j = 1; j < c_size; j++) {
-                unsigned int posicion_patron = conjuntos[i][j];
                 std::vector<float> temp;
-                utils::vectorSuma(sumas, entradas[posicion_patron], temp);
+                utils::vectorSuma(sumas, conjuntos[i][j], temp);
                 sumas = temp;
-                
             }
             //divido por la cantidad de patrones
             std::vector<float> centroide_nuevo;
@@ -131,6 +130,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         for (unsigned int i = 0; i < distancias_ceros.size(); i++) {
             suma_distancias += distancias_ceros[i];
         }
+        suma_distancias /= (float) distancias_ceros.size();
 
         //Si la suma es muy chica, quiere decir que se movieron poco, salgo del while true
         if (suma_distancias < EPS) 
@@ -141,7 +141,6 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
             std::vector<float> mu_i = this->neuronasRBF[i].getMu();
             centroides_viejos[i] = mu_i;
         }
-
         iteraciones++;
     }
     std::cout<<"Termino el K-Means luego de "<<iteraciones<<" iteraciones.\n";
