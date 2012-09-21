@@ -124,6 +124,11 @@ int main (int argc, char *argv[]) {
             std::cout<<"Centroide "<<k<<" = ";
             utils::printVector(centroides[k]);
         }
+        
+        float error = 1-redRBF.train(X, Yd, false);
+        std::cout<<"Error = "<<error*100<<"\%\n";
+
+
         std::getchar();
         
         /*

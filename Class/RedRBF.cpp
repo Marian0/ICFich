@@ -33,22 +33,89 @@ RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_a
 
     //Creo las neuronas tipo perceptron
     for (unsigned int i = 0; i < this->cantidad_n; i++) {
-        Neurona neu (this->cantidad_entradas, -0.5, 0.5, funcion_activacion, tasa_aprendizaje) ;
+        Neurona neu (this->cantidad_rbf, -0.5, 0.5, funcion_activacion, tasa_aprendizaje) ;
         this->neuronasP.push_back(neu);
     }
 }
 
-float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > Yd, bool entrena) {
+float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, bool entrena) {
     //Asegura que sean del mismo tamaño
-    assert(X.size() == Yd.size());
+    assert(X.size() == YD.size());
 
     //Llama a kmeans para aproximar los centroides
     if(entrena == true)
         this->kmeans(X);
-
-
-    return 1.0;
     
+    unsigned int cantidad_casos = X.size();
+
+    unsigned int aciertos = 0; //contador de aciertos
+
+    //recorro todas las entradas
+    for (unsigned int w = 0; w < cantidad_casos; w++) {
+        //Entrenamos con el patron actual
+        bool correcto = singleTrain(X[w], YD[w], entrena);
+        //Si fue correcto, aumentamos la cuenta
+        if (correcto)
+            aciertos++;
+    }
+    //Calculamos el porcentaje de efectividad
+    float efectividad = ((float) aciertos) / ((float) cantidad_casos);
+
+    return efectividad;
+}
+
+bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena) {
+    bool salida_sin_error = true;
+
+    std::vector<float> respuestasRBF; //guarda las respuestas de cada una de las neuronasRBF
+
+    //inserto el patron actual en cada una de las RBF y capturo sus salidas
+    for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
+        //Capturo su respuesta
+        float respuesta = this->neuronasRBF[i].getResponse(X);
+        //La guardo en el vector de respuestas
+        respuestasRBF.push_back(respuesta);
+    }
+    
+    //inserto la salida de las RBF a las neuronas tipo perceptron,  capturo sus salidas y entreno
+    for (unsigned int i = 0; i < this->cantidad_n; i++) {
+        //Capturo su salida
+        float respuesta = this->neuronasP[i].getResponse(respuestasRBF, this->parametro_sigmoidea);
+            
+        //Obtengo los pesos sinápticos actuales
+        std::vector<float> Wi = this->neuronasP[i].getW();
+
+        // Verifico si hay error en alguna salida
+        float error = fabs(YD[i] - respuesta);
+       
+        if ((salida_sin_error == true) && (error > EPS)) { //no hubo error aun y son != (hay un error)
+            salida_sin_error = false;
+        }
+
+
+        //Calculo de los nuevos pesos
+        //Parte Escalar
+        float parte_escalar = (YD[i] - respuesta) * ( this->neuronasP[i].getConstanteAprendizaje() );
+
+        //Realizamos una copia de las respuestas
+        std::vector<float> copiarespuestas = respuestasRBF;
+        //Agregamos la entrada correspondiente al Bias
+        copiarespuestas.insert(copiarespuestas.begin(), -1);
+        
+        //Temporal para el producto
+        std::vector<float> vesc; 
+        utils::vectorEscalar(copiarespuestas, parte_escalar, vesc);
+
+        //Temporal para la suma
+        std::vector<float> Wnuevo; 
+        utils::vectorSuma(Wi, vesc, Wnuevo);
+
+        //Actualizar pesos
+        if (entrena) {
+            this->neuronasP[i].setW( Wnuevo );
+        }
+    }
+    return salida_sin_error;
 }
 
 

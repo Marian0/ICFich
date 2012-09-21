@@ -33,9 +33,12 @@ class RedRBF {
     RedRBF(std::string nombre_archivo, std::string nombre_red, float tasa_aprendizaje, unsigned int funcion_activacion, float par_sigmoidea );
     RedRBF(unsigned int c_e,unsigned int c_rbf, unsigned int c_n, unsigned int k);
     
-    //Realiza el entrenamiento. Primero llama a kmeans y luego computa los errores y recalcula los pesos
-    float train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > Yd, bool entrena);
-    
+    //Realiza el entrenamiento. Primero llama a kmeans y luego a singleTrain con cada patron
+    float train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, bool entrena);
+
+    //Para un caso en particular, calcula su salida y actualiza los pesos
+    bool singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena = true);
+
     //Realiza el algoritmo de k-means
     void kmeans(std::vector<std::vector<float> > entradas);
 
