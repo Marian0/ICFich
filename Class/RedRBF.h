@@ -6,7 +6,7 @@
 #include "Neurona.h"
 #include "NeuronaRBF.h"
 
-#define EPS 0.01
+#define EPS 0.001
 class RedRBF {
     //Vector que almancena la primer capa de neuronas gaussianas
     std::vector<NeuronaRBF> neuronasRBF;

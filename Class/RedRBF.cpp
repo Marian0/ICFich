@@ -135,7 +135,59 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
 */
 
 void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
+    unsigned int cantidad_casos_por_conjunto = entradas.size()/this->cantidad_rbf;
+/*
+    std::vector<std::vector<std::vector<float> > > conjuntos;
+    conjuntos.resize(this->cantidad_rbf);
+
+    for (unsigned int i = 0; i < entradas.size(); i++) {
+        unsigned int idx = (unsigned int) utils::randomDecimal(0, this->cantidad_rbf);
+        conjuntos[idx].push_back(entradas[i]);
+    }
+
+
+    for(unsigned int i = 0; i < this->cantidad_rbf; i++) {
+        std::vector<std::vector<float> >::iterator p = entradas.begin()+i*cantidad_casos_por_conjunto;
+        std::vector<std::vector<float> >::iterator q = entradas.begin()+(i+1)*cantidad_casos_por_conjunto;
+        if (q > entradas.end()) q = entradas.end();
+
+        std::vector<std::vector<float> > V(p,q);
+        conjuntos[i].push_back(V);
+    }
+
+    //recalcular centroide
+    for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
+        
+        unsigned int c_size = conjuntos[i].size(); //cantidad de patrones en esta clase
+        std::cout<<c_size<<'\n';
+        if (c_size == 0) continue; //si no tengo ningun patron en esta clase, continuo
+
+        std::vector<float> sumas = conjuntos[i][0]; //asigno el primero
+       
+        //sumo todos los patrones
+        for (unsigned int j = 1; j < c_size; j++) {
+            std::vector<float> temp;
+            utils::vectorSuma(sumas, conjuntos[i][j], temp);
+            sumas = temp;
+        }
+        //divido por la cantidad de patrones
+        std::vector<float> centroide_nuevo;
+        utils::vectorEscalar(sumas, 1.0/((float)c_size), centroide_nuevo);
+            
+        this->neuronasRBF[i].setMu(centroide_nuevo);
+    }
+*/ 
     
+    std::vector<std::vector<std::vector<float> > > conjuntos;
+    conjuntos.resize(this->cantidad_rbf);
+    for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
+        std::random_shuffle(entradas.begin(), entradas.end());
+        std::vector<float> V = entradas[0];
+        neuronasRBF[i].setMu(V);
+    }
+
+
+
     //guardo los centroides viejos para comparar y salir del while true
     std::vector<std::vector<float> > centroides_viejos;
     for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
@@ -145,6 +197,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         centroides_viejos.push_back(mu_i);
     }
 
+
     unsigned int iteraciones = 0;
 
     while (true) { //hasta que el delta_mu sea menor que un EPS
@@ -152,13 +205,13 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         //vector de conjuntos de puntos
         //En cada conjuntos[i] se almacena la posicion dentro de 
         //  entradas de cada uno de los puntos que pertenecen al conjunto i
-        std::vector<std::vector<std::vector<float> > > conjuntos;
+        conjuntos.clear();
         conjuntos.resize(this->cantidad_rbf);
-        
+       
         unsigned int cantidad_entradas = entradas.size();
         for (unsigned int w = 0; w < cantidad_entradas; w++) { //para cada patron
             std::vector<float> distancias; //aqui se guardaran las distancias de este caso a todas las neuronas
-            
+           
             //mido distancias a cada neuronaRBF
             for (unsigned int k = 0; k < this->cantidad_rbf; k++) { //recorro las neuronas RBF
                 
@@ -167,13 +220,14 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
                 
                 //calculo la distancia entre la neurona y el patron w
                 float dist = utils::vectorDistancia(V, entradas[w]);
+                dist *= dist;
                 
                 distancias.push_back(dist);
             }
             
             //obtengo donde ocurrio la menor de las distancias 
             unsigned int indice_menor = utils::getMinIdx(distancias); //este patron tiene esta clase
-            std::cout<<indice_menor<<' ';
+            //std::cout<<indice_menor<<' ';
             //Agrego el patron a la clase indice_menor
             conjuntos[indice_menor].push_back(entradas[w]);
         }
@@ -203,15 +257,21 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         std::vector<float> distancias_ceros;
         for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
             std::vector<float> mu_i = this->neuronasRBF[i].getMu();
+            std::cout<<"Distancias: \n";
+            utils::printVector(mu_i);
+            utils::printVector(centroides_viejos[i]);
             float dist_i = utils::vectorDistancia(mu_i, centroides_viejos[i]);
+            dist_i *= dist_i;
             distancias_ceros.push_back(dist_i);
         }
 
         //Sumo todas las distancias obtenidas
         float suma_distancias = 0.0;
         for (unsigned int i = 0; i < distancias_ceros.size(); i++) {
+            std::cout<<distancias_ceros[i]<<' ';
             suma_distancias += distancias_ceros[i];
         }
+        std::cout<<'\n'<<suma_distancias<<'\n';
         suma_distancias /= (float) distancias_ceros.size();
 
         //Si la suma es muy chica, quiere decir que se movieron poco, salgo del while true

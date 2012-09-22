@@ -200,7 +200,7 @@ int main (int argc, char *argv[]) {
 	plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
 	plotter("set yrange [0:"+ utils::floatToStr(max_val*100) +"]");
     
-    plotter(plot2);
+    //plotter(plot2);
 	
 	//Prueba con los patrones nunca vistos
 
