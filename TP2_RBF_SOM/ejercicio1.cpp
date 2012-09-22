@@ -107,7 +107,7 @@ int main (int argc, char *argv[]) {
     //Divido en X y Yd los casos de entrenamiento
     std::vector<std::vector<float> > X, Yd;
     
-    utils::splitVector(entrenamiento, X, Yd);
+    utils::splitVector(entrenamiento, X, Yd, 2);
 
     // utils::drawPoints(X, plotter2);
 
@@ -203,7 +203,7 @@ int main (int argc, char *argv[]) {
 	plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
 	plotter("set yrange [0:"+ utils::floatToStr(max_val*100) +"]");
     
-    plotter(plot2);
+    //plotter(plot2);
 	
 	//Prueba con los patrones nunca vistos
 
