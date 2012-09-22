@@ -155,8 +155,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         std::vector<std::vector<std::vector<float> > > conjuntos;
         conjuntos.resize(this->cantidad_rbf);
         
-        std::vector<std::vector<float> > inputs = entradas;
-        unsigned int cantidad_entradas = inputs.size();
+        unsigned int cantidad_entradas = entradas.size();
         for (unsigned int w = 0; w < cantidad_entradas; w++) { //para cada patron
             std::vector<float> distancias; //aqui se guardaran las distancias de este caso a todas las neuronas
             
@@ -167,7 +166,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
                 std::vector<float> V = neuronasRBF[k].getMu();
                 
                 //calculo la distancia entre la neurona y el patron w
-                float dist = utils::vectorDistancia(V, inputs[w]);
+                float dist = utils::vectorDistancia(V, entradas[w]);
                 
                 distancias.push_back(dist);
             }
@@ -176,10 +175,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
             unsigned int indice_menor = utils::getMinIdx(distancias); //este patron tiene esta clase
 
             //Agrego el patron a la clase indice_menor
-            conjuntos[indice_menor].push_back(inputs[w]);
-            //y lo borro del vector
-            inputs.erase(inputs.begin()+w);
-            cantidad_entradas = inputs.size();
+            conjuntos[indice_menor].push_back(entradas[w]);
         }
         
         //recalcular centroide
@@ -224,8 +220,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         
         //actualizo los centroides viejos
         for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
-            std::vector<float> mu_i = this->neuronasRBF[i].getMu();
-            centroides_viejos[i] = mu_i;
+            centroides_viejos[i] = this->neuronasRBF[i].getMu();
         }
         iteraciones++;
     }
