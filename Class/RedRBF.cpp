@@ -7,6 +7,7 @@
 
 #include "utils.h"
 #include "RedRBF.h"
+#include "GNUPlot.h"
 
 RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_aprendizaje, unsigned int funcion_activacion, float par_sigmoidea ) {
     //Leo los parametros de la red desde un archivo
@@ -136,6 +137,14 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
 
 void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
     
+            GNUPlot plotter;    
+        plotter("set xzeroaxis lt -1");
+        plotter("set yzeroaxis lt -1"); 
+        //plotter2("set xrange [-4:4]"); plotter2("set yrange [-4:4]");
+        plotter("set xrange [-1.5:1.5]"); plotter("set yrange [-1.5:1.5]");
+        plotter("set multiplot");
+        plotter("set grid back");   
+        plotter("set pointsize 1");
     //guardo los centroides viejos para comparar y salir del while true
     std::vector<std::vector<float> > centroides_viejos;
     for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
@@ -177,6 +186,17 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
             //Agrego el patron a la clase indice_menor
             conjuntos[indice_menor].push_back(entradas[w]);
         }
+
+        for (unsigned int m=0; m < conjuntos.size(); m++) {
+            std::vector<std::vector<float> > temp;
+            temp.push_back(centroides_viejos[m]);
+            if (conjuntos[m].size() > 0) {
+                utils::drawPoints(conjuntos[m], plotter, m);
+            }
+            utils::drawPoints(temp, plotter, m, 3);
+        }
+        getchar();
+        plotter("clear\n");
         
         //recalcular centroide
         for (unsigned int i = 0; i < this->cantidad_rbf; i++) {

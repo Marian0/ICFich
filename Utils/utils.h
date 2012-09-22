@@ -151,6 +151,8 @@ void static drawPlot(
 		GNUPlot & plotter
 	);
 
+void static drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, unsigned int color = 2, unsigned int tipo = 5);
+
 //Funcion que toma un vector de valores, los interpreta binarios y lo transforma a entero
 unsigned int static binary2int( std::vector<float> & input );
 

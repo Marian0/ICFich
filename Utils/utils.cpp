@@ -560,3 +560,43 @@ unsigned int utils::getMinIdx(std::vector<float> &V ) {
 	}
 	return imin;
 }
+
+
+void utils::drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, unsigned int color, unsigned int tipo) {
+	unsigned int cantidad = V.size();
+	assert(cantidad > 0);
+	assert(V[0].size() == 2);
+
+	std::string to_plot = "plot \"-\" notitle pt " + utils::intToStr(tipo) + " lt " + utils::intToStr(color) + "\n";
+	
+	// float minx = V[0][0];
+	// float miny = V[0][1];
+	// float maxx = V[0][0];
+	// float maxy = V[0][1];
+
+	for (unsigned int i = 0; i < cantidad; i++) {
+		to_plot += utils::floatToStr( V[i][0] ) + " " + utils::floatToStr( V[i][1] ) + " \n";	
+		// if (V[i][0] > maxx)
+		// 	maxx = V[i][0];
+
+		// if (V[i][1] > maxy)
+		// 	maxy = V[i][1];
+
+		// if (V[i][0] < minx)
+		// 	minx = V[i][0];
+		
+		// if (V[i][1] < miny)
+		// 	miny = V[i][1];
+
+
+	}	
+	
+	// plotter("set yrange [" + utils::floatToStr(miny) + ":" + utils::floatToStr(maxy) + "]");
+	// plotter("set xrange [" + utils::floatToStr(minx) + ":" + utils::floatToStr(maxx) + "]");
+
+	// plotter("set multiplot\n");
+	plotter(to_plot);
+	plotter("e\n");
+
+
+}

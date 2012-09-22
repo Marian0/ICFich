@@ -64,7 +64,7 @@ int main (int argc, char *argv[]) {
 	plotter2("set xzeroaxis lt -1");
 	plotter2("set yzeroaxis lt -1");	
 	//plotter2("set xrange [-4:4]"); plotter2("set yrange [-4:4]");
-	plotter2("set xrange [-0.1:1.1]"); plotter2("set yrange [-0.1:1.1]");
+	plotter2("set xrange [-1.5:1.5]"); plotter2("set yrange [-1.5:1.5]");
     plotter2("set multiplot");
 	plotter2("set grid back");	
 	plotter2("set pointsize 1");
@@ -104,11 +104,12 @@ int main (int argc, char *argv[]) {
 	utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
 			porcentaje_prueba, 0);
 
-
     //Divido en X y Yd los casos de entrenamiento
     std::vector<std::vector<float> > X, Yd;
     
     utils::splitVector(entrenamiento, X, Yd);
+
+    // utils::drawPoints(X, plotter2);
 
     unsigned int i = 0; //contador de epocas
     std::vector<float> errores_consecutivos; //usado para calcular los errores consecutivos
@@ -120,6 +121,8 @@ int main (int argc, char *argv[]) {
 
         //obtener los centroides de cada neurona
         std::vector<std::vector<float> > centroides = redRBF.getMus();
+
+        // utils::drawPoints(centroides, plotter2, 1, 1);
         for (unsigned int k = 0; k < centroides.size(); k++) {
             std::cout<<"Centroide "<<k<<" = ";
             utils::printVector(centroides[k]);
@@ -128,8 +131,8 @@ int main (int argc, char *argv[]) {
         float error = 1-redRBF.train(X, Yd, false);
         std::cout<<"Error = "<<error*100<<"\%\n";
 
-
         std::getchar();
+        // plotter2("clear\n");
         
         /*
         if(i < intervalo_dibujo || i % intervalo_dibujo == 0) {
