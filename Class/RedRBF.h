@@ -6,7 +6,7 @@
 #include "Neurona.h"
 #include "NeuronaRBF.h"
 
-#define EPS 0.000001
+#define EPS 0.01
 class RedRBF {
     //Vector que almancena la primer capa de neuronas gaussianas
     std::vector<NeuronaRBF> neuronasRBF;
@@ -18,8 +18,8 @@ class RedRBF {
     unsigned int cantidad_n;
     //Cantidad de entradas
     unsigned int cantidad_entradas;
-    //Cantidad de clases k
-    unsigned int cantidad_clases;
+    //Cantidad de salidas 
+    unsigned int cantidad_salidas;
     
     //Parametro de la funcion sigmoidea
     float parametro_sigmoidea;

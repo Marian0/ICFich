@@ -22,7 +22,7 @@ RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_a
     this->cantidad_entradas = c_e;
     this->cantidad_rbf = c_rbf;
     this->cantidad_n = c_n;
-    this->cantidad_clases = c_n;
+    this->cantidad_salidas = c_n;
     this->parametro_sigmoidea = par_sigmoidea;
     
     //Creo las neuronas tipo rbf
@@ -174,12 +174,9 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
             
             //obtengo donde ocurrio la menor de las distancias 
             unsigned int indice_menor = utils::getMinIdx(distancias); //este patron tiene esta clase
-
+            std::cout<<indice_menor<<' ';
             //Agrego el patron a la clase indice_menor
             conjuntos[indice_menor].push_back(inputs[w]);
-            //y lo borro del vector
-            inputs.erase(inputs.begin()+w);
-            cantidad_entradas = inputs.size();
         }
         
         //recalcular centroide
