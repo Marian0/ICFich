@@ -75,45 +75,47 @@ int main (int argc, char *argv[]) {
     //Vectores temporales para guardar historial errores
 	std::vector<float> error_history_entrenamiento;
 
-	//Leo los patrones en patron
-	utils::parseCSV(archivo_problema.c_str(), patron);
-    patron = utils::genPatrones(patron, cantidad_casos, desvio);
 
-	random_shuffle(patron.begin() , patron.end());
+    //Leo los patrones en patron
+    utils::parseCSV(archivo_problema.c_str(), patron);
+    patron = utils::genPatrones(patron, cantidad_casos, desvio, 2);
+
+    random_shuffle(patron.begin() , patron.end());
 /*
-	//Dibuja los puntos de cada clase en una ventana para ver la dispersion
-	std::string plot_dot1 = "plot \"-\" notitle pt 1 lt 3\n";
-	std::string plot_dot2 = "plot \"-\" notitle pt 1 lt 1\n";
-	for (unsigned int w=0; w < patron.size(); w++ ) {
-		if (patron[w][2] == 1) 
-			plot_dot1 += utils::floatToStr(patron[w][0])+ " " + utils::floatToStr(patron[w][1]) + " \n";
-		else
-			plot_dot2 += utils::floatToStr(patron[w][0])+ " " + utils::floatToStr(patron[w][1]) + " \n";
-	}
-	
+    //Dibuja los puntos de cada clase en una ventana para ver la dispersion
+    std::string plot_dot1 = "plot \"-\" notitle pt 1 lt 3\n";
+    std::string plot_dot2 = "plot \"-\" notitle pt 1 lt 1\n";
+    for (unsigned int w=0; w < patron.size(); w++ ) {
+        if (patron[w][2] == 1) 
+            plot_dot1 += utils::floatToStr(patron[w][0])+ " " + utils::floatToStr(patron[w][1]) + " \n";
+        else
+            plot_dot2 += utils::floatToStr(patron[w][0])+ " " + utils::floatToStr(patron[w][1]) + " \n";
+    }
+    
     plot_dot1 += "e\n";
-	plot_dot2 += "e\n";
-	plotter2(plot_dot1);
-	plotter2(plot_dot2);
-*/					
-	    
+    plot_dot2 += "e\n";
+    plotter2(plot_dot1);
+    plotter2(plot_dot2);
+*/                  
+        
     //Instancio la red
     RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
 
     //Genera las particiones de entrenamiento y prueba
-	utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
-			porcentaje_prueba, 0);
+    utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
+            porcentaje_prueba, 0);
 
     //Divido en X y Yd los casos de entrenamiento
     std::vector<std::vector<float> > X, Yd;
     
     utils::splitVector(entrenamiento, X, Yd, 2);
 
+    utils::printVectorVector(Yd); getchar();
     // utils::drawPoints(X, plotter2);
 
     unsigned int i = 0; //contador de epocas
     std::vector<float> errores_consecutivos; //usado para calcular los errores consecutivos
-	for (; i < criterio_max_epocas; i++) {
+    for (; i < criterio_max_epocas; i++) {
 
         std::vector<std::vector<float> > ultimas_salidas;
         //Entrena y calcula error

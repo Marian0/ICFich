@@ -288,7 +288,7 @@ std::vector<std::vector<float> > utils::genPatrones( std::vector<std::vector<flo
 		std::vector<float> T = P[k%n];
 		
         //Solo para el caso 2d
-        if (T.size() == 3) { //x,y + salida esperada
+        if (T.size() - size_y == 2) { //x,y + salida esperada
             //Lo desvio en forma circular
             float xnuevo, ynuevo;
             utils::randomCircular(T[0], T[1], desvio, xnuevo, ynuevo);
