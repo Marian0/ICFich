@@ -21,7 +21,7 @@ public:
     
 	//Constructor
 	//  * dim = Cantidad de entradas
-	NeuronaRBF(unsigned int dim, float min, float max);
+	NeuronaRBF(unsigned int dim, float sigma, float min, float max);
 
 	// Devuelve la respuesta de la Neurona en base a la entrada especificada por parámetro	
 	float getResponse(std::vector<float> X);

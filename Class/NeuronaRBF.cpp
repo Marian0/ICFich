@@ -9,12 +9,13 @@
 
 #include "utils.h"
 
-NeuronaRBF::NeuronaRBF( unsigned int dim, float min, float max) {
+NeuronaRBF::NeuronaRBF( unsigned int dim, float sigma, float min, float max) {
 	this->dimension = dim;
 	//dim+1 porque una entrada pertenece al bias (umbral)
 	for(unsigned int i = 0; i < dim; i++){
 		mu.push_back(utils::randomDecimal(min,max));
 	}
+    this->sigma = sigma;
 }
 
 //Obtiene la salida de la neurona para una entrada dada
@@ -24,13 +25,15 @@ float NeuronaRBF::getResponse(std::vector<float> X){
 
 	//Calculo la resta de vectores
 	std::vector<float> numerador;
-	utils::vectorEscalar(this->mu, -1, numerador );
-	utils::vectorSuma(numerador, X, numerador);
+    utils::vectorResta(X, this->mu, numerador);
 
 	float norma = utils::vectorNorma(numerador);
-	norma = -1 * norma * norma;
-
-	return exp(norma/ (2*this->sigma*this->sigma));
+    
+    float num = -1 * norma * norma;
+    float den = 2*this->sigma*this->sigma;
+	float resp =  exp(num/den);
+    
+    return resp;
 }
 
 //Obtiene por referencia el vector W

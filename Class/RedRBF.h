@@ -30,8 +30,7 @@ class RedRBF {
 
     public:
     //Constructor que toma un archivo y lee los parametros de la red. El resto de los parametros se le pasan desde donde se construye
-    RedRBF(std::string nombre_archivo, std::string nombre_red, float tasa_aprendizaje, unsigned int funcion_activacion, float par_sigmoidea );
-    RedRBF(unsigned int c_e,unsigned int c_rbf, unsigned int c_n, unsigned int k);
+    RedRBF(std::string nombre_archivo, std::string nombre_red, float tasa_aprendizaje, float sigma, unsigned int funcion_activacion, float par_sigmoidea );
     
     //Realiza el entrenamiento. Primero llama a kmeans y luego a singleTrain con cada patron
     float train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, bool entrena);

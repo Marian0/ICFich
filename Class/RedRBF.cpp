@@ -9,7 +9,7 @@
 #include "RedRBF.h"
 #include "GNUPlot.h"
 
-RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_aprendizaje, unsigned int funcion_activacion, float par_sigmoidea ) {
+RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_aprendizaje, float sigma, unsigned int funcion_activacion, float par_sigmoidea ) {
     //Leo los parametros de la red desde un archivo
     std::ifstream file (nombre_archivo.c_str());
     assert(file.is_open());
@@ -28,7 +28,7 @@ RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_a
     
     //Creo las neuronas tipo rbf
     for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
-        NeuronaRBF neuRBF(this->cantidad_entradas, -1, 1);
+        NeuronaRBF neuRBF(this->cantidad_entradas, sigma, -1, 1);
         this->neuronasRBF.push_back(neuRBF);
     }
 
@@ -77,7 +77,7 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
         //La guardo en el vector de respuestas
         respuestasRBF.push_back(respuesta);
     }
-    
+   
     //inserto la salida de las RBF a las neuronas tipo perceptron,  capturo sus salidas y entreno
     for (unsigned int i = 0; i < this->cantidad_n; i++) {
         //Capturo su salida
@@ -111,6 +111,11 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
         std::vector<float> Wnuevo; 
         utils::vectorSuma(Wi, vesc, Wnuevo);
 
+
+        std::cout<<"W viejo = "; utils::printVector(Wi);
+        std::cout<<"W nuevo = "; utils::printVector(Wnuevo);
+//        std::getchar();
+
         //Actualizar pesos
         if (entrena) {
             this->neuronasP[i].setW( Wnuevo );
@@ -118,22 +123,6 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
     }
     return salida_sin_error;
 }
-/*
-void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
-
-    unsigned int cantidad_casos = entradas.size();
-    float J = 0.0;
-    for (unsigned int j = 0; j < this->cantidad_rbf; j++) {
-        std::vector<float> mu_j = this->neuronasRBF[j].getMu();
-        for (unsigned int w = 0; w < cantidad_casos; w++) {
-            std::vector<float> resta;
-            utils::vectorResta(entradas[w], mu_j, resta);
-            float norma = utils::vectorNorma(resta);
-            J += (norma*norma);
-        }
-    }
-}
-*/
 
 void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
     unsigned int cantidad_casos_por_conjunto = entradas.size()/this->cantidad_rbf;
@@ -178,7 +167,8 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         this->neuronasRBF[i].setMu(centroide_nuevo);
     }
 */ 
-    
+   
+    /*
     GNUPlot plotter;    
     plotter("set xzeroaxis lt -1");
     plotter("set yzeroaxis lt -1"); 
@@ -187,6 +177,8 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
     plotter("set multiplot");
     plotter("set grid back");   
     plotter("set pointsize 1");
+    */
+
     std::vector<std::vector<std::vector<float> > > conjuntos;
     conjuntos.resize(this->cantidad_rbf);
     for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
@@ -203,7 +195,6 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         //lo pushbackeo
         centroides_viejos.push_back(mu_i);
     }
-
 
     unsigned int iteraciones = 0;
 
@@ -234,11 +225,11 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
             
             //obtengo donde ocurrio la menor de las distancias 
             unsigned int indice_menor = utils::getMinIdx(distancias); //este patron tiene esta clase
-            //std::cout<<indice_menor<<' ';
             //Agrego el patron a la clase indice_menor
             conjuntos[indice_menor].push_back(entradas[w]);
         }
 
+        /* Dibuja centroides y conjuntos por color
         for (unsigned int m=0; m < conjuntos.size(); m++) {
             std::vector<std::vector<float> > temp;
             temp.push_back(centroides_viejos[m]);
@@ -249,7 +240,8 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         }
         getchar();
         plotter("clear\n");
-        
+        */
+
         //recalcular centroide
         for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
             unsigned int c_size = conjuntos[i].size(); //cantidad de patrones en esta clase
@@ -275,9 +267,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         std::vector<float> distancias_ceros;
         for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
             std::vector<float> mu_i = this->neuronasRBF[i].getMu();
-            std::cout<<"Distancias: \n";
-            utils::printVector(mu_i);
-            utils::printVector(centroides_viejos[i]);
+            //std::cout<<"Distancias: \n"; utils::printVector(mu_i); utils::printVector(centroides_viejos[i]);
             float dist_i = utils::vectorDistancia(mu_i, centroides_viejos[i]);
             dist_i *= dist_i;
             distancias_ceros.push_back(dist_i);
@@ -286,10 +276,10 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         //Sumo todas las distancias obtenidas
         float suma_distancias = 0.0;
         for (unsigned int i = 0; i < distancias_ceros.size(); i++) {
-            std::cout<<distancias_ceros[i]<<' ';
+            //std::cout<<distancias_ceros[i]<<' ';
             suma_distancias += distancias_ceros[i];
         }
-        std::cout<<'\n'<<suma_distancias<<'\n';
+        //std::cout<<'\n'<<suma_distancias<<'\n';
         suma_distancias /= (float) distancias_ceros.size();
 
         //Si la suma es muy chica, quiere decir que se movieron poco, salgo del while true
@@ -302,7 +292,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         }
         iteraciones++;
     }
-    std::cout<<"Termino el K-Means luego de "<<iteraciones<<" iteraciones.\n";
+    //std::cout<<"Termino el K-Means luego de "<<iteraciones<<" iteraciones.\n";
 }
 
 

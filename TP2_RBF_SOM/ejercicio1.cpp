@@ -25,6 +25,7 @@ int main (int argc, char *argv[]) {
 	unsigned int    cantidad_casos                 = utils::strToInt(config.getValue("cantidad_casos"));
 	float           desvio                         = utils::strToFloat(config.getValue("desvio"));
 	float           tasa_aprendizaje               = utils::strToFloat(config.getValue("tasa_aprendizaje"));
+	float           sigma                          = utils::strToFloat(config.getValue("sigma"));
 	unsigned int    criterio_max_epocas            = utils::strToInt(config.getValue("criterio_max_epocas"));
 	float           criterio_error                 = utils::strToFloat(config.getValue("criterio_error"));
     float           parametro_sigmoidea            = utils::strToFloat(config.getValue("parametro_sigmoidea"));
@@ -46,7 +47,7 @@ int main (int argc, char *argv[]) {
 
 	//Inicializamos y configuramos el Graficador
     //Graficador para el error
-    GNUPlot plotter;	
+    /*GNUPlot plotter;	
 	plotter("set pointsize 1");
 	plotter("set grid back");	
 	plotter("set xzeroaxis lt -1");
@@ -68,13 +69,13 @@ int main (int argc, char *argv[]) {
     plotter2("set multiplot");
 	plotter2("set grid back");	
 	plotter2("set pointsize 1");
-    
+    */
+
 	//Vectores temporales para trabajar
 	std::vector<std::vector<float > > patron, entrenamiento, prueba, validacion;
 	
     //Vectores temporales para guardar historial errores
 	std::vector<float> error_history_entrenamiento;
-
 
     //Leo los patrones en patron
     utils::parseCSV(archivo_problema.c_str(), patron);
@@ -99,7 +100,7 @@ int main (int argc, char *argv[]) {
 */                  
         
     //Instancio la red
-    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
+    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, sigma, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
 
     //Genera las particiones de entrenamiento y prueba
     utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
@@ -110,7 +111,6 @@ int main (int argc, char *argv[]) {
     
     utils::splitVector(entrenamiento, X, Yd, 2);
 
-    utils::printVectorVector(Yd); getchar();
     // utils::drawPoints(X, plotter2);
 
     unsigned int i = 0; //contador de epocas
@@ -121,14 +121,16 @@ int main (int argc, char *argv[]) {
         //Entrena y calcula error
         redRBF.train(X, Yd, true);
 
+        /*
         //obtener los centroides de cada neurona
         std::vector<std::vector<float> > centroides = redRBF.getMus();
 
         // utils::drawPoints(centroides, plotter2, 1, 1);
+        
         for (unsigned int k = 0; k < centroides.size(); k++) {
             std::cout<<"Centroide "<<k<<" = ";
             utils::printVector(centroides[k]);
-        }
+        }*/
         
         float error = 1-redRBF.train(X, Yd, false);
         std::cout<<"Error = "<<error*100<<"\%\n";
@@ -202,8 +204,8 @@ int main (int argc, char *argv[]) {
 
     plot2 += "e\n";
     unsigned int max_value = (unsigned int) 100*max_val;
-	plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
-	plotter("set yrange [0:"+ utils::floatToStr(max_val*100) +"]");
+	//plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
+	//plotter("set yrange [0:"+ utils::floatToStr(max_val*100) +"]");
     
     //plotter(plot2);
 	
