@@ -51,18 +51,27 @@ float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<
 
     unsigned int aciertos = 0; //contador de aciertos
 
+    //Aqui se guardan los errores instantaneos
+    std::vector<float> error_energia;
+    
     //recorro todas las entradas
     for (unsigned int w = 0; w < cantidad_casos; w++) {
         //Entrenamos con el patron actual
         bool correcto = singleTrain(X[w], YD[w], entrena);
+
+        float error_inst = 0.5*utils::vectorPunto(this->error_instantaneo, this->error_instantaneo);
+        error_energia.push_back(error_inst);
+
         //Si fue correcto, aumentamos la cuenta
         if (correcto)
             aciertos++;
     }
+    float promedio_error = utils::promedio(error_energia);
+    
     //Calculamos el porcentaje de efectividad
-    float efectividad = ((float) aciertos) / ((float) cantidad_casos);
+    //float efectividad = ((float) aciertos) / ((float) cantidad_casos);
 
-    return efectividad;
+    return 1-promedio_error;
 }
 
 bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena) {
@@ -77,30 +86,53 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
         //La guardo en el vector de respuestas
         respuestasRBF.push_back(respuesta);
     }
+    respuestasRBF.insert(respuestasRBF.begin(), -1); //le meto un -1 como bias
+    //Realizamos una copia de las respuestas
+    std::vector<float> copiarespuestas = respuestasRBF;
+    //Agregamos la entrada correspondiente al Bias
+    copiarespuestas.insert(copiarespuestas.begin(), -1);
    
+    //Limpio el vector de errores
+    this->error_instantaneo.clear();
+
     //inserto la salida de las RBF a las neuronas tipo perceptron,  capturo sus salidas y entreno
     for (unsigned int i = 0; i < this->cantidad_n; i++) {
         //Capturo su salida
-        float respuesta = this->neuronasP[i].getResponse(respuestasRBF, this->parametro_sigmoidea);
-            
+        //float respuesta = this->neuronasP[i].getResponse(respuestasRBF, this->parametro_sigmoidea);
+    
+
         //Obtengo los pesos sinápticos actuales
         std::vector<float> Wi = this->neuronasP[i].getW();
+        
+
+        //Wi.erase(Wi.begin()); //borro el bias
+
+
+        float punto = utils::vectorPunto(Wi, respuestasRBF);
+        float error = punto - YD[i];
+        float parte_escalar = -1*error*this->neuronasP[i].getConstanteAprendizaje();
+        std::vector<float> Wnuevo;
+        utils::vectorEscalar(respuestasRBF, parte_escalar, Wnuevo);
+
+
+
+        //float error = YD[i] - respuesta;
+        
+        
+        this->error_instantaneo.push_back(error);
+
 
         // Verifico si hay error en alguna salida
-        float error = fabs(YD[i] - respuesta);
-       
-        if ((salida_sin_error == true) && (error > EPS)) { //no hubo error aun y son != (hay un error)
+        if ((salida_sin_error == true) && (fabs(error) > EPS)) { //no hubo error aun y son != (hay un error)
             salida_sin_error = false;
         }
+        
+        //std::cout<<"Wi = "; utils::printVector(Wi); std::cout<<"X = "; utils::printVector(copiarespuestas);
+        //std::cout<<error<<'\n';
 
         //Calculo de los nuevos pesos
         //Parte Escalar
-        float parte_escalar = (YD[i] - respuesta) * ( this->neuronasP[i].getConstanteAprendizaje() );
-
-        //Realizamos una copia de las respuestas
-        std::vector<float> copiarespuestas = respuestasRBF;
-        //Agregamos la entrada correspondiente al Bias
-        copiarespuestas.insert(copiarespuestas.begin(), -1);
+        /*float parte_escalar = (error) * ( this->neuronasP[i].getConstanteAprendizaje() );
         
         //Temporal para el producto
         std::vector<float> vesc; 
@@ -109,12 +141,13 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
         //Temporal para la suma
         std::vector<float> Wnuevo; 
         utils::vectorSuma(Wi, vesc, Wnuevo);
-
+*/
         //Actualizar pesos
         if (entrena) {
             this->neuronasP[i].setW( Wnuevo );
         }
     }
+    ///std::cout<<'\n'; std::getchar();
     return salida_sin_error;
 }
 
@@ -162,7 +195,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
     }
 */ 
    
-    /*
+    /* 
     GNUPlot plotter;    
     plotter("set xzeroaxis lt -1");
     plotter("set yzeroaxis lt -1"); 
@@ -173,6 +206,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
     plotter("set pointsize 1");
     */
 
+    //Inicializo el kmeans con patrones aleatorios del conjunto a clusterear
     std::vector<std::vector<std::vector<float> > > conjuntos;
     conjuntos.resize(this->cantidad_rbf);
     for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
@@ -223,7 +257,8 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
             conjuntos[indice_menor].push_back(entradas[w]);
         }
 
-        /* Dibuja centroides y conjuntos por color
+        /*
+        //Dibuja centroides y conjuntos por color
         for (unsigned int m=0; m < conjuntos.size(); m++) {
             std::vector<std::vector<float> > temp;
             temp.push_back(centroides_viejos[m]);

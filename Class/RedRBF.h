@@ -6,7 +6,7 @@
 #include "Neurona.h"
 #include "NeuronaRBF.h"
 
-#define EPS 0.001
+#define EPS 0.1
 class RedRBF {
     //Vector que almancena la primer capa de neuronas gaussianas
     std::vector<NeuronaRBF> neuronasRBF;
@@ -24,9 +24,11 @@ class RedRBF {
     //Parametro de la funcion sigmoidea
     float parametro_sigmoidea;
 
-
     //Nombre de la red
     std::string nombre_red;
+
+    //Vector que guardara el error instantaneo en cada iteracion
+    std::vector<float> error_instantaneo;
 
     public:
     //Constructor que toma un archivo y lee los parametros de la red. El resto de los parametros se le pasan desde donde se construye

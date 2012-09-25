@@ -11,7 +11,6 @@
 
 NeuronaRBF::NeuronaRBF( unsigned int dim, float sigma, float min, float max) {
 	this->dimension = dim;
-	//dim+1 porque una entrada pertenece al bias (umbral)
 	for(unsigned int i = 0; i < dim; i++){
 		mu.push_back(utils::randomDecimal(min,max));
 	}

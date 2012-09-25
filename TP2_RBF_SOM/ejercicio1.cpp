@@ -23,6 +23,7 @@ int main (int argc, char *argv[]) {
 	unsigned int    porcentaje_entrenamiento       = utils::strToInt(config.getValue("porcentaje_entrenamiento"));
 	unsigned int    porcentaje_prueba              = utils::strToInt(config.getValue("porcentaje_prueba"));
 	unsigned int    cantidad_casos                 = utils::strToInt(config.getValue("cantidad_casos"));
+    unsigned int    cantidad_salidas               = utils::strToInt(config.getValue("cantidad_salidas"));
 	float           desvio                         = utils::strToFloat(config.getValue("desvio"));
 	float           tasa_aprendizaje               = utils::strToFloat(config.getValue("tasa_aprendizaje"));
 	float           sigma                          = utils::strToFloat(config.getValue("sigma"));
@@ -33,6 +34,7 @@ int main (int argc, char *argv[]) {
     std::string     criterio_finalizacion          = config.getValue("criterio_finalizacion");
     unsigned int    minima_cantidad_consecutivos   = utils::strToInt(config.getValue("minima_cantidad_consecutivos"));
     unsigned int    intervalo_dibujo               = utils::strToInt(config.getValue("intervalo_dibujo"));
+    
 
     //Impresion de los datos de ejecucion
     std::cout<<"Bienvenidos al Ejercicio 1 \n";
@@ -77,7 +79,7 @@ int main (int argc, char *argv[]) {
 	
     //Leo los patrones en patron
     utils::parseCSV(archivo_problema.c_str(), patron);
-    patron = utils::genPatrones(patron, cantidad_casos, desvio, 2);
+    patron = utils::genPatrones(patron, cantidad_casos, desvio, cantidad_salidas);
 
     random_shuffle(patron.begin() , patron.end());
 /*
@@ -98,7 +100,7 @@ int main (int argc, char *argv[]) {
 */                  
         
     //Instancio la red
-    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, sigma, Neurona::FUNCION_SIGNO, parametro_sigmoidea);
+    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, sigma, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
 
     //Genera las particiones de entrenamiento y prueba
     utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
@@ -107,7 +109,7 @@ int main (int argc, char *argv[]) {
     //Divido en X y Yd los casos de entrenamiento
     std::vector<std::vector<float> > X, Yd;
     
-    utils::splitVector(entrenamiento, X, Yd, 2);
+    utils::splitVector(entrenamiento, X, Yd, cantidad_salidas);
 
     // utils::drawPoints(X, plotter2);
 
@@ -120,7 +122,7 @@ int main (int argc, char *argv[]) {
     for (; i < criterio_max_epocas; i++) {
 
         std::vector<std::vector<float> > ultimas_salidas;
-        //Entrena y calcula error
+        //Entrena
         redRBF.train(X, Yd, true);
 
         /*
@@ -133,7 +135,7 @@ int main (int argc, char *argv[]) {
             std::cout<<"Centroide "<<k<<" = ";
             utils::printVector(centroides[k]);
         }*/
-        
+        //Calcula el error luego del entrenamiento
         float error = 1-redRBF.train(X, Yd, false);
         error_history_entrenamiento.push_back(error);
         //std::cout<<"Error = "<<error*100<<"\%\n";
@@ -148,7 +150,6 @@ int main (int argc, char *argv[]) {
             utils::drawPlot(X, Yd, ultimas_salidas, plotter2);
         }
 
-		error_history_entrenamiento.push_back(error); 
 				
         //Comprueba si se llego a un error muy chico
         if (((criterio_finalizacion.compare("error") == 0) || criterio_finalizacion.compare("todos") == 0) && 
@@ -202,20 +203,21 @@ int main (int argc, char *argv[]) {
 	std::string plot2 = "plot \"-\" notitle pt 5 lt 3\n";
 
 	for (unsigned int k = 0; k < errores_normalizados.size(); k++) {
-		plot2 += utils::intToStr((int) k) + " " + utils::floatToStr(errores_normalizados[k]*100.0) + " \n";
+		plot2 += utils::intToStr((int) k) + " " + utils::floatToStr(errores_normalizados[k]) + " \n";
     }
 
     plot2 += "e\n";
     unsigned int max_value = (unsigned int) 100*max_val;
 	plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
-	plotter("set yrange [0:"+ utils::floatToStr(max_val*100) +"]");
+	plotter("set yrange [0:1]");
+	//plotter("set yrange [0:"+ utils::floatToStr(max_val*100) +"]");
     
     plotter(plot2);
 	
 	//Prueba con los patrones nunca vistos
 
 	//Cargo el conjunto de prueba
-	utils::splitVector(prueba, X, Yd, 2); 
+	utils::splitVector(prueba, X, Yd, cantidad_salidas); 
     
 	
 	float error_esperado = 1-redRBF.train(X, Yd, false);
