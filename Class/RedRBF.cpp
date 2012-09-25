@@ -93,7 +93,6 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
             salida_sin_error = false;
         }
 
-        std::cout<<respuesta<<' '<<YD[i]<<'\n';
         //Calculo de los nuevos pesos
         //Parte Escalar
         float parte_escalar = (YD[i] - respuesta) * ( this->neuronasP[i].getConstanteAprendizaje() );
@@ -110,11 +109,6 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
         //Temporal para la suma
         std::vector<float> Wnuevo; 
         utils::vectorSuma(Wi, vesc, Wnuevo);
-
-
-        std::cout<<"W viejo = "; utils::printVector(Wi);
-        std::cout<<"W nuevo = "; utils::printVector(Wnuevo);
-//        std::getchar();
 
         //Actualizar pesos
         if (entrena) {
@@ -276,10 +270,8 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         //Sumo todas las distancias obtenidas
         float suma_distancias = 0.0;
         for (unsigned int i = 0; i < distancias_ceros.size(); i++) {
-            //std::cout<<distancias_ceros[i]<<' ';
             suma_distancias += distancias_ceros[i];
         }
-        //std::cout<<'\n'<<suma_distancias<<'\n';
         suma_distancias /= (float) distancias_ceros.size();
 
         //Si la suma es muy chica, quiere decir que se movieron poco, salgo del while true

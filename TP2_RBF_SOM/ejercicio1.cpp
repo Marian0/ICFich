@@ -47,7 +47,7 @@ int main (int argc, char *argv[]) {
 
 	//Inicializamos y configuramos el Graficador
     //Graficador para el error
-    /*GNUPlot plotter;	
+    GNUPlot plotter;	
 	plotter("set pointsize 1");
 	plotter("set grid back");	
 	plotter("set xzeroaxis lt -1");
@@ -60,6 +60,7 @@ int main (int argc, char *argv[]) {
     plotter("set title \"Error durante N Epocas\"");
     plotter("set multiplot");
 
+    /*
     //Graficador para la dispersion de puntos
 	GNUPlot plotter2;	
 	plotter2("set xzeroaxis lt -1");
@@ -74,9 +75,6 @@ int main (int argc, char *argv[]) {
 	//Vectores temporales para trabajar
 	std::vector<std::vector<float > > patron, entrenamiento, prueba, validacion;
 	
-    //Vectores temporales para guardar historial errores
-	std::vector<float> error_history_entrenamiento;
-
     //Leo los patrones en patron
     utils::parseCSV(archivo_problema.c_str(), patron);
     patron = utils::genPatrones(patron, cantidad_casos, desvio, 2);
@@ -100,7 +98,7 @@ int main (int argc, char *argv[]) {
 */                  
         
     //Instancio la red
-    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, sigma, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
+    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, sigma, Neurona::FUNCION_SIGNO, parametro_sigmoidea);
 
     //Genera las particiones de entrenamiento y prueba
     utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
@@ -113,8 +111,12 @@ int main (int argc, char *argv[]) {
 
     // utils::drawPoints(X, plotter2);
 
+    //Vector temporales para guardar historial errores
+    std::vector<float> error_history_entrenamiento;
+
     unsigned int i = 0; //contador de epocas
     std::vector<float> errores_consecutivos; //usado para calcular los errores consecutivos
+    
     for (; i < criterio_max_epocas; i++) {
 
         std::vector<std::vector<float> > ultimas_salidas;
@@ -133,9 +135,10 @@ int main (int argc, char *argv[]) {
         }*/
         
         float error = 1-redRBF.train(X, Yd, false);
-        std::cout<<"Error = "<<error*100<<"\%\n";
+        error_history_entrenamiento.push_back(error);
+        //std::cout<<"Error = "<<error*100<<"\%\n";
 
-        std::getchar();
+        //std::getchar();
         // plotter2("clear\n");
         
         /*
@@ -204,15 +207,15 @@ int main (int argc, char *argv[]) {
 
     plot2 += "e\n";
     unsigned int max_value = (unsigned int) 100*max_val;
-	//plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
-	//plotter("set yrange [0:"+ utils::floatToStr(max_val*100) +"]");
+	plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
+	plotter("set yrange [0:"+ utils::floatToStr(max_val*100) +"]");
     
-    //plotter(plot2);
+    plotter(plot2);
 	
 	//Prueba con los patrones nunca vistos
 
 	//Cargo el conjunto de prueba
-	utils::splitVector(prueba, X, Yd, 1); 
+	utils::splitVector(prueba, X, Yd, 2); 
     
 	
 	float error_esperado = 1-redRBF.train(X, Yd, false);
