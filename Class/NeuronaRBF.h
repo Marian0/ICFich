@@ -10,18 +10,15 @@ private:
 	std::vector<float> mu;
 
 	//Desviación
-	float sigma;
+	float varianza;
 
 	//Cantidad de entradas
 	unsigned int dimension;
 	
 public:
-	static const unsigned int FUNCION_SIGNO = 1;
-	static const unsigned int FUNCION_SIGMOIDEA = 2;
-    
 	//Constructor
 	//  * dim = Cantidad de entradas
-	NeuronaRBF(unsigned int dim, float sigma, float min, float max);
+	NeuronaRBF(unsigned int dim, float var, float min, float max);
 
 	// Devuelve la respuesta de la Neurona en base a la entrada especificada por parámetro	
 	float getResponse(std::vector<float> X);
@@ -30,6 +27,9 @@ public:
 	std::vector<float> getMu();
 	//Define por referencia el vector W
 	void setMu(std::vector<float> & W);
+
+    //Define un nuevo valor para sigma
+    void setVarianza(float nueva_varianza);
 	
 };
 

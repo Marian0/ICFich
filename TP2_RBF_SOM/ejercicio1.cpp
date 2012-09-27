@@ -100,7 +100,7 @@ int main (int argc, char *argv[]) {
 */                  
         
     //Instancio la red
-    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, sigma, Neurona::FUNCION_SIGMOIDEA, parametro_sigmoidea);
+    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, sigma, Neurona::FUNCION_NINGUNA);
 
     //Genera las particiones de entrenamiento y prueba
     utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 

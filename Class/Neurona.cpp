@@ -36,7 +36,9 @@ float Neurona::getResponse(std::vector<float> X, float parametro_sigmoidea){
 	}
 
 	switch(this->id_funcion_activacion) {
-		case FUNCION_SIGNO: {
+        case FUNCION_NINGUNA: 
+            break; //no aplica funcion de activacion
+        case FUNCION_SIGNO: {
 			result = utils::signo(result);
 			break;
 		}

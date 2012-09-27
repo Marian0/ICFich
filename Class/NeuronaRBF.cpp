@@ -9,12 +9,12 @@
 
 #include "utils.h"
 
-NeuronaRBF::NeuronaRBF( unsigned int dim, float sigma, float min, float max) {
+NeuronaRBF::NeuronaRBF( unsigned int dim, float var, float min, float max) {
 	this->dimension = dim;
 	for(unsigned int i = 0; i < dim; i++){
 		mu.push_back(utils::randomDecimal(min,max));
 	}
-    this->sigma = sigma;
+    this->varianza = var;
 }
 
 //Obtiene la salida de la neurona para una entrada dada
@@ -29,7 +29,7 @@ float NeuronaRBF::getResponse(std::vector<float> X){
 	float norma = utils::vectorNorma(numerador);
     
     float num = -1 * norma * norma;
-    float den = 2*this->sigma*this->sigma;
+    float den = 2*this->varianza;
 	float resp =  exp(num/den);
     
     return resp;
@@ -43,3 +43,8 @@ std::vector<float> NeuronaRBF::getMu() {
 void NeuronaRBF::setMu(std::vector<float> & W){
 	this->mu = W;
 }
+
+void NeuronaRBF::setVarianza(float nueva_varianza) {
+    this->varianza = nueva_varianza;
+}
+

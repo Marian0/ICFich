@@ -86,68 +86,56 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
         //La guardo en el vector de respuestas
         respuestasRBF.push_back(respuesta);
     }
-    respuestasRBF.insert(respuestasRBF.begin(), -1); //le meto un -1 como bias
+//    respuestasRBF.insert(respuestasRBF.begin(), -1); //le meto un -1 como bias
     //Realizamos una copia de las respuestas
-    std::vector<float> copiarespuestas = respuestasRBF;
+    //std::vector<float> copiarespuestas = respuestasRBF;
     //Agregamos la entrada correspondiente al Bias
-    copiarespuestas.insert(copiarespuestas.begin(), -1);
+    //copiarespuestas.insert(copiarespuestas.begin(), -1);
    
     //Limpio el vector de errores
     this->error_instantaneo.clear();
 
     //inserto la salida de las RBF a las neuronas tipo perceptron,  capturo sus salidas y entreno
     for (unsigned int i = 0; i < this->cantidad_n; i++) {
+        
         //Capturo su salida
-        //float respuesta = this->neuronasP[i].getResponse(respuestasRBF, this->parametro_sigmoidea);
+        float respuesta = this->neuronasP[i].getResponse(respuestasRBF);
     
+        //Calculo el error
+        float error = respuesta - YD[i];
+        //Guardo el error en un vector
+        this->error_instantaneo.push_back(error); 
+        
+        //Completo la parte escalar
+        float parte_escalar = -1*error*this->neuronasP[i].getConstanteAprendizaje();
+        
+        //Calculo el nuevo W
+        std::vector<float> vesc;
+        std::vector<float> Wnuevo;
+        
+        //Realizamos una copia de las respuestas
+        std::vector<float> copiarespuestas = respuestasRBF;
+        
+        //Agregamos la entrada correspondiente al Bias
+        copiarespuestas.insert(copiarespuestas.begin(), -1);
 
-        //Obtengo los pesos sinápticos actuales
+        utils::vectorEscalar(copiarespuestas, parte_escalar, vesc);
+
+        //Obtengo su vector de pesos
         std::vector<float> Wi = this->neuronasP[i].getW();
         
-
-        //Wi.erase(Wi.begin()); //borro el bias
-
-
-        float punto = utils::vectorPunto(Wi, respuestasRBF);
-        float error = punto - YD[i];
-        float parte_escalar = -1*error*this->neuronasP[i].getConstanteAprendizaje();
-        std::vector<float> Wnuevo;
-        utils::vectorEscalar(respuestasRBF, parte_escalar, Wnuevo);
-
-
-
-        //float error = YD[i] - respuesta;
-        
-        
-        this->error_instantaneo.push_back(error);
-
+        utils::vectorSuma(Wi, vesc, Wnuevo);
 
         // Verifico si hay error en alguna salida
         if ((salida_sin_error == true) && (fabs(error) > EPS)) { //no hubo error aun y son != (hay un error)
             salida_sin_error = false;
         }
         
-        //std::cout<<"Wi = "; utils::printVector(Wi); std::cout<<"X = "; utils::printVector(copiarespuestas);
-        //std::cout<<error<<'\n';
-
-        //Calculo de los nuevos pesos
-        //Parte Escalar
-        /*float parte_escalar = (error) * ( this->neuronasP[i].getConstanteAprendizaje() );
-        
-        //Temporal para el producto
-        std::vector<float> vesc; 
-        utils::vectorEscalar(copiarespuestas, parte_escalar, vesc);
-
-        //Temporal para la suma
-        std::vector<float> Wnuevo; 
-        utils::vectorSuma(Wi, vesc, Wnuevo);
-*/
-        //Actualizar pesos
         if (entrena) {
             this->neuronasP[i].setW( Wnuevo );
         }
     }
-    ///std::cout<<'\n'; std::getchar();
+    //std::cout<<'\n'; std::getchar();
     return salida_sin_error;
 }
 
@@ -216,16 +204,21 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
     }
 
     //guardo los centroides viejos para comparar y salir del while true
-    std::vector<std::vector<float> > centroides_viejos;
+    std::vector<std::vector<float> > centroides_viejos = getMus();
+
+    /*
     for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
         //obtengo el mu actual
         std::vector<float> mu_i = this->neuronasRBF[i].getMu();
         //lo pushbackeo
         centroides_viejos.push_back(mu_i);
     }
+    */
 
     unsigned int iteraciones = 0;
 
+    //Este vector se va a utilizar para estimar los sigmas, una vez terminado el proceso
+    std::vector<std::vector<std::vector<float> > > conjuntos_sigma;
     while (true) { //hasta que el delta_mu sea menor que un EPS
   
         //vector de conjuntos de puntos
@@ -310,16 +303,42 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         suma_distancias /= (float) distancias_ceros.size();
 
         //Si la suma es muy chica, quiere decir que se movieron poco, salgo del while true
-        if (suma_distancias < EPS) 
+        if (suma_distancias < EPS) {
+            conjuntos_sigma = conjuntos;
             break;
-        
+        }
+       
         //actualizo los centroides viejos
+        centroides_viejos = getMus();
+        /*
         for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
             centroides_viejos[i] = this->neuronasRBF[i].getMu();
-        }
+        }*/
         iteraciones++;
     }
+
     //std::cout<<"Termino el K-Means luego de "<<iteraciones<<" iteraciones.\n";
+    
+    //Actualizaremos las varianzas de las RBF de acuerdo a la formula:
+    //sigma_j^2 = \frac{1}{M_j} \sum (\norm x - mu_j \norm )^2
+    for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
+        //Capturo el centroide i
+        std::vector<float> centroide = this->neuronasRBF[i].getMu();
+        //Sumo
+        float suma = 0.0;
+        unsigned int M_i = conjuntos_sigma[i].size();
+        if(M_i == 0) continue; //no hay patrones en este conjunto, no hago nada
+        for (unsigned int j = 0; j < M_i; j++) {
+            //Mido distancia entre el patron j y el centroide i
+            float distancia = utils::vectorDistancia(conjuntos[i][j], centroide);
+            //guardo el valor
+            suma += distancia*distancia;
+        }
+        //divido por la cantidad de patrones asociados a este centroide
+        float nueva_varianza = suma/M_i;
+        //asigno la nueva varianza
+        this->neuronasRBF[i].setVarianza(nueva_varianza);
+    }
 }
 
 
@@ -333,3 +352,5 @@ std::vector<std::vector<float> > RedRBF::getMus(){
     return ret_val;
 
 }
+
+
