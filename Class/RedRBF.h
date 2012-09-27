@@ -5,8 +5,10 @@
 #include <string>
 #include "Neurona.h"
 #include "NeuronaRBF.h"
+#include "GNUPlot.h"
 
-#define EPS 0.1
+#define EPS_KMEANS 0.01
+#define EPS_ERROR 0.001
 class RedRBF {
     //Vector que almancena la primer capa de neuronas gaussianas
     std::vector<NeuronaRBF> neuronasRBF;
@@ -30,6 +32,8 @@ class RedRBF {
     //Vector que guardara el error instantaneo en cada iteracion
     std::vector<float> error_instantaneo;
 
+    //Objeto de GNUPlot para dibujar los centroides
+    GNUPlot plotter; 
     public:
     //Constructor que toma un archivo y lee los parametros de la red. El resto de los parametros se le pasan desde donde se construye
     RedRBF(std::string nombre_archivo, std::string nombre_red, float tasa_aprendizaje, float var, unsigned int funcion_activacion, float par_sigmoidea = 5);

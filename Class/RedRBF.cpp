@@ -7,7 +7,6 @@
 
 #include "utils.h"
 #include "RedRBF.h"
-#include "GNUPlot.h"
 
 RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_aprendizaje, float sigma, unsigned int funcion_activacion, float par_sigmoidea ) {
     //Leo los parametros de la red desde un archivo
@@ -37,6 +36,15 @@ RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_a
         Neurona neu (this->cantidad_rbf, -0.5, 0.5, funcion_activacion, tasa_aprendizaje) ;
         this->neuronasP.push_back(neu);
     }
+    
+    //Inicializo todos los valores del objeto para dibujar 
+    this->plotter("set xzeroaxis lt -1");
+    this->plotter("set yzeroaxis lt -1"); 
+    //this->plotter2("set xrange [-4:4]"); plotter2("set yrange [-4:4]");
+    this->plotter("set xrange [-1.5:1.5]"); plotter("set yrange [-1.5:1.5]");
+    this->plotter("set multiplot");
+    this->plotter("set grid back");   
+    this->plotter("set pointsize 1");
 }
 
 float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, bool entrena) {
@@ -127,7 +135,7 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
         utils::vectorSuma(Wi, vesc, Wnuevo);
 
         // Verifico si hay error en alguna salida
-        if ((salida_sin_error == true) && (fabs(error) > EPS)) { //no hubo error aun y son != (hay un error)
+        if ((salida_sin_error == true) && (fabs(error) > EPS_ERROR)) { //no hubo error aun y son != (hay un error)
             salida_sin_error = false;
         }
         
@@ -140,60 +148,8 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
 }
 
 void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
-    unsigned int cantidad_casos_por_conjunto = entradas.size()/this->cantidad_rbf;
-/*
-    std::vector<std::vector<std::vector<float> > > conjuntos;
-    conjuntos.resize(this->cantidad_rbf);
-
-    for (unsigned int i = 0; i < entradas.size(); i++) {
-        unsigned int idx = (unsigned int) utils::randomDecimal(0, this->cantidad_rbf);
-        conjuntos[idx].push_back(entradas[i]);
-    }
-
-
-    for(unsigned int i = 0; i < this->cantidad_rbf; i++) {
-        std::vector<std::vector<float> >::iterator p = entradas.begin()+i*cantidad_casos_por_conjunto;
-        std::vector<std::vector<float> >::iterator q = entradas.begin()+(i+1)*cantidad_casos_por_conjunto;
-        if (q > entradas.end()) q = entradas.end();
-
-        std::vector<std::vector<float> > V(p,q);
-        conjuntos[i].push_back(V);
-    }
-
-    //recalcular centroide
-    for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
-        
-        unsigned int c_size = conjuntos[i].size(); //cantidad de patrones en esta clase
-        std::cout<<c_size<<'\n';
-        if (c_size == 0) continue; //si no tengo ningun patron en esta clase, continuo
-
-        std::vector<float> sumas = conjuntos[i][0]; //asigno el primero
-       
-        //sumo todos los patrones
-        for (unsigned int j = 1; j < c_size; j++) {
-            std::vector<float> temp;
-            utils::vectorSuma(sumas, conjuntos[i][j], temp);
-            sumas = temp;
-        }
-        //divido por la cantidad de patrones
-        std::vector<float> centroide_nuevo;
-        utils::vectorEscalar(sumas, 1.0/((float)c_size), centroide_nuevo);
-            
-        this->neuronasRBF[i].setMu(centroide_nuevo);
-    }
-*/ 
    
-    /* 
-    GNUPlot plotter;    
-    plotter("set xzeroaxis lt -1");
-    plotter("set yzeroaxis lt -1"); 
-    //plotter2("set xrange [-4:4]"); plotter2("set yrange [-4:4]");
-    plotter("set xrange [-1.5:1.5]"); plotter("set yrange [-1.5:1.5]");
-    plotter("set multiplot");
-    plotter("set grid back");   
-    plotter("set pointsize 1");
-    */
-
+    
     //Inicializo el kmeans con patrones aleatorios del conjunto a clusterear
     std::vector<std::vector<std::vector<float> > > conjuntos;
     conjuntos.resize(this->cantidad_rbf);
@@ -205,15 +161,6 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
 
     //guardo los centroides viejos para comparar y salir del while true
     std::vector<std::vector<float> > centroides_viejos = getMus();
-
-    /*
-    for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
-        //obtengo el mu actual
-        std::vector<float> mu_i = this->neuronasRBF[i].getMu();
-        //lo pushbackeo
-        centroides_viejos.push_back(mu_i);
-    }
-    */
 
     unsigned int iteraciones = 0;
 
@@ -238,7 +185,8 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
                 std::vector<float> V = neuronasRBF[k].getMu();
                 
                 //calculo la distancia entre la neurona y el patron w
-                float dist = utils::vectorDistancia(V, entradas[w]);
+                float dist = utils::vectorDistancia(entradas[w], V);
+                //uso distancia cuadrada
                 dist *= dist;
                 
                 distancias.push_back(dist);
@@ -256,12 +204,12 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
             std::vector<std::vector<float> > temp;
             temp.push_back(centroides_viejos[m]);
             if (conjuntos[m].size() > 0) {
-                utils::drawPoints(conjuntos[m], plotter, m);
+                utils::drawPoints(conjuntos[m], this->plotter, m);
             }
-            utils::drawPoints(temp, plotter, conjuntos.size() + 1, 3);
+            utils::drawPoints(temp, this->plotter, conjuntos.size() + 1, 3);
         }
         getchar();
-        plotter("clear\n");
+        this->plotter("clear\n");
         */
 
         //recalcular centroide
@@ -291,7 +239,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
             std::vector<float> mu_i = this->neuronasRBF[i].getMu();
             //std::cout<<"Distancias: \n"; utils::printVector(mu_i); utils::printVector(centroides_viejos[i]);
             float dist_i = utils::vectorDistancia(mu_i, centroides_viejos[i]);
-            dist_i *= dist_i;
+            //dist_i *= dist_i;
             distancias_ceros.push_back(dist_i);
         }
 
@@ -303,17 +251,13 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         suma_distancias /= (float) distancias_ceros.size();
 
         //Si la suma es muy chica, quiere decir que se movieron poco, salgo del while true
-        if (suma_distancias < EPS) {
-            conjuntos_sigma = conjuntos;
+        if (fabs(suma_distancias) < EPS_KMEANS) {
+            conjuntos_sigma = conjuntos ; //guardo la ultima disposicion de conjuntos para estimar los sigmas
             break;
         }
        
         //actualizo los centroides viejos
         centroides_viejos = getMus();
-        /*
-        for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
-            centroides_viejos[i] = this->neuronasRBF[i].getMu();
-        }*/
         iteraciones++;
     }
 
@@ -322,12 +266,14 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
     //Actualizaremos las varianzas de las RBF de acuerdo a la formula:
     //sigma_j^2 = \frac{1}{M_j} \sum (\norm x - mu_j \norm )^2
     for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
+        
+        unsigned int M_i = conjuntos_sigma[i].size();
+        if(M_i == 0) continue; //no hay patrones en este conjunto, no hago nada
+
         //Capturo el centroide i
         std::vector<float> centroide = this->neuronasRBF[i].getMu();
         //Sumo
         float suma = 0.0;
-        unsigned int M_i = conjuntos_sigma[i].size();
-        if(M_i == 0) continue; //no hay patrones en este conjunto, no hago nada
         for (unsigned int j = 0; j < M_i; j++) {
             //Mido distancia entre el patron j y el centroide i
             float distancia = utils::vectorDistancia(conjuntos[i][j], centroide);
