@@ -70,8 +70,8 @@ int main (int argc, char *argv[]) {
 	plotter2("set grid back");	
 	plotter2("set xzeroaxis lt -1");
 	plotter2("set yzeroaxis lt -1");	
-	plotter2("set xrange [-2:2]");
-	plotter2("set yrange [-2:2]");
+	plotter2("set xrange [-1.2:1.2]");
+	plotter2("set yrange [-1.2:1.2]");
     plotter2("set xlabel \"X\"");
     plotter2("set ylabel \"Y\"");
     //plotter2("set format y \"\%g \%\%\""); //formato porcentaje en ylabel
@@ -112,19 +112,18 @@ int main (int argc, char *argv[]) {
     std::vector<float> errores_consecutivos; //usado para calcular los errores consecutivos
     
     for (; i < criterio_max_epocas; i++) {
-
         //Entrena
         redSOM.train(X, Yd, true);
 
 
         //Calcula el error luego del entrenamiento
-        float error = 1-redSOM.train(X, Yd, false);
-        error_history_entrenamiento.push_back(error);
+        //float error = 1-redSOM.train(X, Yd, false);
+        //error_history_entrenamiento.push_back(error);
 
         if (i % intervalo_dibujo == 0) {
             std::vector<std::vector<float> > puntosSOM;
             redSOM.getPuntos(puntosSOM);
-            utils::printVectorVector(puntosSOM);
+            //utils::printVectorVector(puntosSOM);
             utils::drawPoints(puntosSOM, plotter2);
             std::getchar(); plotter2("clear\n");
         }
