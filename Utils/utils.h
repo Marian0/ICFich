@@ -120,8 +120,7 @@ void static convertirSalida(std::vector<std::vector<float> > &in, std::vector<st
 
 
 //Genera un conjunto de puntos dentro de un cuadrado
-void static generarCuadrado (float x0, float x1, float y0, float y1);
-}
+// void static generarCuadrado (float x0, float x1, float y0, float y1);
 
 //--------------------------------
 //Funciones de conversion de tipos

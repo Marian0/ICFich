@@ -72,7 +72,7 @@ int main (int argc, char *argv[]) {
     random_shuffle(patron.begin() , patron.end());
         
     //Instancio la red
-    RedSOM redSOM("estructura2.txt","Red SOM", tasa_aprendizaje, sigma, Neurona::FUNCION_SIGNO);
+    RedSOM redSOM(5, 50, 100, 0.5, tasa_aprendizaje , 0.3 );
 
     //Genera las particiones de entrenamiento y prueba
     utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 

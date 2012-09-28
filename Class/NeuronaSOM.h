@@ -15,7 +15,7 @@ class NeuronaSOM {
     NeuronaSOM(unsigned int dim, float min, float max);
 
     //Calcula la distancia entre esta neurona y el patron X
-    float getDistancia(std::vector<float> X);
+    float getDistancia(std::vector<float> & X);
 
     //Devuelve los pesos
     std::vector<float> getW();
