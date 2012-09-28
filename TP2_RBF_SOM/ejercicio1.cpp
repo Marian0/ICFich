@@ -100,7 +100,7 @@ int main (int argc, char *argv[]) {
 */                  
         
     //Instancio la red
-    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, sigma, Neurona::FUNCION_NINGUNA);
+    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, sigma, Neurona::FUNCION_SIGNO);
 
     //Genera las particiones de entrenamiento y prueba
     utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
@@ -125,20 +125,22 @@ int main (int argc, char *argv[]) {
         //Entrena
         redRBF.train(X, Yd, true);
 
-        /*
+        
         //obtener los centroides de cada neurona
         std::vector<std::vector<float> > centroides = redRBF.getMus();
 
         // utils::drawPoints(centroides, plotter2, 1, 1);
-        
+    
+        /*
         for (unsigned int k = 0; k < centroides.size(); k++) {
             std::cout<<"Centroide "<<k<<" = ";
             utils::printVector(centroides[k]);
         }*/
+    
         //Calcula el error luego del entrenamiento
         float error = 1-redRBF.train(X, Yd, false);
         error_history_entrenamiento.push_back(error);
-        //std::cout<<"Error = "<<error*100<<"\%\n";
+
 
         //std::getchar();
         // plotter2("clear\n");
@@ -185,7 +187,7 @@ int main (int argc, char *argv[]) {
         }*/
     }
     std::cout<<"Entrenamiento finalizado a las "<<i<<" epocas.\n"; 
-    
+   
     //Dibuja los errores
     
     //Obtiene el maximo de los errores

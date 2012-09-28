@@ -25,17 +25,21 @@ float Neurona::getResponse(std::vector<float> X, float parametro_sigmoidea){
 	//Si el tamaño no coincide, cancela la ejecucion y muestra un mensaje 
 	// de error informativo
 	assert(X.size() == dimension);
-	
-	float result = -1.0*W[0]; //bias
-	//float result = 1.0*W[0]; //bias
 
+
+	//float result = -1.0*W[0]; //bias
+	float result = 1.0*W[0]; //bias
     
     //Realiza el producto punto entre la entrada y los pesos
 	for(unsigned int i = 0; i < X.size(); i++){
 		result += W[i+1] * X[i];
 	}
 
-	switch(this->id_funcion_activacion) {
+    //utils::printVector(W);
+    //std::cout<<result<<'\n';
+    //std::getchar();
+
+    switch(this->id_funcion_activacion) {
         case FUNCION_NINGUNA: 
             break; //no aplica funcion de activacion
         case FUNCION_SIGNO: {
@@ -56,7 +60,6 @@ float Neurona::getConstanteAprendizaje() {
 	return this->constante_aprendizaje;
 }
 
-
 //Obtiene por referencia el vector W
 std::vector<float> Neurona::getW() {
 	return this->W;
@@ -66,7 +69,6 @@ void Neurona::setW(std::vector<float> & W){
 	this->Wn_1 = this->W; //Guardamos una iteración de pesos
 	this->W = W;
 }
-
 
 //Obtiene por referencia el vector W
 std::vector<float> Neurona::getWn_1(){

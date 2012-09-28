@@ -8,7 +8,7 @@
 #include "GNUPlot.h"
 
 #define EPS_KMEANS 0.01
-#define EPS_ERROR 0.001
+#define EPS_ERROR 0.1
 class RedRBF {
     //Vector que almancena la primer capa de neuronas gaussianas
     std::vector<NeuronaRBF> neuronasRBF;

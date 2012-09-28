@@ -28,10 +28,10 @@ float NeuronaRBF::getResponse(std::vector<float> X){
 
 	float norma = utils::vectorNorma(numerador);
     
-    float num = -1 * norma * norma;
-    float den = 2*this->varianza;
+    float num = -1.0 * norma * norma;
+    float den = 2.0*this->varianza;
 	float resp =  exp(num/den);
-    
+
     return resp;
 }
 

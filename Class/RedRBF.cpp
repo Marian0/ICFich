@@ -36,7 +36,8 @@ RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_a
         Neurona neu (this->cantidad_rbf, -0.5, 0.5, funcion_activacion, tasa_aprendizaje) ;
         this->neuronasP.push_back(neu);
     }
-    
+
+    /*
     //Inicializo todos los valores del objeto para dibujar 
     this->plotter("set xzeroaxis lt -1");
     this->plotter("set yzeroaxis lt -1"); 
@@ -45,6 +46,7 @@ RedRBF::RedRBF (std::string nombre_archivo, std::string nombre_red, float tasa_a
     this->plotter("set multiplot");
     this->plotter("set grid back");   
     this->plotter("set pointsize 1");
+    */
 }
 
 float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, bool entrena) {
@@ -66,14 +68,14 @@ float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<
     for (unsigned int w = 0; w < cantidad_casos; w++) {
         //Entrenamos con el patron actual
         bool correcto = singleTrain(X[w], YD[w], entrena);
+        
+        //Si fue correcto, aumentamos la cuenta
+        if (correcto) aciertos++;
 
         float error_inst = 0.5*utils::vectorPunto(this->error_instantaneo, this->error_instantaneo);
         error_energia.push_back(error_inst);
-
-        //Si fue correcto, aumentamos la cuenta
-        if (correcto)
-            aciertos++;
     }
+    
     float promedio_error = utils::promedio(error_energia);
     
     //Calculamos el porcentaje de efectividad
@@ -94,56 +96,53 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
         //La guardo en el vector de respuestas
         respuestasRBF.push_back(respuesta);
     }
-//    respuestasRBF.insert(respuestasRBF.begin(), -1); //le meto un -1 como bias
-    //Realizamos una copia de las respuestas
-    //std::vector<float> copiarespuestas = respuestasRBF;
-    //Agregamos la entrada correspondiente al Bias
-    //copiarespuestas.insert(copiarespuestas.begin(), -1);
    
     //Limpio el vector de errores
     this->error_instantaneo.clear();
 
     //inserto la salida de las RBF a las neuronas tipo perceptron,  capturo sus salidas y entreno
     for (unsigned int i = 0; i < this->cantidad_n; i++) {
-        
+       
         //Capturo su salida
         float respuesta = this->neuronasP[i].getResponse(respuestasRBF);
-    
+   
+        //std::cout<<YD[i]<<' '<<respuesta<<'\n';
+
         //Calculo el error
         float error = respuesta - YD[i];
+        
         //Guardo el error en un vector
         this->error_instantaneo.push_back(error); 
-        
-        //Completo la parte escalar
-        float parte_escalar = -1*error*this->neuronasP[i].getConstanteAprendizaje();
-        
-        //Calculo el nuevo W
-        std::vector<float> vesc;
-        std::vector<float> Wnuevo;
-        
-        //Realizamos una copia de las respuestas
-        std::vector<float> copiarespuestas = respuestasRBF;
-        
-        //Agregamos la entrada correspondiente al Bias
-        copiarespuestas.insert(copiarespuestas.begin(), -1);
-
-        utils::vectorEscalar(copiarespuestas, parte_escalar, vesc);
-
-        //Obtengo su vector de pesos
-        std::vector<float> Wi = this->neuronasP[i].getW();
-        
-        utils::vectorSuma(Wi, vesc, Wnuevo);
-
+       
         // Verifico si hay error en alguna salida
         if ((salida_sin_error == true) && (fabs(error) > EPS_ERROR)) { //no hubo error aun y son != (hay un error)
             salida_sin_error = false;
         }
-        
+ 
         if (entrena) {
+            //Completo la parte escalar
+            float parte_escalar = -1.0*error*this->neuronasP[i].getConstanteAprendizaje();
+                    
+            //Realizamos una copia de las respuestas
+            std::vector<float> copiarespuestas = respuestasRBF;
+            
+            //Agregamos la entrada correspondiente al Bias \phi_0 = 1
+            copiarespuestas.insert(copiarespuestas.begin(), 1.0);
+
+            //Calculo el nuevo W
+            std::vector<float> vesc;
+            utils::vectorEscalar(copiarespuestas, parte_escalar, vesc);
+
+            //Obtengo su vector de pesos
+            std::vector<float> Wi = this->neuronasP[i].getW();
+            
+            std::vector<float> Wnuevo;
+            utils::vectorSuma(Wi, vesc, Wnuevo);
+            
             this->neuronasP[i].setW( Wnuevo );
         }
+                
     }
-    //std::cout<<'\n'; std::getchar();
     return salida_sin_error;
 }
 
