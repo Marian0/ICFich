@@ -121,7 +121,12 @@ void static convertirSalida(std::vector<std::vector<float> > &in, std::vector<st
 
 //Genera un conjunto de puntos dentro de un cuadrado
 void static generarCuadrado (float x0, float x1, float y0, float y1);
-}
+
+//Genera un conjunto de puntos dentro de un circulo
+void static generarCirculo (unsigned int cantidad_casos, float radio, std::vector<std::vector<float> > & patrones);
+
+//Genera un conjunto de puntos dentro de una T (ver dibujo en el cpp)
+void static generarT (unsigned int cantidad_casos, std::vector<std::vector<float> > &patrones);
 
 //--------------------------------
 //Funciones de conversion de tipos
