@@ -5,6 +5,7 @@
 #include <iostream>
 #include <ctime>
 #include <algorithm>
+#include <utility>
 #include "utils.h"
 #include "RedSOM.h"
 #include "Config.h"
@@ -19,17 +20,22 @@ int main (int argc, char *argv[]) {
 	srand( (unsigned) std::time(NULL)); 
 	
 	//Leemos los valores de configuracion
+    //Parametros de los patrones de entrenamiento y prueba
 	std::string     archivo_problema               = config.getValue("archivo_problema"); //Archivo a leer patrones ej xor.csv
 	unsigned int    porcentaje_entrenamiento       = utils::strToInt(config.getValue("porcentaje_entrenamiento"));
 	unsigned int    porcentaje_prueba              = utils::strToInt(config.getValue("porcentaje_prueba"));
 	unsigned int    cantidad_casos                 = utils::strToInt(config.getValue("cantidad_casos"));
+    //Parametros de la red SOM
+    unsigned int    alto                           = utils::strToInt(config.getValue("alto"));
+    unsigned int    ancho                          = utils::strToInt(config.getValue("ancho"));
+    unsigned int    cantidad_entradas              = utils::strToInt(config.getValue("cantidad_entradas"));
     unsigned int    cantidad_salidas               = utils::strToInt(config.getValue("cantidad_salidas"));
-	float           desvio                         = utils::strToFloat(config.getValue("desvio"));
-	float           tasa_aprendizaje               = utils::strToFloat(config.getValue("tasa_aprendizaje"));
-	float           sigma                          = utils::strToFloat(config.getValue("sigma"));
-	unsigned int    criterio_max_epocas            = utils::strToInt(config.getValue("criterio_max_epocas"));
+	float           eta0                           = utils::strToFloat(config.getValue("eta0"));
+	float           sigma0                         = utils::strToFloat(config.getValue("sigma0"));
+	float           tau2                           = utils::strToFloat(config.getValue("tau2"));
+	//Parametros para el entrenamiento
+    unsigned int    criterio_max_epocas            = utils::strToInt(config.getValue("criterio_max_epocas"));
 	float           criterio_error                 = utils::strToFloat(config.getValue("criterio_error"));
-    float           parametro_sigmoidea            = utils::strToFloat(config.getValue("parametro_sigmoidea"));
     float           criterio_error_consecutivo     = utils::strToFloat(config.getValue("criterio_error_consecutivo"));
     std::string     criterio_finalizacion          = config.getValue("criterio_finalizacion");
     unsigned int    minima_cantidad_consecutivos   = utils::strToInt(config.getValue("minima_cantidad_consecutivos"));
@@ -40,9 +46,6 @@ int main (int argc, char *argv[]) {
     std::cout<<"Bienvenidos al Ejercicio 2 \n";
     std::cout<<"Problema: "<<archivo_problema<<'\n';
     std::cout<<"Cantidad de epocas = "<<criterio_max_epocas<<'\n';
-    std::cout<<"Tasa de aprendizaje = "<<tasa_aprendizaje<<'\n';
-    std::cout<<"Criterio de finalizacion: "<<criterio_finalizacion<<'\n';
-    
     std::cout<<"Porcentaje para entrenamiento = "<<porcentaje_entrenamiento<<"\%\n";
     std::cout<<"Porcentaje para validacion = "<<100-porcentaje_entrenamiento-porcentaje_prueba<<"\%\n";
     std::cout<<"Porcentaje para prueba = "<<porcentaje_prueba<<"\%\n";
@@ -62,17 +65,34 @@ int main (int argc, char *argv[]) {
     plotter("set title \"Error durante N Epocas\"");
     plotter("set multiplot");
 
+    GNUPlot plotter2;	
+	plotter2("set pointsize 1");
+	plotter2("set grid back");	
+	plotter2("set xzeroaxis lt -1");
+	plotter2("set yzeroaxis lt -1");	
+	plotter2("set xrange [-2:2]");
+	plotter2("set yrange [-2:2]");
+    plotter2("set xlabel \"X\"");
+    plotter2("set ylabel \"Y\"");
+    //plotter2("set format y \"\%g \%\%\""); //formato porcentaje en ylabel
+    plotter2("set title \"Puntos del entrenamiento\"");
+    plotter2("set multiplot");
+
     //Vectores temporales para trabajar
 	std::vector<std::vector<float > > patron, entrenamiento, prueba, validacion;
 	
-    //Leo los patrones en patron
-    utils::parseCSV(archivo_problema.c_str(), patron);
-    patron = utils::genPatrones(patron, cantidad_casos, desvio, cantidad_salidas);
+    //Leo el problema en patron
+    if ( archivo_problema.compare("cuadrado") == 0)
+        utils::generarCuadrado(cantidad_casos, std::make_pair<float,float>(-1.0,-1.0), std::make_pair<float,float>(1.0,1.0), patron);
+    if ( archivo_problema.compare("circulo") == 0)
+        utils::generarCirculo(cantidad_casos, 1.0, patron);
+    if ( archivo_problema.compare("formaT") == 0)
+        utils::generarT(cantidad_casos, patron);
 
     random_shuffle(patron.begin() , patron.end());
-        
+
     //Instancio la red
-    RedSOM redSOM(5, 50, 100, 0.5, tasa_aprendizaje , 0.3 );
+    RedSOM redSOM(cantidad_entradas, alto, ancho, sigma0, eta0, tau2 );
 
     //Genera las particiones de entrenamiento y prueba
     utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
@@ -83,7 +103,7 @@ int main (int argc, char *argv[]) {
     
     utils::splitVector(entrenamiento, X, Yd, cantidad_salidas);
 
-    // utils::drawPoints(X, plotter2);
+    //utils::drawPoints(X, plotter2);
 
     //Vector temporales para guardar historial errores
     std::vector<float> error_history_entrenamiento;
@@ -93,7 +113,6 @@ int main (int argc, char *argv[]) {
     
     for (; i < criterio_max_epocas; i++) {
 
-        std::vector<std::vector<float> > ultimas_salidas;
         //Entrena
         redSOM.train(X, Yd, true);
 
@@ -102,9 +121,13 @@ int main (int argc, char *argv[]) {
         float error = 1-redSOM.train(X, Yd, false);
         error_history_entrenamiento.push_back(error);
 
-
-        //std::getchar();
-        // plotter2("clear\n");
+        if (i % intervalo_dibujo == 0) {
+            std::vector<std::vector<float> > puntosSOM;
+            redSOM.getPuntos(puntosSOM);
+            utils::printVectorVector(puntosSOM);
+            utils::drawPoints(puntosSOM, plotter2);
+            std::getchar(); plotter2("clear\n");
+        }
         
         /*
         if(i < intervalo_dibujo || i % intervalo_dibujo == 0) {

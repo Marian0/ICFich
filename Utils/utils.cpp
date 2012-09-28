@@ -679,13 +679,13 @@ void utils::generarCirculo (unsigned int cantidad_casos, float radio, std::vecto
 
 void utils::generarT (unsigned int cantidad_casos, std::vector<std::vector<float> > &patrones) {
     //WARNING, DINAMITE CASTING!
-    unsigned int cantidad_A = (unsigned int) ((float) cantidad_casos) * 0.21;
-    unsigned int cantidad_B = (unsigned int) ((float) cantidad_casos) * 0.14;
-    unsigned int cantidad_C = (unsigned int) ((float) cantidad_casos) * 0.21;
-    unsigned int cantidad_D = (unsigned int) ((float) cantidad_casos) * 0.14;
-    unsigned int cantidad_E = (unsigned int) ((float) cantidad_casos) * 0.30;
+    unsigned int cantidad_A = (unsigned int) (((float) cantidad_casos) * 0.21f);
+    unsigned int cantidad_B = (unsigned int) (((float) cantidad_casos) * 0.14f);
+    unsigned int cantidad_C = (unsigned int) (((float) cantidad_casos) * 0.21f);
+    unsigned int cantidad_D = (unsigned int) (((float) cantidad_casos) * 0.14f);
+    unsigned int cantidad_E = (unsigned int) (((float) cantidad_casos) * 0.30f);
 
-
+    
     std::vector<std::vector<float> > patronesA;
     patronesA.resize(cantidad_A);
     //Genero los casos A

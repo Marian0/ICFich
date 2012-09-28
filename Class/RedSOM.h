@@ -51,6 +51,8 @@ class RedSOM {
     std::vector<unsigned int> singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena = true);
 
 
+    void getPuntos(std::vector<std::vector<float> > & X);
+    
     float vecindario(float distancia);
 };
 
