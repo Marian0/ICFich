@@ -82,6 +82,7 @@ int main (int argc, char *argv[]) {
     patron = utils::genPatrones(patron, cantidad_casos, desvio, cantidad_salidas);
 
     random_shuffle(patron.begin() , patron.end());
+
 /*
     //Dibuja los puntos de cada clase en una ventana para ver la dispersion
     std::string plot_dot1 = "plot \"-\" notitle pt 1 lt 3\n";
@@ -111,6 +112,7 @@ int main (int argc, char *argv[]) {
     
     utils::splitVector(entrenamiento, X, Yd, cantidad_salidas);
 
+
     // utils::drawPoints(X, plotter2);
 
     //Vector temporales para guardar historial errores
@@ -121,6 +123,7 @@ int main (int argc, char *argv[]) {
     
     for (; i < criterio_max_epocas; i++) {
 
+        // utils::printVector(error_history_entrenamiento); getchar();
         std::vector<std::vector<float> > ultimas_salidas;
         //Entrena
         redRBF.train(X, Yd, true);

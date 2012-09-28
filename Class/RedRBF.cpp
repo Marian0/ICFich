@@ -59,7 +59,7 @@ float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<
     
     unsigned int cantidad_casos = X.size();
 
-    unsigned int aciertos = 0; //contador de aciertos
+    // unsigned int aciertos = 0; //contador de aciertos
 
     //Aqui se guardan los errores instantaneos
     std::vector<float> error_energia;
@@ -67,10 +67,11 @@ float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<
     //recorro todas las entradas
     for (unsigned int w = 0; w < cantidad_casos; w++) {
         //Entrenamos con el patron actual
-        bool correcto = singleTrain(X[w], YD[w], entrena);
+        //bool correcto = 
+        singleTrain(X[w], YD[w], entrena);
         
         //Si fue correcto, aumentamos la cuenta
-        if (correcto) aciertos++;
+        // if (correcto) aciertos++;
 
         float error_inst = 0.5*utils::vectorPunto(this->error_instantaneo, this->error_instantaneo);
         error_energia.push_back(error_inst);
@@ -84,8 +85,8 @@ float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<
     return 1-promedio_error;
 }
 
-bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena) {
-    bool salida_sin_error = true;
+void RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena) {
+    // bool salida_sin_error = true;
 
     std::vector<float> respuestasRBF; //guarda las respuestas de cada una de las neuronasRBF
 
@@ -115,9 +116,9 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
         this->error_instantaneo.push_back(error); 
        
         // Verifico si hay error en alguna salida
-        if ((salida_sin_error == true) && (fabs(error) > EPS_ERROR)) { //no hubo error aun y son != (hay un error)
-            salida_sin_error = false;
-        }
+        // if ((salida_sin_error == true) && (fabs(error) > EPS_ERROR)) { //no hubo error aun y son != (hay un error)
+        //     salida_sin_error = false;
+        // }
  
         if (entrena) {
             //Completo la parte escalar
@@ -143,7 +144,7 @@ bool RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
         }
                 
     }
-    return salida_sin_error;
+    // return salida_sin_error;
 }
 
 void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
