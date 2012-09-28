@@ -9,6 +9,7 @@
 #include <cstdlib> 
 #include <cassert>
 #include <cmath>
+#include <utility>
 #include "GNUPlot.h"
 
 class utils{
@@ -120,7 +121,9 @@ void static convertirSalida(std::vector<std::vector<float> > &in, std::vector<st
 
 
 //Genera un conjunto de puntos dentro de un cuadrado
-void static generarCuadrado (float x0, float x1, float y0, float y1);
+void static generarCuadrado (unsigned int cantidad_casos,    
+                            std::pair<float, float> p1, std::pair<float, float> p2, 
+                            std::vector<std::vector<float> > & patrones);
 
 //Genera un conjunto de puntos dentro de un circulo
 void static generarCirculo (unsigned int cantidad_casos, float radio, std::vector<std::vector<float> > & patrones);

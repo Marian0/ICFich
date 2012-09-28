@@ -7,6 +7,7 @@
 #include <string>
 #include <cstdlib> 
 #include <cassert>
+#include <utility>
 #include <cmath>
 #include <algorithm>
 //Constante para comparaciones con cero
@@ -602,7 +603,6 @@ void utils::drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, un
 }
 
 
-<<<<<<< HEAD
 /*
  *  ------p2
  * |      |
@@ -619,8 +619,8 @@ void utils::generarCuadrado (unsigned int cantidad_casos,
     patrones.resize(cantidad_casos);
     for (unsigned int i = 0; i < cantidad_casos; i++){
         //Calculo las coordenadas del punto
-        float x = utils::randomDecimal(p1->first, p2->first);
-        float y = utils::randomDecimal(p1->second, p2->second);
+        float x = utils::randomDecimal(p1.first,  p2.first);
+        float y = utils::randomDecimal(p1.second, p2.second);
         //Las agrego al vector
         patrones[i].push_back(x);
         patrones[i].push_back(y);
