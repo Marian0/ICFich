@@ -8,7 +8,7 @@
 #include "GNUPlot.h"
 
 #define EPS_KMEANS 0.01
-#define EPS_ERROR 0.1
+#define EPS_ERROR 0.5
 class RedRBF {
     //Vector que almancena la primer capa de neuronas gaussianas
     std::vector<NeuronaRBF> neuronasRBF;
@@ -42,7 +42,7 @@ class RedRBF {
     float train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, bool entrena);
 
     //Para un caso en particular, calcula su salida y actualiza los pesos
-    bool singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena = true);
+    void singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena = true);
 
     //Realiza el algoritmo de k-means
     void kmeans(std::vector<std::vector<float> > entradas);
