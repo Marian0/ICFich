@@ -25,3 +25,10 @@ float NeuronaSOM::getDistancia(std::vector<float> X) {
     return utils::vectorDistancia(this->W, X);
 }
 
+std::vector<float> NeuronaSOM::getW() {
+    return this->W;
+}
+
+void NeuronaSOM::setW(std::vector<float> newW) {
+    this->W = newW;
+}

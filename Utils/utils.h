@@ -119,6 +119,10 @@ std::vector<float> static int2binary(unsigned int val, unsigned int max_clases);
 void static convertirSalida(std::vector<std::vector<float> > &in, std::vector<std::vector<float> > &out);
 
 
+//Genera un conjunto de puntos dentro de un cuadrado
+void static generarCuadrado (float x0, float x1, float y0, float y1);
+}
+
 //--------------------------------
 //Funciones de conversion de tipos
 
