@@ -602,6 +602,7 @@ void utils::drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, un
 }
 
 
+<<<<<<< HEAD
 /*
  *  ------p2
  * |      |
@@ -745,3 +746,4 @@ void utils::generarT (unsigned int cantidad_casos, std::vector<std::vector<float
     patrones.insert(patrones.end(), patronesD.begin(), patronesD.end());
     patrones.insert(patrones.end(), patronesE.begin(), patronesE.end());
 }
+

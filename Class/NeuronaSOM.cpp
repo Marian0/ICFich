@@ -17,9 +17,9 @@ NeuronaSOM::NeuronaSOM(unsigned int dim, float min, float max) {
 }
 
 //Calcula la distancia entre esta neurona y el patron X
-float NeuronaSOM::getDistancia(std::vector<float> X) {
+float NeuronaSOM::getDistancia(std::vector<float> & X) {
     //Compruebo que tengan la misma dimension
-    assert(X.size == this->W.size());
+    assert(X.size() == this->W.size());
 
     //Calcula la distancia
     return utils::vectorDistancia(this->W, X);
