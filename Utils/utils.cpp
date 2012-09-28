@@ -602,94 +602,148 @@ void utils::drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, un
 }
 
 
-// /*
-//  *  ------p2
-//  * |      |
-//  * |      |
-//  * p1-----
-//  *
-//  */
+<<<<<<< HEAD
+/*
+ *  ------p2
+ * |      |
+ * |      |
+ * p1-----
+ *
+ */
 
-// void utils::generarCuadrado (unsigned int cantidad_casos,    
-//                             std::pair<float, float> p1, std::pair<float, float> p2, 
-//                             std::vector<std::vector<float> > & patrones) {
-//     //Reservo tamanio
-//     patrones.clear();
-//     patrones.resize(cantidad_casos);
-//     for (unsigned int i = 0; i < cantidad_casos; i++){
-//         //Calculo las coordenadas del punto
-//         float x = utils::randomDecimal(p1->first, p2->first);
-//         float y = utils::randomDecimal(p1->second, p2->second);
-//         //Las agrego al vector
-//         patrones[i].push_back(x);
-//         patrones[i].push_back(y);
-//     }
-//     //Los mezclamos
-//     std::random_shuffle(patrones.begin(), patrones.end());
-// }
-
-
-// void utils::generarCirculo (unsigned int cantidad_casos, float radio, std::vector<std::vector<float> > & patrones) {
-//     //Reservo tamanio
-//     patrones.clear();
-//     patrones.resize(cantidad_casos);
-//     for (unsigned int i = 0; i < cantidad_casos; i++){
-//         //Calculo las coordenadas del punto
-//         float modulo = utils::randomDecimal(0, radio);
-//         float angulo = randomDecimal(0, 2*3.14);
-//         float x = modulo*cos(angulo);
-//         float y = modulo*sin(angulo);
-//         //Las agrego al vector
-//         patrones[i].push_back(x);
-//         patrones[i].push_back(y);
-//     }
-
-//     //Los mezclamos
-//     std::random_shuffle(patrones.begin(), patrones.end());
-// }
+void utils::generarCuadrado (unsigned int cantidad_casos,    
+                            std::pair<float, float> p1, std::pair<float, float> p2, 
+                            std::vector<std::vector<float> > & patrones) {
+    //Reservo tamanio
+    patrones.clear();
+    patrones.resize(cantidad_casos);
+    for (unsigned int i = 0; i < cantidad_casos; i++){
+        //Calculo las coordenadas del punto
+        float x = utils::randomDecimal(p1->first, p2->first);
+        float y = utils::randomDecimal(p1->second, p2->second);
+        //Las agrego al vector
+        patrones[i].push_back(x);
+        patrones[i].push_back(y);
+    }
+    //Los mezclamos
+    std::random_shuffle(patrones.begin(), patrones.end());
+}
 
 
-// /* ''''''''''''''''''''''
-//  * |   A     B       C  |
-//  * |                    |
-//  *  =======|     |======
-//  *         |  D  |
-//  *         |     |
-//  *         |     |
-//  *         |  E  |
-//  *         |     |
-//  *          =====
-//  *
-//  * A = { (-1, 0.5), (-0.25, 1) }
-//  * B = { (-0.25, 1), (0.25, 1) }
-//  * C = { (0.25, 1), (1, 1)}
-//  * D = { (-0.25, 0), (0.25, 0.5) }
-//  * E = { (-0.25, -1), (0.25, 0) }
-//  *
-//  * Porcentajes segun superficie:
-//  * A = 21%
-//  * B = 14%
-//  * C = 21%
-//  * D = 14%
-//  * E = 30%
-//  *
-//  */
+void utils::generarCirculo (unsigned int cantidad_casos, float radio, std::vector<std::vector<float> > & patrones) {
+    //Reservo tamanio
+    patrones.clear();
+    patrones.resize(cantidad_casos);
+    for (unsigned int i = 0; i < cantidad_casos; i++){
+        //Calculo las coordenadas del punto
+        float modulo = utils::randomDecimal(0, radio);
+        float angulo = randomDecimal(0, 2*3.14);
+        float x = modulo*cos(angulo);
+        float y = modulo*sin(angulo);
+        //Las agrego al vector
+        patrones[i].push_back(x);
+        patrones[i].push_back(y);
+    }
 
-// void utils::generarT (unsigned int cantidad_casos, std::vector<std::vector<float> > &patrones) {
-//     unsigned int cantidad_A = (float) cantidad_casos * 0.21;
-//     unsigned int cantidad_B = (float) cantidad_casos * 0.14;
-//     unsigned int cantidad_C = (float) cantidad_casos * 0.21;
-//     unsigned int cantidad_D = (float) cantidad_casos * 0.14;
-//     unsigned int cantidad_E = (float) cantidad_casos * 0.30;
+    //Los mezclamos
+    std::random_shuffle(patrones.begin(), patrones.end());
+}
 
-//     patrones.clear();
 
-//     patrones.resize(cantidad_casos);
-//     //Genero los casos A
-//     for (unsigned int i = 0; i < cantidad_A; i++) {
-//         float x = utils::randomDecimal( -1.0, -0.25);
-//         float y = utils::randomDecimal( 0.5, 1.0);
-//         patrones[i].push_back(x);
-//         patrones[i].push_back(y);
-//     }
-// }
+/* ''''''''''''''''''''''
+ * |   A     B       C  |
+ * |                    |
+ *  =======|     |======
+ *         |  D  |
+ *         |     |
+ *         |     |
+ *         |  E  |
+ *         |     |
+ *          =====
+ *
+ * A = { (-1, 0.5), (-0.25, 1) }
+ * B = { (-0.25, 0.5), (0.25, 1) }
+ * C = { (0.25, 1), (1, 1)}
+ * D = { (-0.25, 0), (0.25, 0.5) }
+ * E = { (-0.25, -1), (0.25, 0) }
+ *
+ * Porcentajes segun superficie:
+ * A = 21%
+ * B = 14%
+ * C = 21%
+ * D = 14%
+ * E = 30%
+ *
+ */
+
+
+void utils::generarT (unsigned int cantidad_casos, std::vector<std::vector<float> > &patrones) {
+    //WARNING, DINAMITE CASTING!
+    unsigned int cantidad_A = (unsigned int) ((float) cantidad_casos) * 0.21;
+    unsigned int cantidad_B = (unsigned int) ((float) cantidad_casos) * 0.14;
+    unsigned int cantidad_C = (unsigned int) ((float) cantidad_casos) * 0.21;
+    unsigned int cantidad_D = (unsigned int) ((float) cantidad_casos) * 0.14;
+    unsigned int cantidad_E = (unsigned int) ((float) cantidad_casos) * 0.30;
+
+
+    std::vector<std::vector<float> > patronesA;
+    patronesA.resize(cantidad_A);
+    //Genero los casos A
+    for (unsigned int i = 0; i < cantidad_A; i++) {
+        float x = utils::randomDecimal( -1.0, -0.25);
+        float y = utils::randomDecimal( 0.5, 1.0);
+        patronesA[i].push_back(x);
+        patronesA[i].push_back(y);
+    }
+
+    std::vector<std::vector<float> > patronesB;
+    patronesB.resize(cantidad_B);
+    //Genero los casos B
+    for (unsigned int i = 0; i < cantidad_B; i++) {
+        float x = utils::randomDecimal( -0.25, 0.25);
+        float y = utils::randomDecimal( 0.5, 1.0);
+        patronesB[i].push_back(x);
+        patronesB[i].push_back(y);
+    }
+
+    
+    std::vector<std::vector<float> > patronesC;
+    patronesC.resize(cantidad_C);
+    //Genero los casos C
+    for (unsigned int i = 0; i < cantidad_C; i++) {
+        float x = utils::randomDecimal( 0.25, 1.0);
+        float y = utils::randomDecimal( 0.5, 1.0);
+        patronesC[i].push_back(x);
+        patronesC[i].push_back(y);
+    }
+
+    std::vector<std::vector<float> > patronesD;
+    patronesD.resize(cantidad_D);
+    //Genero los casos D
+    for (unsigned int i = 0; i < cantidad_D; i++) {
+        float x = utils::randomDecimal( -0.25, 0.25);
+        float y = utils::randomDecimal( 0.0, 0.5);
+        patronesD[i].push_back(x);
+        patronesD[i].push_back(y);
+    }
+
+    std::vector<std::vector<float> > patronesE;
+    patronesE.resize(cantidad_E);
+    //Genero los casos E
+    for (unsigned int i = 0; i < cantidad_E; i++) {
+        float x = utils::randomDecimal( -0.25, 0.25);
+        float y = utils::randomDecimal( -1.0, 0.0);
+        patronesE[i].push_back(x);
+        patronesE[i].push_back(y);
+    }
+    
+    patrones.clear();
+
+    //Agrego todos los patrones que genere :)
+    patrones.insert(patrones.end(), patronesA.begin(), patronesA.end());
+    patrones.insert(patrones.end(), patronesB.begin(), patronesB.end());
+    patrones.insert(patrones.end(), patronesC.begin(), patronesC.end());
+    patrones.insert(patrones.end(), patronesD.begin(), patronesD.end());
+    patrones.insert(patrones.end(), patronesE.begin(), patronesE.end());
+}
+
