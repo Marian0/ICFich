@@ -1,0 +1,35 @@
+GPP=g++
+GCC=gcc
+FLAGS=  -g2 -Wall -O0 -I../Class -I../Utils  -D_DEBUG 
+LIBS=  
+OBJS=Debug/main2.o Debug/GNUPlot.o Debug/NeuronaSOM.o Debug/RedSOM.o Debug/utils.o Debug/Config.o 
+
+all: Debug Debug/TP2_Ej2_RBF_SOM.bin
+
+clean:
+	rm -rf ${OBJS} Debug/TP2_Ej2_RBF_SOM.bin
+
+Debug/TP2_Ej2_RBF_SOM.bin: ${OBJS}
+	${GPP} ${OBJS} ${LIBS} -o $@
+
+Debug:
+	mkdir Debug
+
+Debug/main2.o: ejercicio2.cpp ../Class/NeuronaSOM.h ../Utils/utils.h ../Class/GNUPlot.h ../Class/Config.h
+	${GPP} ${FLAGS} -c ejercicio2.cpp -o $@
+
+Debug/GNUPlot.o: ../Class/GNUPlot.cpp ../Class/GNUPlot.h
+	${GPP} ${FLAGS} -c ../Class/GNUPlot.cpp -o $@
+
+Debug/NeuronaSOM.o: ../Class/NeuronaSOM.cpp ../Class/NeuronaSOM.h ../Utils/utils.h
+	${GPP} ${FLAGS} -c ../Class/NeuronaSOM.cpp -o $@
+
+Debug/RedSOM.o: ../Class/RedSOM.cpp ../Class/RedSOM.h ../Class/NeuronaSOM.h ../Utils/utils.h
+	${GPP} ${FLAGS} -c ../Class/RedSOM.cpp -o $@
+
+Debug/utils.o: ../Utils/utils.cpp ../Utils/utils.h
+	${GPP} ${FLAGS} -c ../Utils/utils.cpp -o $@
+
+Debug/Config.o: ../Class/Config.cpp ../Class/Config.h
+	${GPP} ${FLAGS} -c ../Class/Config.cpp -o $@
+
