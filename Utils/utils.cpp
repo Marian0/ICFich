@@ -588,8 +588,6 @@ void utils::drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, un
 		
 		// if (V[i][1] < miny)
 		// 	miny = V[i][1];
-
-
 	}	
 	
 	// plotter("set yrange [" + utils::floatToStr(miny) + ":" + utils::floatToStr(maxy) + "]");
@@ -598,8 +596,6 @@ void utils::drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, un
 	// plotter("set multiplot\n");
 	plotter(to_plot);
 	plotter("e\n");
-
-
 }
 
 

@@ -30,6 +30,7 @@ int main (int argc, char *argv[]) {
     unsigned int    ancho                          = utils::strToInt(config.getValue("ancho"));
     unsigned int    cantidad_entradas              = utils::strToInt(config.getValue("cantidad_entradas"));
     unsigned int    cantidad_salidas               = utils::strToInt(config.getValue("cantidad_salidas"));
+    unsigned int    cantidad_clases                = utils::strToInt(config.getValue("cantidad_clases"));
 	float           eta0                           = utils::strToFloat(config.getValue("eta0"));
 	float           sigma0                         = utils::strToFloat(config.getValue("sigma0"));
 	float           tau2                           = utils::strToFloat(config.getValue("tau2"));
@@ -67,8 +68,8 @@ int main (int argc, char *argv[]) {
 	plotter2("set grid back");	
 	plotter2("set xzeroaxis lt -1");
 	plotter2("set yzeroaxis lt -1");	
-	plotter2("set xrange [-1.2:1.2]");
-	plotter2("set yrange [-1.2:2]");
+	plotter2("set xrange [-4:4]");
+	plotter2("set yrange [-4:4]");
     plotter2("set xlabel \"X\"");
     plotter2("set ylabel \"Y\"");
     //plotter2("set format y \"\%g \%\%\""); //formato porcentaje en ylabel
@@ -81,40 +82,48 @@ int main (int argc, char *argv[]) {
     //Leo el problema en patron
     if ( archivo_problema.compare("cuadrado") == 0)
         utils::generarCuadrado(cantidad_casos, std::make_pair<float,float>(-1.0,-1.0), std::make_pair<float,float>(1.0,1.0), patron);
-    if ( archivo_problema.compare("circulo") == 0)
+    else if ( archivo_problema.compare("circulo") == 0)
         utils::generarCirculo(cantidad_casos, 1.0, patron);
-    if ( archivo_problema.compare("formaT") == 0)
+    else if ( archivo_problema.compare("formaT") == 0)
         utils::generarT(cantidad_casos, patron);
+    else
+        utils::parseCSV(archivo_problema, patron);
 
     random_shuffle(patron.begin() , patron.end());
 
-    //Instancio la red
-    RedSOM redSOM(cantidad_entradas, alto, ancho, sigma0, eta0, tau2 );
-
+    
     //Genera las particiones de entrenamiento y prueba
     utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
             porcentaje_prueba, 0);
+    
+    
+    unsigned int maxit = epocas_fase_ordenamiento + epocas_fase_convergencia;
+
+    //Instancio la red
+    RedSOM redSOM(cantidad_entradas, cantidad_clases, alto, ancho, sigma0, eta0, tau2, maxit);
 
     //Divido en X y Yd los casos de entrenamiento
     std::vector<std::vector<float> > X, Yd;
     
     utils::splitVector(entrenamiento, X, Yd, cantidad_salidas);
-
-    //utils::drawPoints(X, plotter2);
-
+    
     //Vector temporales para guardar historial errores
-    std::vector<float> error_history_entrenamiento;
+    //std::vector<float> error_history_entrenamiento;
 
     std::vector<std::vector<float> > puntosSOM;
     
     redSOM.getPuntos(puntosSOM);
+    
     plotter2("clear\n");
     utils::drawPoints(puntosSOM, plotter2);
+
+    std::vector<std::vector<float> > Ycalculados;
 
     std::cout<<"Fase de ordenamiento\n";
     for (unsigned int i = 0; i < epocas_fase_ordenamiento; i++) {
         //Entrena
-        redSOM.train(X, Yd, true, true);
+        redSOM.train(X, Yd, Ycalculados, true, true);
+        std::cout<<i<<'\n';
         /*
         if (i % intervalo_dibujo == 0) {
             std::vector<std::vector<float> > puntosSOM;
@@ -131,15 +140,17 @@ int main (int argc, char *argv[]) {
     //Para convergencia, uso la cantidad de neuronas por el valor en epocas_fase_convergencia
     // epocas_fase_convergencia *= redSOM.getCantidadNeuronas();
     redSOM.setCteAprendizaje(0.01);
-    
+    redSOM.setSigma(1);
+
     redSOM.getPuntos(puntosSOM);
     plotter2("clear\n");
     utils::drawPoints(puntosSOM, plotter2);
 
     for (unsigned int i = 0; i < epocas_fase_convergencia; i++) {
         //Entrena
-        redSOM.train(X, Yd, true, false);
+        redSOM.train(X, Yd, Ycalculados, true, false);
 
+        std::cout<<i<<'\n';
         /*
         //Dibuja si corresponde
         if (i % intervalo_dibujo == 0) {
@@ -157,7 +168,23 @@ int main (int argc, char *argv[]) {
     redSOM.getPuntos(puntosSOM);
     plotter2("clear\n");
     utils::drawPoints(puntosSOM, plotter2);
-  /* 
+   
+    std::cout<<"El SOM esta entrenado.\n";
+
+    std::cout<<"Asignacion de clase a cada neurona\n";
+    redSOM.definirClaseNeuronas();
+
+    std::cout<<"Prueba del desempeno de la red\n";
+
+    float error = 1-redSOM.train(X, Yd, Ycalculados, false, false);
+   
+    std::cout<<"Error obtenido = "<<error<<'\n';
+    
+    plotter2("clear\n");
+    utils::drawPlot(X, Yd, Ycalculados, plotter2);
+
+    
+    /* 
     //Dibuja los errores
     
     //Obtiene el maximo de los errores

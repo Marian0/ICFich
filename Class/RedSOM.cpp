@@ -9,13 +9,16 @@
 #include "RedSOM.h"
 
 
-RedSOM::RedSOM(unsigned int dimension, unsigned int alto, unsigned int ancho, float sigma0, float cte_aprendizaje0, float tau2 ){
+RedSOM::RedSOM(unsigned int dimension, unsigned int cantidad_clases, unsigned int alto, unsigned int ancho, float sigma0, float cte_aprendizaje0, float tau2, unsigned int maxit ){
 	//Verificamos que las dimensiones sean mayores a cero
 	assert(alto > 0 && ancho > 0);
 
 	//Inicializamos atributos y matriz de neuronas (mapa)
 	this->alto = alto;
 	this->ancho = ancho;
+
+	this->dimension = dimension;
+    this->cantidad_clases = cantidad_clases;
 
 	this->sigma0 = sigma0;
 	this->sigma = sigma0;
@@ -24,8 +27,10 @@ RedSOM::RedSOM(unsigned int dimension, unsigned int alto, unsigned int ancho, fl
 	this->tau1 = 1000 / log(sigma0); //Haykin pag 453
 	this->tau2 = tau2;
 	this->iteracion = 0;
-	this->dimension = dimension;
-
+    this->sigma_convergencia = this->sigma0;
+    this->cte_aprendizaje_convergencia = this->cte_aprendizaje;
+    this->maxit_convergencia = maxit;
+    
     std::cout<<"\nEstructura de la Red SOM:\n";
     std::cout<<"Alto x ancho = "<<this->alto<<" x "<<this->ancho<<'\n';
     std::cout<<"Sigma0 = "<<this->sigma0<<"\t Eta0 = "<<this->cte_aprendizaje0<<'\n';
@@ -35,31 +40,66 @@ RedSOM::RedSOM(unsigned int dimension, unsigned int alto, unsigned int ancho, fl
 	for (unsigned int i = 0; i < this->alto ; i++) {
 		std::vector<NeuronaSOM> filaNeurona;
 		for (unsigned int j = 0; j < this->ancho; j++) {
-			filaNeurona.push_back(  NeuronaSOM(dimension, -0.5, 0.5 ) );
+			filaNeurona.push_back(  NeuronaSOM(dimension, cantidad_clases, -0.5, 0.5 ) );
 		}
 		this->neuronas.push_back(filaNeurona);
 	}
 
 }
-float RedSOM::train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, bool entrena, bool actualizar_valores) {
+float RedSOM::train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, std::vector<std::vector<float> > &YC, bool entrena, bool actualizar_valores) {
 	unsigned int npatrones = X.size();
 	assert(npatrones == YD.size());
-    
 
     if (actualizar_valores) {
 	    //Calculo las constantes en base a la iteracion
 	    this->cte_aprendizaje = this->cte_aprendizaje0 * exp( (-1.0 * this->iteracion) / this->tau2 );
 	    this->sigma = this->sigma0 * exp(  (-1.0 * this->iteracion) / this->tau1 );
-        this->iteracion++; //aumento la cantidad de iteraciones para cambiar los valores la proxima vez
+        //Asignamos los valores para la etapa de convergencia
+        this->sigma_convergencia = this->sigma;
+        this->cte_aprendizaje_convergencia = this->cte_aprendizaje_convergencia;
+        /*
+        } else {
+        //Decrece eta y sigma linealmente.
+        //Los valores se calculan como una caida lineal de los ultimos que tuvo en la etapa de ordenamiento
+        //float decaimiento = (1 - ((float) this->iteracion / (float) this->maxit_convergencia));
+        //if (this->cte_aprendizaje > 0.01)//si es muy chica, no actualizo
+        //    this->cte_aprendizaje = this->cte_aprendizaje_convergencia * decaimiento;
+        //this->sigma = this->sigma_convergencia * decaimiento;
+        //std::cout<<this->cte_aprendizaje<<' '<<this->sigma<<'\n';
+        */
     }
 
+    this->iteracion++; //aumento la cantidad de iteraciones para cambiar los valores la proxima vez
+
+    YC.clear();
+
+    unsigned int aciertos = 0;
 	for (unsigned int i = 0; i < npatrones; i++) {
-		this->singleTrain(X[i], YD[i], entrena);
+        std::vector<unsigned int> salida = this->singleTrain(X[i], YD[i], entrena);
+        if (entrena == false) { //estoy probando la red, los parametros estan fijos
+            //obtengo los dos indices la neurona ganadora
+            unsigned int ii = salida[0];
+            unsigned int jj = salida[1];
+
+
+            int clase_neurona = neuronas[ii][jj].getClase();
+            //Actualizo el vector de Y calculadas
+            std::vector<float> out;
+            out.push_back(clase_neurona);
+            YC.push_back(out);
+
+            //comparo la clase del patron con la clase de la neurona ganadora
+            bool clase_correcta = neuronas[ii][jj].compararClase(YD[i]);
+            //si hubo acierto, aumento el contador
+            if (clase_correcta) 
+                aciertos++;
+        }
 	}
+    //calculo la eficacia de la red para esta corrida
+    float eficacia = ((float) aciertos ) / ((float) npatrones);
 
-    return 1.0;
+    return eficacia;
 }
-
 
 std::vector<unsigned int> RedSOM::singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena) {
 
@@ -81,8 +121,10 @@ std::vector<unsigned int> RedSOM::singleTrain(std::vector<float> X, std::vector<
 			}
 		}
     }
-   
+       
     if (entrena) {
+        //Actualiza los contadores de la neurona sobre las clases
+        this->neuronas[iactivacion][jactivacion].sumarContadorClases(YD);
 
         //Guardo la i,j de activacion en un vector
         std::vector<float> v1; //j = x, i = y
@@ -154,6 +196,24 @@ void RedSOM::setCteAprendizaje(float new_val) {
     this->cte_aprendizaje = new_val;
 }
 
+void RedSOM::setSigma(float new_val) {
+    this->sigma = new_val;
+}
+
 unsigned int RedSOM::getCantidadNeuronas(){
     return this->alto * this->ancho;
 }
+
+//Define la clase de todas las neuronas
+void RedSOM::definirClaseNeuronas() {
+    //llamar a setclase de cada neurona
+    std::cout<<"Clases de cada neurona:\n";
+    for (unsigned int i = 0; i < this->alto; i++) {
+        for (unsigned int j = 0; j < this->ancho; j++) {
+            this->neuronas[i][j].definirClase();
+            std::cout<<this->neuronas[i][j].getClase()<<'\n';
+        }
+    }
+}
+
+

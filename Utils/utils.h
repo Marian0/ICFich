@@ -119,6 +119,8 @@ std::vector<float> static int2binary(unsigned int val, unsigned int max_clases);
 //Convierte unos valores {0, 1, 2, 3...} en una codificacion {[1,-1,-1,-1,...], [-1,1,-1,-1,...], ... }
 void static convertirSalida(std::vector<std::vector<float> > &in, std::vector<std::vector<float> > &out);
 
+//Funcion que toma un vector de valores, los interpreta binarios y lo transforma a entero
+unsigned int static binary2int( std::vector<float> & input );
 
 //Genera un conjunto de puntos dentro de un cuadrado
 void static generarCuadrado (unsigned int cantidad_casos,    
@@ -165,8 +167,6 @@ void static drawPlot(
 
 void static drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, unsigned int color = 2, unsigned int tipo = 5);
 
-//Funcion que toma un vector de valores, los interpreta binarios y lo transforma a entero
-unsigned int static binary2int( std::vector<float> & input );
 
 unsigned int static getMinIdx(std::vector<float> &V );
 };
