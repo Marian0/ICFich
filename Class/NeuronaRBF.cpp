@@ -20,7 +20,8 @@ NeuronaRBF::NeuronaRBF( unsigned int dim, float var, float min, float max) {
 //Obtiene la salida de la neurona para una entrada dada
 float NeuronaRBF::getResponse(std::vector<float> X){
 	//Verifico dimensiones
-	assert(X.size() == this->mu.size());
+	
+    assert(X.size() == this->mu.size());
 
 	//Calculo la resta de vectores
 	std::vector<float> numerador;

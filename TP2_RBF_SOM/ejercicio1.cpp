@@ -79,7 +79,9 @@ int main (int argc, char *argv[]) {
 	
     //Leo los patrones en patron
     utils::parseCSV(archivo_problema.c_str(), patron);
-    //patron = utils::genPatrones(patron, cantidad_casos, desvio, cantidad_salidas);
+    patron = utils::genPatrones(patron, cantidad_casos, desvio, cantidad_salidas);
+
+    utils::saveCSV("xor_disperso.csv", patron); std::getchar();
 
     random_shuffle(patron.begin() , patron.end());
 
@@ -99,10 +101,6 @@ int main (int argc, char *argv[]) {
     plotter2(plot_dot1);
     plotter2(plot_dot2);
 */                  
-        
-    //Instancio la red
-    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, sigma, Neurona::FUNCION_SIGNO);
-
     //Genera las particiones de entrenamiento y prueba
     utils::genParticiones(patron, entrenamiento, validacion, prueba, porcentaje_entrenamiento, 
             porcentaje_prueba, 0);
@@ -115,7 +113,11 @@ int main (int argc, char *argv[]) {
     //Decodifica las salidas
     utils::convertirSalida(Yd, Ycodificados);
     Yd = Ycodificados;
-
+    
+    //Instancio la red
+    RedRBF redRBF("estructura1.txt","Red RBF", tasa_aprendizaje, sigma, Neurona::FUNCION_SIGNO);
+    redRBF.kmeans(X);
+    
     // utils::drawPoints(X, plotter2);
 
     //Vector temporales para guardar historial errores

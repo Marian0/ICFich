@@ -54,8 +54,8 @@ float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<
     assert(X.size() == YD.size());
 
     //Llama a kmeans para aproximar los centroides
-    if(entrena == true)
-        this->kmeans(X);
+    //if(entrena == true)
+    //    this->kmeans(X);
     
     unsigned int cantidad_casos = X.size();
 
@@ -129,7 +129,7 @@ void RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
  
         if (entrena) {
 
-            /*
+            
             //Completo la parte escalar
             float parte_escalar = -1.0*error*this->neuronasP[i].getConstanteAprendizaje();
                     
@@ -146,8 +146,8 @@ void RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
            
             //std::cout<<"Distancia entre W = "<<utils::vectorDistancia(Wi, Wnuevo)<<'\n';;
             this->neuronasP[i].setW( Wnuevo );
-            */
-            this->neuronasP[i].actualizarPesos(copiarespuestas, YD[i]);
+            
+            //this->neuronasP[i].actualizarPesos(copiarespuestas, YD[i]);
         }
     }
     // return salida_sin_error;
