@@ -48,3 +48,4 @@ void NeuronaRBF::setVarianza(float nueva_varianza) {
     this->varianza = nueva_varianza;
 }
 
+

@@ -39,7 +39,9 @@ public:
 	//Devuelve la constante de aprendizaje
 	float getConstanteAprendizaje();
 
-	//Obtiene por referencia el vector W
+    void actualizarPesos(std::vector<float> phi_i, float Yd);
+	
+    //Obtiene por referencia el vector W
 	std::vector<float> getWn_1();
 };
 

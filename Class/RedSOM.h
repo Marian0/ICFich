@@ -1,5 +1,5 @@
-#ifndef __REDRBF_H__
-#define __REDRBF_H__
+#ifndef __REDSOM_H__
+#define __REDSOM_H__
 
 #include <vector>
 #include <string>

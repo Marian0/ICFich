@@ -123,16 +123,14 @@ int main (int argc, char *argv[]) {
     for (unsigned int i = 0; i < epocas_fase_ordenamiento; i++) {
         //Entrena
         redSOM.train(X, Yd, Ycalculados, true, true);
-        std::cout<<i<<'\n';
-        /*
+        
         if (i % intervalo_dibujo == 0) {
+            std::cout<<"ordenamiento iteracion "<<i<<'\n';
             std::vector<std::vector<float> > puntosSOM;
             redSOM.getPuntos(puntosSOM);
-            //utils::printVectorVector(puntosSOM);
             plotter2("clear\n");
             utils::drawPoints(puntosSOM, plotter2);
         }
-          */      
     }
 
     std::cout<<"Fin Fase de ordenamiento \n";
@@ -150,17 +148,14 @@ int main (int argc, char *argv[]) {
         //Entrena
         redSOM.train(X, Yd, Ycalculados, true, false);
 
-        std::cout<<i<<'\n';
-        /*
         //Dibuja si corresponde
         if (i % intervalo_dibujo == 0) {
+            std::cout<<"convergencia iteracion "<<i<<'\n';
             std::vector<std::vector<float> > puntosSOM;
             redSOM.getPuntos(puntosSOM);
-            //utils::printVectorVector(puntosSOM);
             plotter2("clear\n");
             utils::drawPoints(puntosSOM, plotter2);
         }
-        */
     }
 
     std::cout<<"Fin Fase de convergencia \n";
@@ -168,7 +163,7 @@ int main (int argc, char *argv[]) {
     redSOM.getPuntos(puntosSOM);
     plotter2("clear\n");
     utils::drawPoints(puntosSOM, plotter2);
-   
+  
     std::cout<<"El SOM esta entrenado.\n";
 
     std::cout<<"Asignacion de clase a cada neurona\n";
@@ -180,8 +175,7 @@ int main (int argc, char *argv[]) {
    
     std::cout<<"Error obtenido = "<<error<<'\n';
     
-    plotter2("clear\n");
-    utils::drawPlot(X, Yd, Ycalculados, plotter2);
+    //plotter2("clear\n"); utils::drawPlot(X, Yd, Ycalculados, plotter2);
 
     
     /* 

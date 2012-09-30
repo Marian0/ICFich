@@ -81,7 +81,7 @@ float RedSOM::train(std::vector<std::vector<float> > X, std::vector<std::vector<
             unsigned int ii = salida[0];
             unsigned int jj = salida[1];
 
-
+            //obtengo la clase de la neurona que gano
             int clase_neurona = neuronas[ii][jj].getClase();
             //Actualizo el vector de Y calculadas
             std::vector<float> out;

@@ -63,7 +63,7 @@ float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<
 
     //Aqui se guardan los errores instantaneos
     std::vector<float> error_energia;
-    
+   
     //recorro todas las entradas
     for (unsigned int w = 0; w < cantidad_casos; w++) {
         //Entrenamos con el patron actual
@@ -77,6 +77,7 @@ float RedRBF::train(std::vector<std::vector<float> > X, std::vector<std::vector<
         error_energia.push_back(error_inst);
     }
     
+    //utils::printVector(error_energia); std::getchar();
     float promedio_error = utils::promedio(error_energia);
     
     //Calculamos el porcentaje de efectividad
@@ -100,6 +101,12 @@ void RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
    
     //Limpio el vector de errores
     this->error_instantaneo.clear();
+    
+    //Realizamos una copia de las respuestas
+    std::vector<float> copiarespuestas = respuestasRBF;
+            
+    //Agregamos la entrada correspondiente al Bias \phi_0 = 1
+    copiarespuestas.insert(copiarespuestas.begin(), 1.0);
 
     //inserto la salida de las RBF a las neuronas tipo perceptron,  capturo sus salidas y entreno
     for (unsigned int i = 0; i < this->cantidad_n; i++) {
@@ -111,7 +118,7 @@ void RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
 
         //Calculo el error
         float error = respuesta - YD[i];
-        
+       
         //Guardo el error en un vector
         this->error_instantaneo.push_back(error); 
        
@@ -121,15 +128,12 @@ void RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
         // }
  
         if (entrena) {
+
+            /*
             //Completo la parte escalar
             float parte_escalar = -1.0*error*this->neuronasP[i].getConstanteAprendizaje();
                     
-            //Realizamos una copia de las respuestas
-            std::vector<float> copiarespuestas = respuestasRBF;
             
-            //Agregamos la entrada correspondiente al Bias \phi_0 = 1
-            copiarespuestas.insert(copiarespuestas.begin(), 1.0);
-
             //Calculo el nuevo W
             std::vector<float> vesc;
             utils::vectorEscalar(copiarespuestas, parte_escalar, vesc);
@@ -139,17 +143,18 @@ void RedRBF::singleTrain(std::vector<float> X, std::vector<float> YD, bool entre
             
             std::vector<float> Wnuevo;
             utils::vectorSuma(Wi, vesc, Wnuevo);
-            
+           
+            //std::cout<<"Distancia entre W = "<<utils::vectorDistancia(Wi, Wnuevo)<<'\n';;
             this->neuronasP[i].setW( Wnuevo );
+            */
+            this->neuronasP[i].actualizarPesos(copiarespuestas, YD[i]);
         }
-                
     }
     // return salida_sin_error;
 }
 
 void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
-   
-    
+
     //Inicializo el kmeans con patrones aleatorios del conjunto a clusterear
     std::vector<std::vector<std::vector<float> > > conjuntos;
     conjuntos.resize(this->cantidad_rbf);
@@ -166,6 +171,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
 
     //Este vector se va a utilizar para estimar los sigmas, una vez terminado el proceso
     std::vector<std::vector<std::vector<float> > > conjuntos_sigma;
+    
     while (true) { //hasta que el delta_mu sea menor que un EPS
   
         //vector de conjuntos de puntos
@@ -187,7 +193,7 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
                 //calculo la distancia entre la neurona y el patron w
                 float dist = utils::vectorDistancia(entradas[w], V);
                 //uso distancia cuadrada
-                dist *= dist;
+                dist = dist*dist;
                 
                 distancias.push_back(dist);
             }
@@ -233,39 +239,46 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
             this->neuronasRBF[i].setMu(centroide_nuevo);
         }
 
+        //std::vector<float> distancias_ceros;
+
+        float error_logrado = 0.0;
         //Calculo las distancias entre los mu nuevos y los viejos
-        std::vector<float> distancias_ceros;
         for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
             std::vector<float> mu_i = this->neuronasRBF[i].getMu();
             //std::cout<<"Distancias: \n"; utils::printVector(mu_i); utils::printVector(centroides_viejos[i]);
+            
             float dist_i = utils::vectorDistancia(mu_i, centroides_viejos[i]);
             //dist_i *= dist_i;
-            distancias_ceros.push_back(dist_i);
-        }
+            //distancias_ceros.push_back(dist_i);
 
-        //Sumo todas las distancias obtenidas
-        float suma_distancias = 0.0;
-        for (unsigned int i = 0; i < distancias_ceros.size(); i++) {
-            suma_distancias += distancias_ceros[i];
+            error_logrado += dist_i*dist_i;
         }
-        suma_distancias /= (float) distancias_ceros.size();
+        error_logrado = sqrt(error_logrado);
+
+        if (error_logrado < EPS_KMEANS){
+            conjuntos_sigma = conjuntos ; //guardo la ultima disposicion de conjuntos para estimar los sigmas
+            break;
+        }
+        /*
+        //Calculo el promedio de distancias
+        float suma_distancias = utils::promedio(distancias_ceros);
 
         //Si la suma es muy chica, quiere decir que se movieron poco, salgo del while true
         if (fabs(suma_distancias) < EPS_KMEANS) {
             conjuntos_sigma = conjuntos ; //guardo la ultima disposicion de conjuntos para estimar los sigmas
             break;
         }
-       
+        */
         //actualizo los centroides viejos
         centroides_viejos = getMus();
         iteraciones++;
     }
 
-    //std::cout<<"Termino el K-Means luego de "<<iteraciones<<" iteraciones.\n";
+    std::cout<<"Termino el K-Means luego de "<<iteraciones<<" iteraciones.\n";
     
     //Actualizaremos las varianzas de las RBF de acuerdo a la formula:
     //sigma_j^2 = \frac{1}{M_j} \sum (\norm x - mu_j \norm )^2
-    for (unsigned int i = 0; i < this->cantidad_rbf; i++) {
+    for (unsigned int i = 0; i < this->cantidad_rbf; i++) { //para cada centroide
         
         unsigned int M_i = conjuntos_sigma[i].size();
         if(M_i == 0) continue; //no hay patrones en este conjunto, no hago nada
@@ -274,9 +287,9 @@ void RedRBF::kmeans(std::vector<std::vector<float> > entradas) {
         std::vector<float> centroide = this->neuronasRBF[i].getMu();
         //Sumo
         float suma = 0.0;
-        for (unsigned int j = 0; j < M_i; j++) {
+        for (unsigned int j = 0; j < M_i; j++) { //para cada patron asociado a este centroide
             //Mido distancia entre el patron j y el centroide i
-            float distancia = utils::vectorDistancia(conjuntos[i][j], centroide);
+            float distancia = utils::vectorDistancia(conjuntos_sigma[i][j], centroide);
             //guardo el valor
             suma += distancia*distancia;
         }

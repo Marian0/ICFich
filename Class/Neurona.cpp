@@ -73,4 +73,14 @@ void Neurona::setW(std::vector<float> & W){
 //Obtiene por referencia el vector W
 std::vector<float> Neurona::getWn_1(){
 	return this->Wn_1;
-}	
+}
+
+void Neurona::actualizarPesos(std::vector<float> phi_i, float Yd) {
+    assert(this->W.size() == phi_i.size());
+
+    float respuesta = utils::signo(utils::vectorPunto(this->W, phi_i));
+    std::cout<<respuesta<<'\n';
+    for (unsigned int i = 0; i < this->W.size(); i++) {
+        this->W[i] = this->W[i] - this->constante_aprendizaje * (respuesta - Yd)*phi_i[i];
+    }
+}

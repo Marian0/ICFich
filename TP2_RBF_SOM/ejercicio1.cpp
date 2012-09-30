@@ -79,7 +79,7 @@ int main (int argc, char *argv[]) {
 	
     //Leo los patrones en patron
     utils::parseCSV(archivo_problema.c_str(), patron);
-    patron = utils::genPatrones(patron, cantidad_casos, desvio, cantidad_salidas);
+    //patron = utils::genPatrones(patron, cantidad_casos, desvio, cantidad_salidas);
 
     random_shuffle(patron.begin() , patron.end());
 
@@ -108,10 +108,13 @@ int main (int argc, char *argv[]) {
             porcentaje_prueba, 0);
 
     //Divido en X y Yd los casos de entrenamiento
-    std::vector<std::vector<float> > X, Yd;
+    std::vector<std::vector<float> > X, Yd, Ycodificados;
     
     utils::splitVector(entrenamiento, X, Yd, cantidad_salidas);
-
+    
+    //Decodifica las salidas
+    utils::convertirSalida(Yd, Ycodificados);
+    Yd = Ycodificados;
 
     // utils::drawPoints(X, plotter2);
 
@@ -214,8 +217,8 @@ int main (int argc, char *argv[]) {
     plot2 += "e\n";
     unsigned int max_value = (unsigned int) 100*max_val;
 	plotter("set xrange [0:" + utils::intToStr(i + 2) +"]");
-	plotter("set yrange [0:1]");
-	//plotter("set yrange [0:"+ utils::floatToStr(max_val*100) +"]");
+	plotter("set yrange [-0.1:1.1]");
+	//plotter("set yrange [0:"+ utils::floatToStr(max_val) +"]");
     
     plotter(plot2);
 	
@@ -224,7 +227,10 @@ int main (int argc, char *argv[]) {
 	//Cargo el conjunto de prueba
 	utils::splitVector(prueba, X, Yd, cantidad_salidas); 
     
-	
+	//Decodifica las salidas
+    utils::convertirSalida(Yd, Ycodificados);
+    Yd = Ycodificados;
+
 	float error_esperado = 1-redRBF.train(X, Yd, false);
 	std::cout<<"Error Esperado (conjunto de prueba) = "<<error_esperado*100.0<<"\%\n";
 	

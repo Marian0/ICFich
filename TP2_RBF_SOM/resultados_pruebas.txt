@@ -1,7 +1,26 @@
-#Configuracion del la Red Neuronal
-# Todas las lineas que empiecen con '#' seran consideradas comentarios y se ignoraran
-# Poner los comentarios siempre en una nueva linea. 
-# Por las dudas, nunca dejar espacios en blanco
+SOM
+
+CLOUDS
+Error: 30%
+# Alto de la red SOM
+alto=5
+# Ancho de la red SOM
+ancho=5
+# Sigma inicial
+sigma0=3
+# Tasa de aprendizaje inicial
+eta0=0.1
+# Constante tau2
+tau2=200
+Cantidad de casos=300
+# Cantidad de epocas de la fase de ordenamiento
+epocas_fase_ordenamiento=1000
+# Cantidad de epocas de la fase de convergencia (luego se multiplica por la cantidad de neuronas)
+epocas_fase_convergencia=5000
+
+
+CLOUDS
+
 #
 #Fichero fuente 
 archivo_problema=clouds.csv
@@ -23,12 +42,6 @@ sigma0=3
 eta0=0.1
 # Constante tau2
 tau2=1000
-# Cantidad de conjuntos diferentes de: entrenamiento prueba y validación
-cantidad_conjuntos=1
-# Porcentaje de patrones para Entrenamiento
-porcentaje_entrenamiento=100
-# Porcentaje de patrones para Prueba
-porcentaje_prueba=0
 # Cantidad de epocas de la fase de ordenamiento
 epocas_fase_ordenamiento=1000
 # Cantidad de epocas de la fase de convergencia (luego se multiplica por la cantidad de neuronas)
