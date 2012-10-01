@@ -1,20 +1,3 @@
-/*
- * =====================================================================================
- *
- *       Filename:  NeuronaRBF.cpp
- *
- *    Description:  
- *
- *        Version:  1.0
- *        Created:  30/09/12 00:06:23
- *       Revision:  none
- *       Compiler:  gcc
- *
- *         Author:  YOUR NAME (), 
- *   Organization:  
- *
- * =====================================================================================
- */
 #include "NeuronaRBF.h"
 #include <vector>
 #include <cmath>
@@ -46,7 +29,7 @@ float NeuronaRBF::getResponse(std::vector<float> X) {
     //obtengo la norma al cuadrado del vector V (suma de las componentes al cuadrado)
     float num = 0.0;
     for (unsigned int i = 0; i < V.size(); i++) {
-        num += V[i]*V[i];
+        num += pow(V[i],2);
     }
    
     //calculo la respuesta total de esta neurona:
@@ -60,8 +43,12 @@ float NeuronaRBF::getResponse(std::vector<float> X) {
     std::cout<<num<<'/'<<den<<'\n';
     std::getchar();
     */
+    //utils::printVector(X); utils::printVector(this->media); utils::printVector(V);
+    //std::cout<<num<<' '<<den<<' '<<exp(-num/den)<<'\n';
+    
+    if (fabs(num) < 0.0001) return 1.0;
     float respuesta = exp(-num/den);
-    if (respuesta < 0.0001) return 0.0;
+    if (fabs(respuesta) < 0.0001) return 0.0;
     else return respuesta;
 }
 

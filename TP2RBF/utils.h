@@ -30,5 +30,14 @@ public:
     
     std::string static intToStr(int input);
     std::string static floatToStr(float input);
+    
+    void static vectorEscalar(std::vector<float> &X, float value, std::vector<float> &Z);
+    void static vectorSuma(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z);
+    void static vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z);
+    float static vectorPunto(std::vector<float> &X, std::vector<float> &Y);
+    float static promedio(std::vector<float> &V);
+    float static sigmoidea(float x, float param);
+    float static sigmoideaPrima(float x, float param);
+    float static randomDecimal(float a, float b);
 };
 #endif
