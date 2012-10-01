@@ -43,7 +43,7 @@ void NeuronaSOM::setW(std::vector<float> newW) {
 //suma los contadores
 void NeuronaSOM::sumarContadorClases(std::vector<float> Yd) {
     //compruebo que tenga un valor al menos
-    assert(Yd.size() > 0);
+    if (Yd.size() == 0) return;
 
     unsigned int new_class;
     

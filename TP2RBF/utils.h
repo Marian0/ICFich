@@ -27,5 +27,8 @@ public:
 	std::vector<std::vector<float> > & Prueba,
 	unsigned int porcentaje_entrenamiento,	unsigned int porcentaje_prueba,
 	unsigned int indice_prueba);
+    
+    std::string static intToStr(int input);
+    std::string static floatToStr(float input);
 };
 #endif

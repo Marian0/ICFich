@@ -6,7 +6,8 @@
 #include <cstdio>
 #include "utils.h"
 #include "RedRBF.h"
-
+#include "GNUPlot.h"
+  
 int main() {
     //Inicializo la semilla
     srand(time(NULL));
@@ -15,11 +16,11 @@ int main() {
     //defino parametros
     unsigned int cantidad_epocas = 100;
     unsigned int maxit_kmeans = 30;
-    unsigned int cantidad_entradas = 2;
-    unsigned int cantidad_rbf = 10;
+    unsigned int cantidad_entradas = 5;
+    unsigned int cantidad_rbf = 8;
     unsigned int cantidad_perceptron = 2;
-    float tasa_aprendizaje = 0.01;
-    std::string archivo_problema = "clouds.csv";
+    float tasa_aprendizaje = 0.3001;
+    std::string archivo_problema = "phoneme.csv";
     unsigned int cantidad_salidas = 1;
 
     //leo los patrones
@@ -52,18 +53,42 @@ int main() {
     utils::printVector(varianzas);
     std::cout<<'\n';
     
-    
     std::vector<float> errores;
     for (unsigned int i = 0; i < cantidad_epocas; i++) {
         float error = redRBF.train(X, Yd);
         errores.push_back(error);
     }
 
+    //Inicializamos y configuramos el Graficador
+    //Graficador para el error
+    GNUPlot plotter;	
+    plotter("set pointsize 1");
+    plotter("set grid back");	
+    plotter("set xzeroaxis lt -1");
+    plotter("set yzeroaxis lt -1");	
+    plotter("set xrange [0:100]");
+    plotter("set yrange [-0.1:1.1]");
+    plotter("set xlabel \"Epocas\"");
+    plotter("set ylabel \"Error\"");
+    plotter("set title \"Error durante N Epocas\"");
+    plotter("set multiplot");
+    
+    //Haremos un string para poder plotear al final		
+    std::string plot2 = "plot \"-\" notitle pt 2 lt 3\n";
+
+    for (unsigned int k = 0; k < errores.size(); k++) {
+        plot2 += utils::intToStr((int) k) + " " + utils::floatToStr(errores[k]) + " \n";
+    }
+    plot2 += "e\n";
+    plotter(plot2);
+    
+    /*
     std::vector<std::vector<float> > errores_guardar;
     errores_guardar.push_back(errores);
     utils::saveCSV("errores.csv", errores_guardar);
     std::cout<<"Errores obtenidos = ";
     utils::printVector(errores);
+    */
     
     //los separo
     utils::splitVector(prueba, X, Yd, cantidad_salidas);

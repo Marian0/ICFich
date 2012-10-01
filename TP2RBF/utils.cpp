@@ -215,3 +215,15 @@ void utils::genParticiones( std::vector<std::vector<float> > P,
 			}
 		}
 }
+
+std::string utils::intToStr(int input) {
+	std::stringstream str;
+	str<<input;
+	return str.str();
+}
+
+std::string utils::floatToStr(float input) {
+	std::stringstream str;
+	str<<input;
+	return str.str();
+}

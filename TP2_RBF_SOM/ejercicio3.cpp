@@ -13,7 +13,7 @@
 #include "GNUPlot.h"
 
 //Variable global
-Config config("configuracion2.cfg"); //lectura de la configuracion
+Config config("configuracion3.cfg"); //lectura de la configuracion
 
 int main (int argc, char *argv[]) {
 	//inicializacion de semilla
@@ -41,23 +41,26 @@ int main (int argc, char *argv[]) {
     
 
     //Impresion de los datos de ejecucion
-    std::cout<<"Bienvenidos al Ejercicio 2 \n";
+    std::cout<<"Bienvenidos al Ejercicio 3 \n";
     std::cout<<"Problema: "<<archivo_problema<<'\n';
     std::cout<<"Porcentaje para entrenamiento = "<<porcentaje_entrenamiento<<"\%\n";
-    std::cout<<"Porcentaje para validacion = "<<100-porcentaje_entrenamiento-porcentaje_prueba<<"\%\n";
     std::cout<<"Porcentaje para prueba = "<<porcentaje_prueba<<"\%\n";
 
-    GNUPlot plotter2;	
-	plotter2("set pointsize 1");
-	plotter2("set grid back");	
-	plotter2("set xzeroaxis lt -1");
-	plotter2("set yzeroaxis lt -1");	
-	plotter2("set xrange [-1.1:1.1]");
-	plotter2("set yrange [-1.1:1.1]");
-    plotter2("set xlabel \"X\"");
-    plotter2("set ylabel \"Y\"");
-    plotter2("set title \"Puntos del entrenamiento\"");
-    plotter2("set multiplot");
+    
+    if (cantidad_entradas == 2) { //es dibujable
+        GNUPlot plotter2;	
+        plotter2("set pointsize 1");
+        plotter2("set grid back");	
+        plotter2("set xzeroaxis lt -1");
+        plotter2("set yzeroaxis lt -1");	
+        plotter2("set xrange [-4:4]");
+        plotter2("set yrange [-4:4]");
+        plotter2("set xlabel \"X\"");
+        plotter2("set ylabel \"Y\"");
+        //plotter2("set format y \"\%g \%\%\""); //formato porcentaje en ylabel
+        plotter2("set title \"Puntos del entrenamiento\"");
+        plotter2("set multiplot");
+    }
 
     //Vectores temporales para trabajar
 	std::vector<std::vector<float > > patron, entrenamiento, prueba, validacion;
@@ -85,19 +88,22 @@ int main (int argc, char *argv[]) {
     //Instancio la red
     RedSOM redSOM(cantidad_entradas, cantidad_clases, alto, ancho, sigma0, eta0, tau2, maxit);
 
-
     //Divido en X y Yd los casos de entrenamiento
     std::vector<std::vector<float> > X, Yd;
     
     utils::splitVector(entrenamiento, X, Yd, cantidad_salidas);
     
+    //Vector temporales para guardar historial errores
+    //std::vector<float> error_history_entrenamiento;
 
     std::vector<std::vector<float> > puntosSOM;
     
-    redSOM.getPuntos(puntosSOM);
-    plotter2("clear\n");
-    utils::drawPoints(puntosSOM, plotter2);
-
+    if (cantidad_entradas == 2) { //es dibujable
+        redSOM.getPuntos(puntosSOM);
+        plotter2("clear\n");
+        utils::drawPoints(puntosSOM, plotter2);
+    }
+    
     std::vector<std::vector<float> > Ycalculados;
 
     std::cout<<"Fase de ordenamiento\n";
@@ -107,10 +113,11 @@ int main (int argc, char *argv[]) {
         
         if (i % intervalo_dibujo == 0) {
             std::cout<<"ordenamiento iteracion "<<i<<'\n';
-            std::vector<std::vector<float> > puntosSOM;
-            redSOM.getPuntos(puntosSOM);
-            plotter2("clear\n");
-            utils::drawPoints(puntosSOM, plotter2);
+            if (cantidad_entradas == 2) { //es dibujable
+                redSOM.getPuntos(puntosSOM);
+                plotter2("clear\n");
+                utils::drawPoints(puntosSOM, plotter2);
+            }
         }
     }
 
@@ -121,9 +128,12 @@ int main (int argc, char *argv[]) {
     redSOM.setCteAprendizaje(0.01);
     redSOM.setSigma(1);
 
-    redSOM.getPuntos(puntosSOM);
-    plotter2("clear\n");
-    utils::drawPoints(puntosSOM, plotter2);
+        
+    if (cantidad_entradas == 2) { //es dibujable
+        redSOM.getPuntos(puntosSOM);
+        plotter2("clear\n");
+        utils::drawPoints(puntosSOM, plotter2);
+    }
 
     for (unsigned int i = 0; i < epocas_fase_convergencia; i++) {
         //Entrena
@@ -132,21 +142,33 @@ int main (int argc, char *argv[]) {
         //Dibuja si corresponde
         if (i % intervalo_dibujo == 0) {
             std::cout<<"convergencia iteracion "<<i<<'\n';
-            std::vector<std::vector<float> > puntosSOM;
-            redSOM.getPuntos(puntosSOM);
-            plotter2("clear\n");
-            utils::drawPoints(puntosSOM, plotter2);
+            if (cantidad_entradas == 2) { //es dibujable
+                redSOM.getPuntos(puntosSOM);
+                plotter2("clear\n");
+                utils::drawPoints(puntosSOM, plotter2);
+            }
         }
     }
 
     std::cout<<"Fin Fase de convergencia \n";
     
-    redSOM.getPuntos(puntosSOM);
-    plotter2("clear\n");
-    utils::drawPoints(puntosSOM, plotter2);
+    if (cantidad_entradas == 2) { //es dibujable
+        redSOM.getPuntos(puntosSOM);
+        plotter2("clear\n");
+        utils::drawPoints(puntosSOM, plotter2);
+    }
   
     std::cout<<"El SOM esta entrenado.\n";
 
-   return 0;
+    std::cout<<"Asignacion de clase a cada neurona\n";
+    redSOM.definirClaseNeuronas();
+
+    std::cout<<"Prueba del desempeno de la red\n";
+
+    float error = 1-redSOM.train(X, Yd, Ycalculados, false, false);
+   
+    std::cout<<"Error obtenido = "<<error*100<<"\%\n";
+    
+    return 0;
 }
 
