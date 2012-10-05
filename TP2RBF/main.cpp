@@ -15,15 +15,15 @@ int main() {
     srand(time(NULL));
     
     
-    std::string archivo_problema = "phoneme.csv";
+    std::string archivo_problema = "iris.csv";
     unsigned int cantidad_salidas = 1;
     
     //defino parametros
     unsigned int cantidad_epocas = 50;
     unsigned int maxit_kmeans = 40;
-    unsigned int cantidad_entradas = 5;
-    unsigned int cantidad_rbf = 25;
-    unsigned int cantidad_perceptron = 1;
+    unsigned int cantidad_entradas = 4;
+    unsigned int cantidad_rbf = 10;
+    unsigned int cantidad_perceptron = 2;
     float tasa_rbf = 0.01;
     
     
@@ -42,7 +42,7 @@ int main() {
     //leo los patrones 
     utils::parseCSV(archivo_problema, patrones);
     std::random_shuffle(patrones.begin(), patrones.end());
-    utils::genParticiones(patrones, entrenamiento, validacion, prueba, 80, 20, 0);
+    utils::genParticiones(patrones, entrenamiento, validacion, prueba, 100, 0, 0);
     //los separo
     utils::splitVector(entrenamiento, X, Yd, cantidad_salidas);
 
@@ -92,14 +92,14 @@ int main() {
 	perceptron.train(X, Yd, ultimas_salidas, true);
 	float errorsin = 1-perceptron.train(X, Yd, ultimas_salidas, false);
 	errores_mlp.push_back(errorsin);
-	std::cout<<i<<'\n';
+	std::cout<<i<<' '<<errorsin<<'\n';
     }
     t_fin = clock();
     std::cout<<"Tiempo MLP = "<<(double)(t_fin - t_ini) / CLOCKS_PER_SEC<<'\n';
     
     //Pruebas
     //los separo
-    utils::splitVector(prueba, X, Yd, cantidad_salidas);
+    utils::splitVector(entrenamiento, X, Yd, cantidad_salidas);
 
     //codifico las salidas
     utils::convertirSalida(Yd, Yconvertida);

@@ -46,7 +46,7 @@ RedSOM::RedSOM(unsigned int dimension, unsigned int cantidad_clases, unsigned in
 	}
 
 }
-float RedSOM::train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, std::vector<std::vector<float> > &YC, bool entrena, bool actualizar_valores) {
+float RedSOM::train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, std::vector<std::vector<float> > &YC, bool entrena, bool actualizar_valores, bool clasificar) {
 	unsigned int npatrones = X.size();
 	assert(npatrones == YD.size());
 
@@ -75,7 +75,7 @@ float RedSOM::train(std::vector<std::vector<float> > X, std::vector<std::vector<
 
     unsigned int aciertos = 0;
 	for (unsigned int i = 0; i < npatrones; i++) {
-        std::vector<unsigned int> salida = this->singleTrain(X[i], YD[i], entrena);
+        std::vector<unsigned int> salida = this->singleTrain(X[i], YD[i], entrena, clasificar);
         if (entrena == false) { //estoy probando la red, los parametros estan fijos
             //obtengo los dos indices la neurona ganadora
             unsigned int ii = salida[0];
@@ -101,7 +101,7 @@ float RedSOM::train(std::vector<std::vector<float> > X, std::vector<std::vector<
     return eficacia;
 }
 
-std::vector<unsigned int> RedSOM::singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena) {
+std::vector<unsigned int> RedSOM::singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena, bool clasificar) {
 
 	//Inicializo para encontrar la menor distancia W(neurona) <-> Patron(X)
 	unsigned int iactivacion = 0;
@@ -124,7 +124,8 @@ std::vector<unsigned int> RedSOM::singleTrain(std::vector<float> X, std::vector<
        
     if (entrena) {
         //Actualiza los contadores de la neurona sobre las clases
-        this->neuronas[iactivacion][jactivacion].sumarContadorClases(YD);
+        if (clasificar) 
+            this->neuronas[iactivacion][jactivacion].sumarContadorClases(YD);
 
         //Guardo la i,j de activacion en un vector
         std::vector<float> v1; //j = x, i = y

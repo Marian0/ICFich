@@ -47,7 +47,7 @@ int main (int argc, char *argv[]) {
     std::cout<<"Porcentaje para prueba = "<<porcentaje_prueba<<"\%\n";
 
     
-    if (cantidad_entradas == 2) { //es dibujable
+    //if (cantidad_entradas == 2) { //es dibujable
         GNUPlot plotter2;	
         plotter2("set pointsize 1");
         plotter2("set grid back");	
@@ -60,7 +60,7 @@ int main (int argc, char *argv[]) {
         //plotter2("set format y \"\%g \%\%\""); //formato porcentaje en ylabel
         plotter2("set title \"Puntos del entrenamiento\"");
         plotter2("set multiplot");
-    }
+    //}
 
     //Vectores temporales para trabajar
 	std::vector<std::vector<float > > patron, entrenamiento, prueba, validacion;
@@ -109,7 +109,7 @@ int main (int argc, char *argv[]) {
     std::cout<<"Fase de ordenamiento\n";
     for (unsigned int i = 0; i < epocas_fase_ordenamiento; i++) {
         //Entrena
-        redSOM.train(X, Yd, Ycalculados, true, true);
+        redSOM.train(X, Yd, Ycalculados, true, true, false);
         
         if (i % intervalo_dibujo == 0) {
             std::cout<<"ordenamiento iteracion "<<i<<'\n';
@@ -137,7 +137,7 @@ int main (int argc, char *argv[]) {
 
     for (unsigned int i = 0; i < epocas_fase_convergencia; i++) {
         //Entrena
-        redSOM.train(X, Yd, Ycalculados, true, false);
+        redSOM.train(X, Yd, Ycalculados, true, false, false);
 
         //Dibuja si corresponde
         if (i % intervalo_dibujo == 0) {
@@ -151,6 +151,10 @@ int main (int argc, char *argv[]) {
     }
 
     std::cout<<"Fin Fase de convergencia \n";
+        
+    for (unsigned int i = 0; i < epocas_fase_convergencia; i++) {
+        redSOM.train(X, Yd, Ycalculados, true, false, true);
+    }
     
     if (cantidad_entradas == 2) { //es dibujable
         redSOM.getPuntos(puntosSOM);

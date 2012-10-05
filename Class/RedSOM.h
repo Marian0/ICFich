@@ -56,10 +56,10 @@ class RedSOM {
     RedSOM(unsigned int dimension, unsigned int cantidad_clases, unsigned int alto, unsigned int ancho, float sigma0, float cte_aprendizaje0, float tau2, unsigned int maxit);
     
     //Realiza el entrenamiento. Primero llama a kmeans y luego a singleTrain con cada patron
-    float train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, std::vector<std::vector<float> > &YC, bool entrena = true, bool actualizar_valores = true);
+    float train(std::vector<std::vector<float> > X, std::vector<std::vector<float> > YD, std::vector<std::vector<float> > &YC, bool entrena = true, bool actualizar_valores = true, bool clasificar = false);
     
     //Para un caso en particular, calcula su salida y actualiza los pesos
-    std::vector<unsigned int> singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena = true);
+    std::vector<unsigned int> singleTrain(std::vector<float> X, std::vector<float> YD, bool entrena = true, bool clasificar = false);
 
     //Devuelve en X las coordenadas de los pesos de cada neurona para graficar
     void getPuntos(std::vector<std::vector<float> > & X);

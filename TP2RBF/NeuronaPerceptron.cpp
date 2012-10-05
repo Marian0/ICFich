@@ -33,13 +33,13 @@ float NeuronaPerceptron::update ( std::vector<float> X, float Yd) {
     float error = Yd - respuesta;
     
     if (fabs(error) > 0.0000001) { //si el error no es cero, actualizo
-	for (unsigned int j = 0; j < X.size(); j++) {
-	    float wviejo = this->W[j];
-	    this->W[j] = this->W[j] + eta*error*X[j];
-	    //std::cout<<wviejo<<'+'<<eta<<'*'<<error<<'*'<<X[j]<<'='<<this->W[j]<<'\n';
-	}
-	return error;
+        for (unsigned int j = 0; j < X.size(); j++) {
+            float wviejo = this->W[j];
+            this->W[j] = this->W[j] + eta*error*X[j];
+            //std::cout<<wviejo<<'+'<<eta<<'*'<<error<<'*'<<X[j]<<'='<<this->W[j]<<'\n';
+        }
+        return error;
     } else { //si no, devuelvo cero
-	return 0.0; 
+        return 0.0; 
     }
 }		
