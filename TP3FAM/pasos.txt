@@ -1,0 +1,34 @@
+PASOS:
+Calcular DT (delta temperatura) = T_ref(actual) - 0.912*T_i - 0.088*T_e (cambia si a = 1)
+
+Conjuntos borrosos:
+T = {MuchoFrio, Frio, Normal, Calor, MuchoCalor}
+Heladera = {Apagado, Minimo, Medio, Maximo}
+Calefactor = {Apagado, Minimo, Medio, Maximo}
+Nota: Los valores Medio de H y C no se usan :).
+
+Reglas: (DT; Heladera, Calefactor)
+DT = 0: Normal, no hago nada
+	(Normal; Apagado, Apagado)
+
+DT<0: calor -> aumento frio
+	(Calor; Medio, Apagado)
+	(MuchoCalor; Maximo, Apagado)
+
+DT>0: frio -> aumento calefactor
+	(Frio; Apagado, Medio);
+	(MuchoFrio; Apagado; Maximo)
+
+Construyo las M_i (con correlacion minimo o producto)
+Si DT>0 =>modificare calefactor
+Si DT<0 =>modificare heladera
+
+Se harán dos FAM, uno para calefactor y otro para heladera.
+El sistema para Calefactor va a dar como salida la intensidad que hay que aplicarle al calefactor.
+El sistema para Heladera va a dar como salida la tensión que hay que aplicarle a la heladera.
+
+1) Entra DT y armo vectores para cada grupo de T, fijandome el valor de DT en cada uno de los conjuntos de T, lo llamo A_j
+2) Le paso ese A_j a cada una de las matrices M_i. Hago la operación A_j o M_i para calcular B_ji.
+3) Sumo todos los vectores obtenidos miembro a miembro (B_total)
+4) Obtengo el centroide del conjunto obtenido (y)
+5) Asigno la tension o intensidad a la heladera o calefactor
