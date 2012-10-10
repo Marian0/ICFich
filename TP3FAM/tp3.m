@@ -1,23 +1,26 @@
 1;
 
+source("funciones.m");
+
 %Generamos los conjuntos
 
 %Entrada
 %conjuntos_T es una matriz que tiene los valores de cada uno de los trapecios
 %conjuntos_T = [ MC; C; N; F; MF];
-conjuntos_T = [   ;    ;    ;    ;   ];
+conjuntos_T = [  [-15 -10 -10 -7 ]  ;  [ -8 -5 -5 -2 ]  ;  [-3 0 0 3]  ;  [2 5 5 8]  ;  [7 10 10 15] ];
+conjuntos_T = [  [-17 -10 -10 -5 ]  ;  [ -10 -5 -5 -0 ]  ;  [-5 0 0 5]  ;  [0 5 5 10]  ;  [5 10 10 17] ];
 cantidad_conjuntos_T = size(conjuntos_T, 1);
 cantidad_conjuntos_calor = floor(cantidad_conjuntos_T/2);
-cantidad_conjuntos_frio = cantidad_calor;
+cantidad_conjuntos_frio = cantidad_conjuntos_calor;
 
 %Salidas
 %Heladera
 %conjuntos_H = [Ap; Mi; Me; Ma];
-conjuntos_H = [    ;    ;    ;    ];
+conjuntos_H = [  [-5000 4999 0 1562.5]  ;  [937.5 2500 2500 4062.5]   ;  [3437.5 5000 10000 10001]  ];
 
 %Calefactor
 %conjuntos_C = [Ap; Mi; Me; Ma];
-conjuntos_C = [    ;    ;    ;    ];
+conjuntos_C = [  [-1000 -999 -0.7 0.5 ]  ;  [-0.1 1.1 1.1 2.3]  ;  [1.7 2.9 2.9 4.1]  ;  [3.5 4.7 1000 1001]  ];
 
 
 %Reglas: (DT; Heladera, Calefactor)
@@ -56,7 +59,8 @@ end
 %inicializamos la temperatura interior
 Ti = zeros(1,361);
 Ti(1) = 20;
-
+V = [];
+I = [];
 %bucle principal
 for w=1:360
     %comprueba si la puerta esta abierta y calcula el DT
@@ -76,7 +80,7 @@ for w=1:360
     %se guardaran los trapecios activados y su membresia:
     % [trapecio_1, membresia_1; trapecio_2, membresia_2]
     trapecios_activados = [];
-    
+ 
     %hace calor y debo aumentar heladera 
     if (DT < 0)
         %se recorren todos los que pertenecen a calor y guardo los trapecios y sus activaciones
@@ -108,16 +112,33 @@ for w=1:360
     end
    
     %calcular centroide de trapecios
+    nactivados = size(trapecios_activados,1);
 
+    nuevo_v = 0; %no le pongo heladera
+    nuevo_i = 0; %no le pongo calefactor
     if (DT < 0) %actualizaremos la heladera
-        nuevo_v = %centroide calculado
-        nuevo_i = 0; %no le pongo calefactor
+
+        if (nactivados == 2) %Cantidad de Filas
+            nuevo_v = centroideTrapecios( trapecios_activados(1,:), trapecios_activados(2,:) );
+        elseif (nactivados == 1)
+            nuevo_v = centroideTrapecio(trapecios_activados(1,:));
+        else
+            nuevo_v = 0;
+        end
+    elseif (DT > 0) %actualizaremos el calefactor
+        if (nactivados == 2) %Cantidad de Filas
+            nuevo_i = centroideTrapecios( trapecios_activados(1,:), trapecios_activados(2,:) );
+        elseif (nactivados == 1)
+            nuevo_i = centroideTrapecio(trapecios_activados(1,:));
+        else
+            nuevo_i = 0;
+        end
     end
 
-    if (DT > 0) %actualizaremos el calefactor
-        nuevo_i = %centroide calculado
-        nuevo_v = 0; %no le pongo heladera
-    end
+    V = [V nuevo_v];
+    I = [I nuevo_i];
+
+
 
     if (apertura_puerta(w) == 0) %no esta abierta la puerta
         Tnueva = 0.912*Ti(w) + 0.088*Te(w) + 0.604*nuevo_i*nuevo_i - 0.0121*nuevo_v;
@@ -130,6 +151,21 @@ for w=1:360
     Ti(w+1) = Tnueva; 
 end
 
+hold on;
+figure(2);
+plot(V, 'b');
+plot(I, 'r');
+
+legend('Heladera', 'Calefactor');
 %graficar y demases
+hold on;
+
+figure(1);
+plot(Ti, 'r');
+plot(Tdeseada, 'b');
+legend('Temp Actual', 'Temp Deseada');
+
+
+
 
 pause; %VERY IMPORTANT
