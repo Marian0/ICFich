@@ -6,23 +6,17 @@ source("funciones.m");
 
 %Entrada
 %conjuntos_T es una matriz que tiene los valores de cada uno de los trapecios
-%conjuntos_T = [ MC; C; N; F; MF];
-%conjuntos_T = [  [-15 -10 -10 -7 ]  ;  [ -8 -5 -5 -2 ]  ;  [-3 0 0 3]  ;  [2 5 5 8]  ;  [7 10 10 15] ];
-
 %conjuntos_T = [Sof; MC; C; N; F; MF; Cong];
 conjuntos_T = [  [-12 -9 -9 -7 ] ; [ -8 -6 -6 -3 ] ; [-5 -3 -3 -1] ; [-2 0 0 2] ; [1 3 3 5] ; [4 6 6 8] ; [7 9 9 12] ]; 
-%conjuntos_T = [  [-17 -10 -10 -5 ]  ;  [ -10 -5 -5 -0 ]  ;  [-5 0 0 5]  ;  [0 5 5 10]  ;  [5 10 10 17] ];
 cantidad_conjuntos_T = size(conjuntos_T, 1);
 
 %Salidas
 %Heladera
 %conjuntos_H = [Ap; Mi; Me; Ma];
-%conjuntos_H = 1.35.*[  [-200 0 0 200]  ;  [100 300 300 500]   ;  [3437.5 5000 5000 6562.5]  ];
-conjuntos_H = 1.45.*[ [-120 0 0 30] ; [15 150 150 300] ; [ 200 350 350 600] ];
+conjuntos_H = 1.45.*[ [-50 20 20 125] ; [15 130 130 280] ; [ 200 350 350 600] ];
 
 %Calefactor
 %conjuntos_C = [Ap; Mi; Me; Ma];
-%conjuntos_C = 1.85.*[ [-0.1 1.1 1.1 2.3] ; [1.7 2.9 2.9 4.1] ; [3.5 4.7 4.7 6] ];
 conjuntos_C = 1.85.*[  [0.0 0.8 0.8 1.7] ; [1.3 2.3 2.3 3.3] ; [2.7 3.7 3.7 4.7] ];
 
 %sin uso porque explota
@@ -33,12 +27,14 @@ constante_superposicion = 0.01; %usada para superponer 2 reglas "opuestas"
 % (Normal; Apagado, Apagado)
 
 %DT<0: calor -> aumento frio
-% (Calor; Medio, Apagado)
-% (MuchoCalor; Maximo, Apagado)
+% (Calor;       Minimo, Apagado)
+% (MuchoCalor;  Medio,  Apagado)
+% (Sofocante;   Maximo, Apagado)
 
 %DT>0: frio -> aumento calefactor
-% (Frio; Apagado, Medio);
-% (MuchoFrio; Apagado; Maximo)
+% (Frio;        Apagado, Minimo);
+% (MuchoFrio;   Apagado, Medio)
+% (Congelante;  Apagado, Maximo)
 
 
 %Generamos las temperaturas deseadas
@@ -66,6 +62,8 @@ Ti = zeros(1,361);
 Ti(1) = 20;
 V = [];
 I = [];
+
+DThistory = [];
 %bucle principal
 for w=1:360
     %comprueba si la puerta esta abierta y calcula el DT
@@ -90,16 +88,6 @@ for w=1:360
     if (DT < 0)
         %se recorren todos los que pertenecen a calor y guardo los trapecios y sus activaciones
         
-       %%se activa la regla de mucho calor
-       %if (membresias(1) > 0) 
-       %     trapecios_activados = [trapecios_activados; conjuntos_H(2,:) membresias(1)];
-       %end
-       %
-       %%se activa la regla de calor
-       %if (membresias(2) > 0) 
-       %     trapecios_activados = [trapecios_activados; conjuntos_H(1,:) membresias(2)];
-       %end
-
         %se activa la regla de sofocante
         if (membresias(1) > 0) 
              trapecios_activados = [trapecios_activados; conjuntos_H(3,:) membresias(1)];
@@ -121,16 +109,7 @@ for w=1:360
     if (DT > 0)
         %se recorren todos los que pertenecen a frio y guardo los trapecios y sus activaciones
         
-       %%se activa la regla de frio
-       %if (membresias(4) > 0) 
-       %     trapecios_activados = [trapecios_activados; conjuntos_C(2,:) membresias(4)];
-       %end
-       %
-       %%se activa la regla de mucho frio
-       %if (membresias(5) > 0) 
-       %     trapecios_activados = [trapecios_activados; conjuntos_C(3,:) membresias(5)];
-       %end
-       
+              
        %se activa la regla de frio
        if (membresias(5) > 0) 
             trapecios_activados = [trapecios_activados; conjuntos_C(1,:) membresias(5)];
@@ -173,10 +152,10 @@ for w=1:360
     end
 
     %trampa no borrosa
-  %if (abs(DT) < 1.5)
-  %    nuevo_i = nuevo_i*0.9;
-  %    nuevo_v = nuevo_v*0.9;
-  %end
+    % if (abs(DT) < 1.5)
+    %     nuevo_i = nuevo_i*0.85;
+    %     nuevo_v = nuevo_v*0.85;
+    % end
     
     V = [V nuevo_v];
     I = [I nuevo_i];
@@ -187,32 +166,47 @@ for w=1:360
         Tnueva = 0.169*Ti(w) + 0.831*Te(w) + 0.112*nuevo_i*nuevo_i - 0.002*nuevo_v;
     end
 
-
+    DThistory = [DThistory DT];
     %Notar que se asigna Ti(w+1) para la iteracion siguiente
     Ti(w+1) = Tnueva; 
 end
 
-hold on;
-figure(1);
-plot(V, 'b');
-plot(I, 'r');
-
-legend('Heladera', 'Calefactor');
-%graficar y demases
-hold off;
 figure(2);
 hold on;
-
 plot(Ti, 'r');
 plot(Tdeseada, 'b');
 plot(Te, 'k');
 plot(dibuja_puerta, 'g');
-legend('Temp Actual', 'Temp Deseada', 'Temp Externa', 'Apertura Puerta');
+plot(DThistory.+10, 'c');
+legend('Temp Actual', 'Temp Deseada', 'Temp Externa', 'Apertura Puerta', 'DeltaTemperatura+10');
 title('Temperatura de la habitacion');
 xlabel('Tiempo');
 ylabel('Temperatura');
 
 
+%Graficacion de trapecios
+%   figure(3);
+%   hold on;
+%   dibujaTrapecio(conjuntos_T(1,:),1);
+%   dibujaTrapecio(conjuntos_T(2,:),3);
+%   dibujaTrapecio(conjuntos_T(3,:),1);
+%   dibujaTrapecio(conjuntos_T(4,:),3);
+%   dibujaTrapecio(conjuntos_T(5,:),1);
+%   dibujaTrapecio(conjuntos_T(6,:),3);
+%   dibujaTrapecio(conjuntos_T(7,:),1);
+%   title('Conjuntos Delta Temperatura');
 
+%   figure(4);
+%   hold on;
+%   dibujaTrapecio(conjuntos_H(1,:),1);
+%   dibujaTrapecio(conjuntos_H(2,:),3);
+%   dibujaTrapecio(conjuntos_H(3,:),1);
+%   title('Conjuntos Aire Acondicionado');
 
+%   figure(5);
+%   hold on;
+%   dibujaTrapecio(conjuntos_C(1,:),1);
+%   dibujaTrapecio(conjuntos_C(2,:),3);
+%   dibujaTrapecio(conjuntos_C(3,:),1);
+%   title('Conjuntos Calefactor');
 pause; %VERY IMPORTANT
