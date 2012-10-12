@@ -110,3 +110,12 @@ function centroide=centroideTrapecios(coordenadas1 , coordenadas2)
 
 	centroide = (c1*area1 + c2*area2) / (area1 + area2);
 endfunction
+
+function dibujaTrapecio(coordenadas, color=1)
+	if (length(coordenadas) < 4)
+		disp("dibujaTrapecio cantidad de coordenadas inválida");
+	end
+	hold on;
+
+	plot( coordenadas, [0 1 1 0], int2str(color) );
+endfunction
