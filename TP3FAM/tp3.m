@@ -18,7 +18,7 @@ cantidad_conjuntos_T = size(conjuntos_T, 1);
 %Heladera
 %conjuntos_H = [Ap; Mi; Me; Ma];
 %conjuntos_H = 1.35.*[  [-200 0 0 200]  ;  [100 300 300 500]   ;  [3437.5 5000 5000 6562.5]  ];
-conjuntos_H = 1.45.*[ [-125 0 0 75] ; [25 175 175 325] ; [ 225 375 375 625] ];
+conjuntos_H = 1.45.*[ [-120 0 0 30] ; [15 150 150 300] ; [ 200 350 350 600] ];
 
 %Calefactor
 %conjuntos_C = [Ap; Mi; Me; Ma];
@@ -52,12 +52,12 @@ Te = [22*ones(1,60) 15*ones(1,60) 22*ones(1,60) 10*ones(1,60) 22*ones(1,60) 25*o
 
 %Generamos los intervalos donde se va a abrir la puerta (es aleatorio)
 apertura_puerta = zeros(1,360);
+dibuja_puerta = 15*ones(1,360);
 for i=1:360
     num = rand;
     if (num < 1/360)
-        apertura_puerta(i) = 0;
-    else
-        apertura_puerta(i) = 0;
+        apertura_puerta(i) = 1;
+        dibuja_puerta(i) = 25;
     end
 end
 
@@ -173,10 +173,10 @@ for w=1:360
     end
 
     %trampa no borrosa
-   %if (abs(DT) < 1.5)
-   %    nuevo_i = nuevo_i*0.7;
-   %    nuevo_v = nuevo_v*0.7;
-   %end
+  %if (abs(DT) < 1.5)
+  %    nuevo_i = nuevo_i*0.9;
+  %    nuevo_v = nuevo_v*0.9;
+  %end
     
     V = [V nuevo_v];
     I = [I nuevo_i];
@@ -206,10 +206,12 @@ hold on;
 plot(Ti, 'r');
 plot(Tdeseada, 'b');
 plot(Te, 'k');
-legend('Temp Actual', 'Temp Deseada', 'Temp Externa');
+plot(dibuja_puerta, 'g');
+legend('Temp Actual', 'Temp Deseada', 'Temp Externa', 'Apertura Puerta');
 title('Temperatura de la habitacion');
 xlabel('Tiempo');
 ylabel('Temperatura');
+
 
 
 
