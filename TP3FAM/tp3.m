@@ -7,19 +7,26 @@ source("funciones.m");
 %Entrada
 %conjuntos_T es una matriz que tiene los valores de cada uno de los trapecios
 %conjuntos_T = [ MC; C; N; F; MF];
-conjuntos_T = [  [-15 -10 -10 -7 ]  ;  [ -8 -5 -5 -2 ]  ;  [-3 0 0 3]  ;  [2 5 5 8]  ;  [7 10 10 15] ];
+%conjuntos_T = [  [-15 -10 -10 -7 ]  ;  [ -8 -5 -5 -2 ]  ;  [-3 0 0 3]  ;  [2 5 5 8]  ;  [7 10 10 15] ];
+
+%conjuntos_T = [Sof; MC; C; N; F; MF; Cong];
+conjuntos_T = [  [-12 -9 -9 -7 ] ; [ -8 -6 -6 -3 ] ; [-5 -3 -3 -1] ; [-2 0 0 2] ; [1 3 3 5] ; [4 6 6 8] ; [7 9 9 12] ]; 
 %conjuntos_T = [  [-17 -10 -10 -5 ]  ;  [ -10 -5 -5 -0 ]  ;  [-5 0 0 5]  ;  [0 5 5 10]  ;  [5 10 10 17] ];
 cantidad_conjuntos_T = size(conjuntos_T, 1);
 
 %Salidas
 %Heladera
 %conjuntos_H = [Ap; Mi; Me; Ma];
-conjuntos_H = 1.5.*[  [-200 0 0 200]  ;  [100 300 300 500]   ;  [3437.5 5000 5000 6562.5]  ];
+%conjuntos_H = 1.35.*[  [-200 0 0 200]  ;  [100 300 300 500]   ;  [3437.5 5000 5000 6562.5]  ];
+conjuntos_H = 1.45.*[ [-125 0 0 75] ; [25 175 175 325] ; [ 225 375 375 625] ];
 
 %Calefactor
 %conjuntos_C = [Ap; Mi; Me; Ma];
-conjuntos_C = 2.0.*[  [-2 -0.7 -0.7 0.5 ]  ;  [-0.1 1.1 1.1 2.3]  ;  [1.7 2.9 2.9 4.1]  ;  [3.5 4.7 4.7 6]  ];
+%conjuntos_C = 1.85.*[ [-0.1 1.1 1.1 2.3] ; [1.7 2.9 2.9 4.1] ; [3.5 4.7 4.7 6] ];
+conjuntos_C = 1.85.*[  [0.0 0.8 0.8 1.7] ; [1.3 2.3 2.3 3.3] ; [2.7 3.7 3.7 4.7] ];
 
+%sin uso porque explota
+constante_superposicion = 0.01; %usada para superponer 2 reglas "opuestas"
 
 %Reglas: (DT; Heladera, Calefactor)
 %DT = 0: Normal, no hago nada
@@ -83,14 +90,30 @@ for w=1:360
     if (DT < 0)
         %se recorren todos los que pertenecen a calor y guardo los trapecios y sus activaciones
         
-        %se activa la regla de mucho calor
+       %%se activa la regla de mucho calor
+       %if (membresias(1) > 0) 
+       %     trapecios_activados = [trapecios_activados; conjuntos_H(2,:) membresias(1)];
+       %end
+       %
+       %%se activa la regla de calor
+       %if (membresias(2) > 0) 
+       %     trapecios_activados = [trapecios_activados; conjuntos_H(1,:) membresias(2)];
+       %end
+
+        %se activa la regla de sofocante
         if (membresias(1) > 0) 
-             trapecios_activados = [trapecios_activados; conjuntos_H(2,:) membresias(1)];
+             trapecios_activados = [trapecios_activados; conjuntos_H(3,:) membresias(1)];
+        end
+        
+        %se activa la regla de mucho calor
+        if (membresias(2) > 0) 
+             trapecios_activados = [trapecios_activados; conjuntos_H(2,:) membresias(2)];
         end
         
         %se activa la regla de calor
-        if (membresias(2) > 0) 
-             trapecios_activados = [trapecios_activados; conjuntos_H(1,:) membresias(2)];
+        if (membresias(3) > 0) 
+             trapecios_activados = [trapecios_activados; conjuntos_H(1,:) membresias(3)];
+             %trapecios_activados = [trapecios_activados; conjuntos_C(1,:) membresias(3)*constante_superposicion]; %activa un toquesito la de frio tambien
         end
     end
     
@@ -98,15 +121,31 @@ for w=1:360
     if (DT > 0)
         %se recorren todos los que pertenecen a frio y guardo los trapecios y sus activaciones
         
-        %se activa la regla de frio
-        if (membresias(4) > 0) 
-             trapecios_activados = [trapecios_activados; conjuntos_C(3,:) membresias(4)];
-        end
-        
-        %se activa la regla de mucho frio
-        if (membresias(5) > 0) 
-             trapecios_activados = [trapecios_activados; conjuntos_C(4,:) membresias(5)];
-        end
+       %%se activa la regla de frio
+       %if (membresias(4) > 0) 
+       %     trapecios_activados = [trapecios_activados; conjuntos_C(2,:) membresias(4)];
+       %end
+       %
+       %%se activa la regla de mucho frio
+       %if (membresias(5) > 0) 
+       %     trapecios_activados = [trapecios_activados; conjuntos_C(3,:) membresias(5)];
+       %end
+       
+       %se activa la regla de frio
+       if (membresias(5) > 0) 
+            trapecios_activados = [trapecios_activados; conjuntos_C(1,:) membresias(5)];
+            %trapecios_activados = [trapecios_activados; conjuntos_H(1,:) membresias(5)*constante_superposicion]; %activa un toquesito la regla de calor
+       end
+       
+       %se activa la regla de mucho frio
+       if (membresias(6) > 0) 
+            trapecios_activados = [trapecios_activados; conjuntos_C(2,:) membresias(6)];
+       end
+      
+       %se activa la regla de congelante
+       if (membresias(7) > 0) 
+            trapecios_activados = [trapecios_activados; conjuntos_C(3,:) membresias(7)];
+       end
     end
    
     %calcular centroide de trapecios
@@ -133,6 +172,12 @@ for w=1:360
         end
     end
 
+    %trampa no borrosa
+   %if (abs(DT) < 1.5)
+   %    nuevo_i = nuevo_i*0.7;
+   %    nuevo_v = nuevo_v*0.7;
+   %end
+    
     V = [V nuevo_v];
     I = [I nuevo_i];
 
@@ -161,8 +206,10 @@ hold on;
 plot(Ti, 'r');
 plot(Tdeseada, 'b');
 plot(Te, 'k');
-legend('Temp Actual', 'Temp Deseada', 'Temp externa');
-
+legend('Temp Actual', 'Temp Deseada', 'Temp Externa');
+title('Temperatura de la habitacion');
+xlabel('Tiempo');
+ylabel('Temperatura');
 
 
 
