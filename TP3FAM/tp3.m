@@ -8,19 +8,17 @@ source("funciones.m");
 %conjuntos_T es una matriz que tiene los valores de cada uno de los trapecios
 %conjuntos_T = [ MC; C; N; F; MF];
 conjuntos_T = [  [-15 -10 -10 -7 ]  ;  [ -8 -5 -5 -2 ]  ;  [-3 0 0 3]  ;  [2 5 5 8]  ;  [7 10 10 15] ];
-conjuntos_T = [  [-17 -10 -10 -5 ]  ;  [ -10 -5 -5 -0 ]  ;  [-5 0 0 5]  ;  [0 5 5 10]  ;  [5 10 10 17] ];
+%conjuntos_T = [  [-17 -10 -10 -5 ]  ;  [ -10 -5 -5 -0 ]  ;  [-5 0 0 5]  ;  [0 5 5 10]  ;  [5 10 10 17] ];
 cantidad_conjuntos_T = size(conjuntos_T, 1);
-cantidad_conjuntos_calor = floor(cantidad_conjuntos_T/2);
-cantidad_conjuntos_frio = cantidad_conjuntos_calor;
 
 %Salidas
 %Heladera
 %conjuntos_H = [Ap; Mi; Me; Ma];
-conjuntos_H = [  [-5000 4999 0 1562.5]  ;  [937.5 2500 2500 4062.5]   ;  [3437.5 5000 10000 10001]  ];
+conjuntos_H = 1.5.*[  [-200 0 0 200]  ;  [100 300 300 500]   ;  [3437.5 5000 5000 6562.5]  ];
 
 %Calefactor
 %conjuntos_C = [Ap; Mi; Me; Ma];
-conjuntos_C = [  [-1000 -999 -0.7 0.5 ]  ;  [-0.1 1.1 1.1 2.3]  ;  [1.7 2.9 2.9 4.1]  ;  [3.5 4.7 1000 1001]  ];
+conjuntos_C = 2.0.*[  [-2 -0.7 -0.7 0.5 ]  ;  [-0.1 1.1 1.1 2.3]  ;  [1.7 2.9 2.9 4.1]  ;  [3.5 4.7 4.7 6]  ];
 
 
 %Reglas: (DT; Heladera, Calefactor)
@@ -50,7 +48,7 @@ apertura_puerta = zeros(1,360);
 for i=1:360
     num = rand;
     if (num < 1/360)
-        apertura_puerta(i) = 1;
+        apertura_puerta(i) = 0;
     else
         apertura_puerta(i) = 0;
     end
@@ -87,12 +85,12 @@ for w=1:360
         
         %se activa la regla de mucho calor
         if (membresias(1) > 0) 
-             trapecios_activados = [trapecios_activados; conjuntos_T(1,:) membresias(1)];
+             trapecios_activados = [trapecios_activados; conjuntos_H(2,:) membresias(1)];
         end
         
         %se activa la regla de calor
         if (membresias(2) > 0) 
-             trapecios_activados = [trapecios_activados; conjuntos_T(2,:) membresias(2)];
+             trapecios_activados = [trapecios_activados; conjuntos_H(1,:) membresias(2)];
         end
     end
     
@@ -102,12 +100,12 @@ for w=1:360
         
         %se activa la regla de frio
         if (membresias(4) > 0) 
-             trapecios_activados = [trapecios_activados; conjuntos_T(4,:) membresias(4)];
+             trapecios_activados = [trapecios_activados; conjuntos_C(3,:) membresias(4)];
         end
         
         %se activa la regla de mucho frio
         if (membresias(5) > 0) 
-             trapecios_activados = [trapecios_activados; conjuntos_T(5,:) membresias(5)];
+             trapecios_activados = [trapecios_activados; conjuntos_C(4,:) membresias(5)];
         end
     end
    
@@ -138,8 +136,6 @@ for w=1:360
     V = [V nuevo_v];
     I = [I nuevo_i];
 
-
-
     if (apertura_puerta(w) == 0) %no esta abierta la puerta
         Tnueva = 0.912*Ti(w) + 0.088*Te(w) + 0.604*nuevo_i*nuevo_i - 0.0121*nuevo_v;
     else
@@ -152,18 +148,20 @@ for w=1:360
 end
 
 hold on;
-figure(2);
+figure(1);
 plot(V, 'b');
 plot(I, 'r');
 
 legend('Heladera', 'Calefactor');
 %graficar y demases
+hold off;
+figure(2);
 hold on;
 
-figure(1);
 plot(Ti, 'r');
 plot(Tdeseada, 'b');
-legend('Temp Actual', 'Temp Deseada');
+plot(Te, 'k');
+legend('Temp Actual', 'Temp Deseada', 'Temp externa');
 
 
 
