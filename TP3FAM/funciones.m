@@ -62,15 +62,18 @@ function coordenadas=obtenerCoordenadasTriangulo( centro, base_mayor )
 endfunction
 
 
-function area=areaTrapecio(coordenadas) 
+function area=areaTrapecio(coordenadas, activacion) 
 	if (length(coordenadas) < 4)
 		disp("areaTrapecio cantidad de coordenadas inválida");
 	end
+    %modifica el trapecio por el valor de activacion logrado
+    coordenadas(2) = coordenadas(1)+(coordenadas(2)-coordenadas(1))*activacion;
+    coordenadas(3) = coordenadas(4)-(coordenadas(4)-coordenadas(3))*activacion;
 
 	base_mayor = abs(coordenadas(4) - coordenadas(1));
 	base_menor = abs(coordenadas(3) - coordenadas(2));
 
-	area = (base_mayor + base_menor) / 2;
+	area = (base_mayor + base_menor) *activacion / 2;
 endfunction
 
 
@@ -90,7 +93,7 @@ function centroide=centroideTrapecio(coordenadas)
 		disp("centroideTrapecio cantidad de coordenadas inválida");
 	end
 
-	centroide = abs(coordenadas(4) - coordenadas(1)) / 2;
+	centroide = coordenadas(1) + (coordenadas(4) - coordenadas(1)) / 2;
 	
 endfunction
 
@@ -101,8 +104,9 @@ function centroide=centroideTrapecios(coordenadas1 , coordenadas2)
 		disp("centroideTrapecios cantidad de coordenadas inválida");
 	end
 
-	area1 = areaTrapecio(coordenadas1);
-	area2 = areaTrapecio(coordenadas2);
+
+	area1 = areaTrapecio(coordenadas1(1:4), coordenadas1(5));
+	area2 = areaTrapecio(coordenadas2(1:4), coordenadas2(5));
 
 	%Centroides en x
 	c1 = (coordenadas1(4) - coordenadas1(1)) / 2;

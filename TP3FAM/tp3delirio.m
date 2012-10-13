@@ -1,3 +1,5 @@
+1;
+
 source("funciones.m");
 
 %Generamos los conjuntos
@@ -5,19 +7,23 @@ source("funciones.m");
 %Entrada
 %conjuntos_T es una matriz que tiene los valores de cada uno de los trapecios
 %conjuntos_T = [Sof; MC; C; N; F; MF; Cong];
-conjuntos_T = [  [-12 -12 -7 -6 ] ; [ -7 -5 -5 -3 ] ; [-4 -3 -3 -1] ; [-1.5 0 0 2] ; [1 3 3 4] ; [3 5 5 7] ; [6 7 10 10] ]; 
+%conjuntos_T = [  [-12 -9 -9 -7 ] ; [ -8 -6 -6 -3 ] ; [-5 -3 -3 -1] ; [-2 0 0 2] ; [1 3 3 5] ; [4 6 6 8] ; [7 9 9 12] ]; 
+conjuntos_T = [  [-8 -8.0 -2.0 -1.6] ; [-1.8 -1.4 -1.4 -1.0] ; [-1.2 -0.8 -0.8 -0.4] ; [-0.6 0 0 0.6] ; [0.4 0.8 0.8 1.2] ; [1.0 1.4 1.4 1.8] ; [1.6 2.0 8.0 8] ]; 
 cantidad_conjuntos_T = size(conjuntos_T, 1);
 
 %Salidas
 %Heladera
-%conjuntos_H = [Mi; Me; Ma];
-%conjuntos_H = 1.45.*[ [0 40 40 125] ; [60 130 130 280] ; [ 200 350 350 600] ];
-conjuntos_H = [ [0 120 120 170] ; [90 180 180 300] ; [ 210 330 340 340] ];
+%conjuntos_H = [Ap; Mi; Me; Ma];
+%conjuntos_H = 1.45.*[ [-50 20 20 125] ; [15 130 130 280] ; [ 200 350 350 600] ];
+conjuntos_H = [ [0 100 150 250] ; [220 230 260 290] ; [ 260 320 400 400] ];
 
 %Calefactor
-%conjuntos_C = [Mi; Me; Ma];
+%conjuntos_C = [Ap; Mi; Me; Ma];
+conjuntos_C =  [  [0.0 1.5 1.5 3.0] ; [2.5 3.5 3.5 4.5] ; [4 5 10 10] ];
 %conjuntos_C = 1.85.*[  [0.0 0.8 0.8 1.7] ; [1.3 2.3 2.3 3.3] ; [2.7 3.7 3.7 4.7] ];
-conjuntos_C =  [  [0.0 1.6 1.6 2.8] ; [2.5 3.0 3.0 4.0] ; [4 5 10 10] ];
+
+%sin uso porque explota
+constante_superposicion = 0.01; %usada para superponer 2 reglas "opuestas"
 
 %Reglas: (DT; Heladera, Calefactor)
 %DT = 0: Normal, no hago nada
@@ -42,9 +48,6 @@ Tdeseada = [x18 x22 x18 x22 x18 x22];
 
 %Generamos las temperaturas externas
 Te = [22*ones(1,60) 15*ones(1,60) 22*ones(1,60) 10*ones(1,60) 22*ones(1,60) 25*ones(1,60)];
-%Te = [18*ones(1,360)];
-Te = Tdeseada;
-
 
 %Generamos los intervalos donde se va a abrir la puerta (es aleatorio)
 apertura_puerta = zeros(1,360);
@@ -83,7 +86,7 @@ for w=1:360
     %se guardaran los trapecios activados y su membresia:
     % [trapecio_1, membresia_1; trapecio_2, membresia_2]
     trapecios_activados = [];
- 
+
     %hace calor y debo aumentar heladera 
     if (DT < 0)
         %se recorren todos los que pertenecen a calor y guardo los trapecios y sus activaciones
@@ -102,6 +105,7 @@ for w=1:360
         if (membresias(3) > 0) 
              trapecios_activados = [trapecios_activados; conjuntos_H(1,:) membresias(3)];
         end
+        
     end
     
     %hace frio y debo aumentar calefactor
@@ -128,6 +132,14 @@ for w=1:360
     %calcular centroide de trapecios
     nactivados = size(trapecios_activados,1);
 
+%%%%figure(1);
+%%%%hold on;
+%%%%for k=1:nactivados
+%%%%    dibujaTrapecio(trapecios_activados(k,1:4),k);
+%%%%end
+%%%%%pause;
+%%%%clf;
+        
     nuevo_v = 0; %no le pongo heladera
     nuevo_i = 0; %no le pongo calefactor
     if (DT < 0) %actualizaremos la heladera
@@ -150,14 +162,13 @@ for w=1:360
     end
 
     %trampa no borrosa
-    % if (abs(DT) < 1.5)
-    %     nuevo_i = nuevo_i*0.85;
-    %     nuevo_v = nuevo_v*0.85;
-    % end
+     if (abs(DT) < 1.5)
+         nuevo_i = nuevo_i*0.85;
+         nuevo_v = nuevo_v*0.85;
+     end
     
     V = [V nuevo_v];
     I = [I nuevo_i];
-
     if (apertura_puerta(w) == 0) %no esta abierta la puerta
         Tnueva = 0.912*Ti(w) + 0.088*Te(w) + 0.604*nuevo_i*nuevo_i - 0.0121*nuevo_v;
     else
@@ -175,7 +186,7 @@ plot(Ti, 'r');
 plot(Tdeseada, 'b');
 plot(Te, 'k');
 stem(dibuja_puerta, 'g');
-stem(DThistory, 'k');
+plot(DThistory, 'c');
 legend('Temp Actual', 'Temp Deseada', 'Temp Externa', 'Apertura Puerta', 'DeltaTemperatura');
 title('Temperatura de la habitacion');
 xlabel('Tiempo');
@@ -194,17 +205,17 @@ ylabel('Temperatura');
 %  dibujaTrapecio(conjuntos_T(7,:),1);
 %  title('Conjuntos Delta Temperatura');
 
-%  figure(4);
-%  hold on;
-%  dibujaTrapecio(conjuntos_H(1,:),1);
-%  dibujaTrapecio(conjuntos_H(2,:),3);
-%  dibujaTrapecio(conjuntos_H(3,:),1);
-%  title('Conjuntos Aire Acondicionado');
+%   figure(4);
+%   hold on;
+%   dibujaTrapecio(conjuntos_H(1,:),1);
+%   dibujaTrapecio(conjuntos_H(2,:),3);
+%   dibujaTrapecio(conjuntos_H(3,:),1);
+%   title('Conjuntos Aire Acondicionado');
 
-%  figure(5);
-%  hold on;
-%  dibujaTrapecio(conjuntos_C(1,:),1);
-%  dibujaTrapecio(conjuntos_C(2,:),3);
-%  dibujaTrapecio(conjuntos_C(3,:),1);
-%  title('Conjuntos Calefactor');
+%   figure(5);
+%   hold on;
+%   dibujaTrapecio(conjuntos_C(1,:),1);
+%   dibujaTrapecio(conjuntos_C(2,:),3);
+%   dibujaTrapecio(conjuntos_C(3,:),1);
+%   title('Conjuntos Calefactor');
 pause; %VERY IMPORTANT
