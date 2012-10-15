@@ -6,7 +6,7 @@ source("funciones.m");
 %conjuntos_T es una matriz que tiene los valores de cada uno de los trapecios
 %conjuntos_T = [Sof; MC; C; N; F; MF; Cong];
 %conjuntos_T = [  [-12 -12 -7 -6 ] ; [ -7 -5 -5 -3 ] ; [-4 -3 -3 -1] ; [-1.5 0 0 2] ; [1 3 3 4] ; [3 5 5 7] ; [6 7 10 10] ]; 
-conjuntos_T = [  [-7 -5 -5 -4 ] ; [ -5 -2.5 -2.5 -2 ] ; [-2.5 -1.5 -1 -0.5] ; [-1.5 0 0 1.5] ;[0.5 1 1.5 2.5]; [2 2.5 2.5 5]; [4 5 5 7] ]; 
+conjuntos_T = [  [-10 -10 -5 -4 ] ; [ -5 -2.5 -2.5 -2 ] ; [-2.5 -1.5 -1 -0.5] ; [-1.5 0 0 1.5] ;[0.5 1 1.5 2.5]; [2 2.5 2.5 5]; [4 5 10 10] ]; 
 cantidad_conjuntos_T = size(conjuntos_T, 1);
 
 %Salidas
@@ -55,14 +55,24 @@ for i=1:360
         dibuja_puerta(i) = 25;
     end
 end
+%fuerzo a que se abra la puerta en 200
+apertura_puerta(200) = 1;
+dibuja_puerta(200) = 25;
 
 %inicializamos la temperatura interior
+Tinicial = 20;
 Ti = zeros(1,360);
-Ti(1) = 20;
+Ti(1) = Tinicial;
+%historiales de voltios y amperes
 V = [];
 I = [];
-
+%historial de delta temperatura
 DThistory = [];
+
+%temperatura sin control
+Ti_sincontrol = zeros(1,360);
+Ti_sincontrol(1) = Tinicial;
+
 %bucle principal
 for w=2:360
    
@@ -150,9 +160,15 @@ for w=2:360
     I = [I nuevo_i];
 
     if (apertura_puerta(w) == 0) %no esta abierta la puerta
-        Tnueva = 0.912*Ti(w-1) + 0.088*Te(w) + 0.604*nuevo_i*nuevo_i - 0.0121*nuevo_v;
+        sincontrol  =   0.912*Ti_sincontrol(w-1) + 0.088*Te(w);      
+        control     =   0.604*nuevo_i*nuevo_i - 0.0121*nuevo_v;
+        Tnueva      =   0.912*Ti(w-1) + 0.088*Te(w) + control;
+        Ti_sincontrol(w) = sincontrol;
     else
-        Tnueva = 0.169*Ti(w-1) + 0.831*Te(w) + 0.112*nuevo_i*nuevo_i - 0.002*nuevo_v;
+        sincontrol  =   0.169*Ti_sincontrol(w-1) + 0.831*Te(w);
+        control     =   0.112*nuevo_i*nuevo_i - 0.002*nuevo_v;
+        Tnueva      =   0.169*Ti(w-1) + 0.831*Te(w) + control;
+        Ti_sincontrol(w) = sincontrol;
     end
 
     DThistory = [DThistory DT];
@@ -166,7 +182,8 @@ plot(Tdeseada, 'b');
 plot(Te, 'k');
 stem(dibuja_puerta, 'go');
 stem(DThistory, 'ko');
-legend('Temp Actual', 'Temp Deseada', 'Temp Externa', 'Apertura Puerta', 'DeltaTemperatura');
+plot(Ti_sincontrol, 'c');
+legend('Temp Actual', 'Temp Deseada', 'Temp Externa', 'Apertura Puerta', 'DeltaTemperatura', 'Temp sin control');
 title('Temperatura de la habitacion');
 xlabel('Tiempo');
 ylabel('Temperatura');
