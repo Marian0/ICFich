@@ -87,5 +87,12 @@ void static drawPlot(
 void static drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, unsigned int color = 2, unsigned int tipo = 5);
 
 unsigned int static getMinIdx(std::vector<float> &V );
+
+//Convierte un vector de 1 y 0 a un entero, si signo=true => El primer bit indica el signo
+int static binary2int(std::vector<unsigned int> &V, bool signo=false);
+
+//convierte un entero a un vector de 1 y 0. Si signo es true, agrega un 1 sii value es negativo. Si no, agrega un cero
+
+std::vector<unsigned int> utils::int2binary(int value, bool signo) {
 };
 #endif

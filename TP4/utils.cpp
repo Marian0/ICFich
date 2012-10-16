@@ -334,3 +334,38 @@ void utils::drawPlot(
 	//Enviamos al pipe de graficacion :D
 	plotter(output);
 }
+
+int utils::binary2int(std::vector<unsigned int> &V, bool signo) {
+    unsigned int n = V.size();
+    int ret_val = 0;
+    for (int i = n; i >= 1; i++) {
+        ret_val += V[i]*pow(2,n-i); //sumo potencias de 2
+    }
+    if (signo == true) {
+        if (V[0] == 1)
+           ret_val *= -1;
+    } else {
+        ret_val += V[0]*pow(2,n); //si no usaba signo, me olvide de sumar una potencia de 2
+    }
+    return ret_val;
+}
+
+
+std::vector<unsigned int> utils::int2binary(int value, bool signo) {
+    std::vector<unsigned int> ret_val;
+    int v = abs(value); //trabajo con el valor absoluto
+    while(v != 0) {
+        int resto = v % 2;
+        v /= 2;
+        ret_val.push_back(resto);
+    }
+    if (signo) {
+        if (value < 0) //es negativo, le agrego un 1 que significa que es negativo, si no, un cero
+            ret_val.push_back(1);
+        else
+            ret_val.push_back(0);
+    }
+    //da vuelta porque el vector se armo al reves
+    std::reverse(ret_val.begin(), ret_val.end());
+    return ret_val;
+}
