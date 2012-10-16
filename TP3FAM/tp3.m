@@ -45,6 +45,7 @@ Tdeseada = [x18 x22 x18 x22 x18 x22];
 Te = [22*ones(1,60) 15*ones(1,60) 22*ones(1,60) 10*ones(1,60) 22*ones(1,60) 25*ones(1,60)];
 %Te = zeros(1,360);
 
+% Te=Tdeseada;
 %Generamos los intervalos donde se va a abrir la puerta (es aleatorio)
 apertura_puerta = zeros(1,360);
 dibuja_puerta = zeros(1,360);
@@ -135,19 +136,25 @@ for w=2:360
 
     nuevo_v = 0; %no le pongo heladera
     nuevo_i = 0; %no le pongo calefactor
-    if (DT < 0) %actualizaremos la heladera
 
-        if (nactivados == 2) %Cantidad de Filas
-            nuevo_v = centroideTrapecios( trapecios_activados(1,:), trapecios_activados(2,:) );
-        elseif (nactivados == 1)
-            nuevo_v = centroideTrapecio(trapecios_activados(1,:));
+
+    if (nactivados > 0)
+
+        if (DT < 0) %actualizaremos la heladera
+
+            if (nactivados == 2) %Cantidad de Filas
+                nuevo_v = centroideTrapecios( trapecios_activados(1,:), trapecios_activados(2,:) );
+            elseif (nactivados == 1)
+                nuevo_v = centroideTrapecio(trapecios_activados(1,1:4) , trapecios_activados(1,5) );
+            end
+        elseif (DT > 0) %actualizaremos el calefactor
+            if (nactivados == 2) %Cantidad de Filas
+                nuevo_i = centroideTrapecios( trapecios_activados(1,:), trapecios_activados(2,:) );
+            elseif (nactivados == 1)
+                nuevo_i = centroideTrapecio(trapecios_activados(1,1:4) , trapecios_activados(1,5) );
+            end
         end
-    elseif (DT > 0) %actualizaremos el calefactor
-        if (nactivados == 2) %Cantidad de Filas
-            nuevo_i = centroideTrapecios( trapecios_activados(1,:), trapecios_activados(2,:) );
-        elseif (nactivados == 1)
-            nuevo_i = centroideTrapecio(trapecios_activados(1,:));
-        end
+
     end
 
     %trampa no borrosa
@@ -179,11 +186,11 @@ figure(2);
 hold on;
 plot(Ti, 'r');
 plot(Tdeseada, 'b');
-plot(Te, 'k');
 stem(dibuja_puerta, 'go');
 stem(DThistory, 'ko');
 plot(Ti_sincontrol, 'c');
-legend('Temp Actual', 'Temp Deseada', 'Temp Externa', 'Apertura Puerta', 'DeltaTemperatura', 'Temp sin control');
+plot(Te, 'k');
+legend('Temp Actual', 'Temp Deseada', 'Apertura Puerta', 'DeltaTemperatura', 'Temp sin control', 'Temp Externa');
 title('Temperatura de la habitacion');
 xlabel('Tiempo');
 ylabel('Temperatura');
