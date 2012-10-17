@@ -174,39 +174,6 @@ float utils::devest(std::vector<float> &V, float media) {
     return suma/V.size();
 }
 
-//Convierte unos valores {0, 1, 2, 3...} en una codificacion {[1,-1,-1,-1,...], [-1,1,-1,-1,...], ... }
-void utils::convertirSalida(std::vector<std::vector<float> > &in, std::vector<std::vector<float> > &out) {
-    if (in[0].size() > 1) { //la salida ya viene codificada, no tengo que hacer nada
-        std::vector<std::vector<float> > V = in;
-        out = V;
-        return;
-    }
-    out.clear();
-    
-    unsigned int cant_casos = in.size();
-    std::vector<float> inn;
-    inn.resize(cant_casos);
-    //Convierto un vector de vector de float (con un solo elemento) en un vector de float
-    for (unsigned int i = 0; i < cant_casos; i++) {
-        inn[i] = in[i][0];
-    }
-
-    unsigned int maximo_clases = 1+(unsigned int) *(std::max_element(inn.begin(), inn.end())); //obtiene la ultima clase, para saber cuantas tengo
-
-    for (unsigned int i = 0; i < cant_casos; i++) {
-        unsigned int val = (unsigned int) inn[i]; //warning, danger casting
-        out.push_back(utils::int2binary(val, maximo_clases));
-    }
-}
-
-//Convierte un entero a un array de -1 y 1
-std::vector<float> utils::int2binary(unsigned int val, unsigned int max_clases) {
-    std::vector<float> temp;
-    temp.resize(max_clases, -1.0);
-    temp[val] = 1.0;
-    return temp;
-}
-
 
 
 //Dado un vector, devuelve el índice de menor elemento del vector 
@@ -261,79 +228,6 @@ void utils::drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, un
 	plotter("e\n");
 }
 
-//Funcion para graficar el conjuto de patrones
-void utils::drawPlot(
-		std::vector<std::vector<float> > & X,
-		std::vector<std::vector<float> > & YD,
-		std::vector<std::vector<float> > & YC,
-		GNUPlot & plotter
-	) {
-	//Verifico la cantidad de entradas sean iguales
-	unsigned int nX = X.size();
-	unsigned int nYC = YC.size();
-	unsigned int nYD = YD.size();
-	assert( nX > 0 && nX == nYD && nX == nYC ); 
-
-
-	//Verifico que X sea graficable (2D)
-	assert( X[0].size() == 2 ); 
-
-	//Vefifico que tengan la misma dimension las salidas
-	unsigned int dimension_salida = YD[0].size();
-	assert( dimension_salida == YC[0].size() );
-
-	//Calculo cantidad de clases 2^n
-	//unsigned int cantidad_clases = pow(2, YC[0].size() );
-    unsigned int cantidad_clases = YC[0].size();
-
-	//Vectores temporales para guardar los comandos de gnuplot para graficación.
-	std::vector<std::string> str2plot_good; //Bien clasificados
-	std::vector<std::string> str2plot_bad;  //Mal Clasificados
-    
-    str2plot_good.resize(cantidad_clases);
-    str2plot_bad.resize(cantidad_clases);
-
-    //Inicializo el vector de string para graficación
-	for (unsigned int i = 0; i < cantidad_clases; i++) {
-		str2plot_good[i] = "plot \"-\" notitle pt " + utils::intToStr(i+3) + " lt 3\n";
-		str2plot_bad[i] = "plot \"-\" notitle pt " + utils::intToStr(i+3) + " lt 1\n";
-	}
-
-	//Lenght minimo para decir que es una clase vacía (no graficar)
-	unsigned int lenght_minimo = str2plot_good[0].size() + 5;
-
-	//Recorro los patrones
-	for (unsigned int i = 0; i < nX; i++) {
-		// std::cout<<"la calculada ";
-		
-		unsigned int salida_real = utils::binary2int(YC[i]);
-		//unsigned int salida_deseada = utils::binary2int(YD[i]);
-		unsigned int salida_deseada = utils::binary2int(YD[i]);
-		// std::cout<<"la clase real"<<salida_real<<" la deseada"<<salida_deseada<<std::endl; 
-		// getchar();
-
-		std::string punto = utils::floatToStr( X[i][0] ) + " " + utils::floatToStr( X[i][1] ) + " \n";
-		if (salida_real - salida_deseada == 0) {
-			//Esta bien clasificado
-			str2plot_good[salida_deseada] += punto;
-		} else {
-			str2plot_bad[salida_deseada] += punto;
-		}
-	}
-
-	std::string output = "set multiplot\n";
-	//Cerramos los strings de graficacion
-	for (unsigned int i = 0; i < cantidad_clases; i++) {
-		//Los strings que hayan añadido algun punto tendran mayor size que el lenght minimo
-		if ( str2plot_good[i].size() > lenght_minimo )
-			output += str2plot_good[i] + "e\n";
-
-		if ( str2plot_bad[i].size() > lenght_minimo )
-			output += str2plot_bad[i] + "e\n";
-	}
-	//Enviamos al pipe de graficacion :D
-	plotter(output);
-}
 
 int utils::binary2int(std::vector<unsigned int> &V, bool signo) {
     unsigned int n = V.size();

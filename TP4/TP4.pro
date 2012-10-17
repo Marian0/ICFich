@@ -15,4 +15,15 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += main.cpp
+SOURCES += src/main.cpp \
+    src/utils.cpp \
+    src/GNUPlot.cpp \
+    src/Config.cpp
+
+HEADERS += \
+    include/utils.h \
+    include/GNUPlot.h \
+    include/Gen.h \
+    include/Cromosoma.h \
+    include/Config.h \
+    include/AlgoritmoGenetico.h

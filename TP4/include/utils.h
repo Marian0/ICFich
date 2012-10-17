@@ -76,13 +76,6 @@ float static promedio(std::vector<float> &V);
 //Calcula la desviación estandar
 float static devest(std::vector<float> &V, float media);
 
-//Funcion para graficar el conjuto de patrones
-void static drawPlot(
-		std::vector<std::vector<float> > & X,
-		std::vector<std::vector<float> > & YD,
-		std::vector<std::vector<float> > & YC,
-		GNUPlot & plotter
-	);
 
 void static drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, unsigned int color = 2, unsigned int tipo = 5);
 
@@ -93,6 +86,6 @@ int static binary2int(std::vector<unsigned int> &V, bool signo=false);
 
 //convierte un entero a un vector de 1 y 0. Si signo es true, agrega un 1 sii value es negativo. Si no, agrega un cero
 
-std::vector<unsigned int> utils::int2binary(int value, bool signo) {
+std::vector<unsigned int> static int2binary(int value, bool signo);
 };
 #endif
