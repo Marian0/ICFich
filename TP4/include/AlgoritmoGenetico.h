@@ -49,13 +49,13 @@ class AlgoritmoGenetico {
     void ventanas(std::vector<Cromosoma> &nuevos_padres);
     
     //Metodo de competencias para la seleccion
-    void competencia(std::vector<Cromosoma> &nuevos_padres);
+    void competencia(Cromosoma &nuevo_padre);
     
     //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
     void cruza(Cromosoma padre, Cromosoma madre, std::vector<Cromosoma> &hijos);
     
     //Realiza la mutación de un padre en un hijo
-    void mutacion(Cromosoma padre, &Cromosoma hijo);
+    void mutacion(Cromosoma padre, Cromosoma & hijo);
 
 };
 #endif

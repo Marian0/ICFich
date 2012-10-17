@@ -18,7 +18,8 @@ TEMPLATE = app
 SOURCES += src/main.cpp \
     src/utils.cpp \
     src/GNUPlot.cpp \
-    src/Config.cpp
+    src/Config.cpp \
+    src/AlgoritmoGenetico.cpp
 
 HEADERS += \
     include/utils.h \
