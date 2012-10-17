@@ -18,3 +18,5 @@ Cache
 octave-core
 
 *.*~
+
+*-build-*
