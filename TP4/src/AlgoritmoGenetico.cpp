@@ -1,7 +1,8 @@
-
+#include <algorithm>
+#include "utils.h"
 #include "AlgoritmoGenetico.h"
 #include "Individuo.h"
-#include <algorithm>
+
 AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_genes,
                                         unsigned int max_gen, float pcruza, float pmutacion,
                                         unsigned int met_sel, unsigned int k_competencia, int n_ventanas) {
@@ -67,7 +68,28 @@ void AlgoritmoGenetico::competencia(Individuo &nuevo_padre) {
 }
 
 //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
-void cruza(Individuo padre, Individuo madre, std::vector<Individuo> &hijos);
+void AlgoritmoGenetico::cruza(Individuo padre, Individuo madre, std::vector<Individuo> &hijos) {
+    unsigned int posicion_cruza = abs(trunc(utils::randomDecimal(0, this->cantidad_genes )));
+
+    Individuo hijo1( this->cantidad_genes );
+    Individuo hijo2( this->cantidad_genes );
+    hijo1.genotipo.clear();
+    hijo2.genotipo.clear();
+
+    hijo1.genotipo.insert(hijo1.begin(), padre.begin(), padre.begin() + posicion_cruza);
+    hijo2.genotipo.insert(hijo2.begin(), madre.begin(), madre.begin() + posicion_cruza);
+
+    hijo1.genotipo.insert(hijo1.begin() + posicion_cruza, madre.begin() + posicion_cruza, madre.end() );
+    hijo2.genotipo.insert(hijo2.begin() + posicion_cruza, padre.begin() + posicion_cruza, padre.end() );
+
+    hijos.clear();
+
+    hijos.push_back(hijo1);
+    hijos.push_back(hijo2);
+}
 
 //Realiza la mutación de un padre en un hijo
-void mutacion(Individuo padre, Individuo & hijo);
+void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
+    unsigned int i_random = abs(trunc( utils::randomDecimal(0, this->cantidad_genes) ));
+    individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
+}
