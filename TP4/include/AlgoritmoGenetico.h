@@ -38,7 +38,7 @@ class AlgoritmoGenetico {
     static const unsigned int SELECCION_COMPETENCIA = 3;
     
     //Constructor
-    AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, unsigned int max_gen, float pcruza, float pmutacion, unsigned int metodo_seleccion = SELECCION_COMPETENCIA , unsigned int k_competencia = 5, int n_ventanas = -1);
+    AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, unsigned int max_gen, float pcruza, float pmutacion, unsigned int metodo_seleccion = SELECCION_COMPETENCIA , unsigned int k_comp = 5, int n_vent = -1);
 
     //Crea la nueva generacion
     void reproduccion();
@@ -47,7 +47,7 @@ class AlgoritmoGenetico {
     void seleccion(std::vector<Individuo> &nuevos_padres);
     
     //Metodo de la ruleta para la seleccion
-    void ruleta(std::vector<Individuo> &nuevos_padres);
+    void ruleta(Individuo &nuevo_padre);
     
     //Metodo de ventanas para la seleccion
     void ventanas(std::vector<Individuo> &nuevos_padres);
@@ -60,6 +60,11 @@ class AlgoritmoGenetico {
     
     //Realiza la mutación de un padre en un hijo
     void mutacion(Individuo &individuo_a_mutar);
+
+    //Funcion que sirve para ordenar individuos de mayor a menor
+    bool ordenarIndividuos(Individuo a, Individuo b) {
+        return a.fitness > b.fitness;
+    }
 
 };
 #endif
