@@ -5,6 +5,7 @@
 
 AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_genes,
                                         unsigned int max_gen, float pcruza, float pmutacion,
+                                        unsigned int id_funcion_fitness,
                                         unsigned int met_sel, unsigned int k_competencia, int n_ventanas) {
 
 }
@@ -68,19 +69,19 @@ void AlgoritmoGenetico::competencia(Individuo &nuevo_padre) {
 }
 
 //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
-void AlgoritmoGenetico::cruza(Individuo padre, Individuo madre, std::vector<Individuo> &hijos) {
+void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<Individuo> &hijos) {
     unsigned int posicion_cruza = abs(trunc(utils::randomDecimal(0, this->cantidad_genes )));
 
-    Individuo hijo1( this->cantidad_genes );
-    Individuo hijo2( this->cantidad_genes );
+    Individuo hijo1( this->cantidad_genes, this->id_funcion_fitness );
+    Individuo hijo2( this->cantidad_genes, this->id_funcion_fitness );
     hijo1.genotipo.clear();
     hijo2.genotipo.clear();
 
-    hijo1.genotipo.insert(hijo1.begin(), padre.begin(), padre.begin() + posicion_cruza);
-    hijo2.genotipo.insert(hijo2.begin(), madre.begin(), madre.begin() + posicion_cruza);
+    hijo1.genotipo.insert(hijo1.genotipo.begin(), padre.genotipo.begin(), padre.genotipo.begin() + posicion_cruza);
+    hijo2.genotipo.insert(hijo2.genotipo.begin(), madre.genotipo.begin(), madre.genotipo.begin() + posicion_cruza);
 
-    hijo1.genotipo.insert(hijo1.begin() + posicion_cruza, madre.begin() + posicion_cruza, madre.end() );
-    hijo2.genotipo.insert(hijo2.begin() + posicion_cruza, padre.begin() + posicion_cruza, padre.end() );
+    hijo1.genotipo.insert(hijo1.genotipo.begin() + posicion_cruza, madre.genotipo.begin() + posicion_cruza, madre.genotipo.end() );
+    hijo2.genotipo.insert(hijo2.genotipo.begin() + posicion_cruza, padre.genotipo.begin() + posicion_cruza, padre.genotipo.end() );
 
     hijos.clear();
 

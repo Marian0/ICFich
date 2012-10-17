@@ -32,13 +32,19 @@ class AlgoritmoGenetico {
 
     unsigned int metodo_seleccion;
 
+    unsigned int id_funcion_fitness;
+
     public:
     static const unsigned int SELECCION_RULETA = 1;
     static const unsigned int SELECCION_VENTANAS = 2;
     static const unsigned int SELECCION_COMPETENCIA = 3;
     
     //Constructor
-    AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, unsigned int max_gen, float pcruza, float pmutacion, unsigned int metodo_seleccion = SELECCION_COMPETENCIA , unsigned int k_competencia = 5, int n_ventanas = -1);
+    AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, unsigned int max_gen,
+                      float pcruza, float pmutacion, unsigned int id_funcion_fitness,
+                      unsigned int metodo_seleccion = SELECCION_COMPETENCIA ,
+                      unsigned int k_competencia = 5, int n_ventanas = -1
+                      );
 
     //Crea la nueva generacion
     void reproduccion();
@@ -53,10 +59,10 @@ class AlgoritmoGenetico {
     void ventanas(std::vector<Individuo> &nuevos_padres);
     
     //Metodo de competencias para la seleccion
-    void competencia(Cromosoma &nuevo_padre);
+    void competencia(Individuo &nuevo_padre);
     
     //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
-    void cruza(Individuo padre, Individuo madre, std::vector<Individuo> &hijos);
+    void cruza(Individuo & padre, Individuo & madre, std::vector<Individuo> &hijos);
     
     //Realiza la mutación de un padre en un hijo
     void mutacion(Individuo &individuo_a_mutar);
