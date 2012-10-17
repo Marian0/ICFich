@@ -1,26 +1,40 @@
 #include <vector>
 #include "Individuo.h"
+#include "utils.h"
+
+//Constructor vacio
+Individuo::Individuo() {
+
+}
 
 //Constructor
-Individuo::Individuo(unsigned int cantidad_genes) {
+Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id) {
+    this->funcion_fitness_id = funcion_fitness_id;
     //Relleno el individuo con contenido al azar
     for (unsigned int i = 0; i < cantidad_genes; i++) {
         //Genero un numero aleatorio
-        float value = utils::randomDecimal(0.0, 1.0);
-        bool gen;
-        //Si mayor a 0.5, es true, si no, false
-        if (value > 0.5)
-            gen = true;
-        else
-            gen = false;
+        bool gen = rand() % 2;
+
         //Asigno
-        this->genotipo.push_back(gen)
+        this->genotipo.push_back(gen);
     }
 }
 
 //Devuelve el fitness actual
 float Individuo::getFitness(){
-    return this->fitness;
+    /*
+    switch(this->funcion_fitness_id){
+
+    case 1:
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    default:
+        return 1.1;
+    }*/
+    return 1.0;
 }
 
 

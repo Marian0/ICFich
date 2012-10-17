@@ -1,12 +1,14 @@
+#include <algorithm>
+#include "utils.h"
 #include "AlgoritmoGenetico.h"
 #include "Individuo.h"
-#include <algorithm>
-#include <vector>
 #include <cstdio>
 
 AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_genes,
                                         unsigned int max_gen, float pcruza, float pmutacion,
-                                        unsigned int met_sel, unsigned int k_comp, int n_vent) {
+                                        unsigned int id_funcion_fitness,
+                                        unsigned int met_sel, unsigned int k_competencia, int n_ventanas) {
+
     //Copia las propiedades del algoritmo
     this->tamanio_poblacion = tam_pob;
     this->cantidad_genes = cant_genes;
@@ -14,24 +16,23 @@ AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_
     this->probabilidad_cruza = pcruza;
     this->probabilidad_mutacion = pmutacion;
     this->metodo_seleccion = met_sel;
-    this->k_competencia = k_comp;
-    this->n_ventanas = n_vent;
+    this->k_competencia = k_competencia;
+    this->n_ventanas = n_ventanas;
+    this->id_funcion_fitness = id_funcion_fitness;
 
     //Crea todos los Individuos
     for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
-        Individuo new_ind(this->cantidad_genes);
+        Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness);
         this->poblacion.push_back(new_ind);
     }
+
 }
 
 //Crea la nueva generacion
 void AlgoritmoGenetico::reproduccion() {
     std::vector<Individuo> nueva_poblacion;
 
-
-
-
-
+    //codigo aca
 
 
     this->poblacion = nueva_poblacion;
@@ -115,9 +116,15 @@ void AlgoritmoGenetico::ventanas(std::vector<Individuo> &nuevos_padres) {
     std::vector<Individuo> poblacion_ordenada = this->poblacion;
 
     //Ordena los individuos de mayor a menor fitness
-    std::sort(poblacion_ordenada.begin(), poblacion_ordenada.end(), this->ordenarIndividuos());
+    std::sort(poblacion_ordenada.begin(), poblacion_ordenada.end(), AlgoritmoGenetico::ordenarIndividuos);
 
-    for (unsigned int i = 0; i < n_ventanas; i++) {
+    unsigned int n_ventanas_efectivo;
+    if (n_ventanas == -1)
+        n_ventanas_efectivo = this->tamanio_poblacion;
+    else
+        n_ventanas_efectivo = this->n_ventanas;
+
+    for (unsigned int i = 0; i < n_ventanas_efectivo; i++) {
         std::vector<Individuo> poblacion_ventaneada;
         //Copio una ventana de la poblacion
         poblacion_ventaneada.assign(poblacion_ordenada.begin(), poblacion_ordenada.end()-i);
@@ -170,8 +177,30 @@ void AlgoritmoGenetico::competencia(Individuo &nuevo_padre) {
 }
 
 //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
-void cruza(Individuo padre, Individuo madre, std::vector<Individuo> &hijos);
+void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<Individuo> &hijos) {
+    unsigned int posicion_cruza = abs(trunc(utils::randomDecimal(0, this->cantidad_genes )));
+
+    Individuo hijo1( this->cantidad_genes, this->id_funcion_fitness );
+    Individuo hijo2( this->cantidad_genes, this->id_funcion_fitness );
+    hijo1.genotipo.clear();
+    hijo2.genotipo.clear();
+
+    hijo1.genotipo.insert(hijo1.genotipo.begin(), padre.genotipo.begin(), padre.genotipo.begin() + posicion_cruza);
+    hijo2.genotipo.insert(hijo2.genotipo.begin(), madre.genotipo.begin(), madre.genotipo.begin() + posicion_cruza);
+
+    hijo1.genotipo.insert(hijo1.genotipo.begin() + posicion_cruza, madre.genotipo.begin() + posicion_cruza, madre.genotipo.end() );
+    hijo2.genotipo.insert(hijo2.genotipo.begin() + posicion_cruza, padre.genotipo.begin() + posicion_cruza, padre.genotipo.end() );
+
+    hijos.clear();
+
+    hijos.push_back(hijo1);
+    hijos.push_back(hijo2);
+}
+
+
 
 //Realiza la mutación de un padre en un hijo
-void mutacion(Individuo padre, Individuo & hijo);
-
+void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
+    unsigned int i_random = abs(trunc( utils::randomDecimal(0, this->cantidad_genes) ));
+    individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
+}

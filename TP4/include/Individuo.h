@@ -8,15 +8,20 @@ class Individuo {
     public:
     //Vector con los valores de la cadena de bits
     std::vector<bool> genotipo;
+
+    unsigned int funcion_fitness_id;
     
     //Ultimo valor obtenido de la función de fitness
     float fitness; 
 
+    //Constructor vacio
+    Individuo();
+
     //Constructor
-    Individuo(unsigned int cantidad_genes);
+    Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id);
 
     //Calcula el fitness actual y lo guarda en la propiedad fitness
-    virtual float calcularFitness() = 0; //la hace clase abstracta
+    float calcularFitness();
 
     //Devuelve el fitness actual
     float getFitness();

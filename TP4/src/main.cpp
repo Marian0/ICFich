@@ -7,13 +7,6 @@
 #include "GNUPlot.h"
 #include "Individuo.h"
 
-class Ejercicio1 : Individuo {
-    public:
-    float calcularFitness() {
-        return 1.0;
-    }
-};
-
 //Variable global
 Config config("configuracion1.cfg"); //lectura de la configuracion
 

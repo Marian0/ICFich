@@ -14,13 +14,14 @@ CONFIG   -= app_bundle
 
 TEMPLATE = app
 
-
 SOURCES += src/main.cpp \
     src/utils.cpp \
     src/GNUPlot.cpp \
     src/Config.cpp \
     src/Individuo.cpp \
     src/AlgoritmoGenetico.cpp
+
+INCLUDEPATH += include
 
 HEADERS += \
     include/utils.h \
