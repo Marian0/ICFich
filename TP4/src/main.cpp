@@ -2,11 +2,17 @@
 #include <cstdlib>
 #include <vector>
 #include <ctime>
-
-
 #include "utils.h"
 #include "Config.h"
 #include "GNUPlot.h"
+#include "Individuo.h"
+
+class Ejercicio1 : Individuo {
+    public:
+    float calcularFitness() {
+        return 1.0;
+    }
+};
 
 //Variable global
 Config config("configuracion1.cfg"); //lectura de la configuracion
@@ -27,7 +33,7 @@ int main(int argc, char *argv[]) {
     unsigned int    ventanas_inicial    = utils::strToInt(config.getValue("ventanas_inicial"));
     unsigned int    k_competencia       = utils::strToInt(config.getValue("k_competencia"));
     float           fitness_deseado     = utils::strToFloat(config.getValue("fitness_deseado"));
-
+    std::cout<<"Aleloooooooooo";
     getwchar();
     return 0;
 }

@@ -2,16 +2,16 @@
 #define __ALGORITMOGENETICO_H__
 
 #include <vector>
-#include "Cromosoma.h"
+#include "Individuo.h"
 
 class AlgoritmoGenetico {
-    //Vector que tiene todos los cromosomas de esta poblacion
-    std::vector<Cromosoma> poblacion;
+    //Vector que tiene todos los Individuos de esta poblacion
+    std::vector<Individuo> poblacion;
     
     //Define el tamaño máximo de población a manejar
     unsigned int tamanio_poblacion;
 
-    //Define la cantidad de genes que tiene cada cromosoma
+    //Define la cantidad de genes que tiene cada Individuo
     unsigned int cantidad_genes;
 
     //Cuenta la generacion en la que nos ubicamos
@@ -30,32 +30,36 @@ class AlgoritmoGenetico {
     //Define la cantidad de ventanas a usar en el metodo de ventanas. Si es -1 => se usa la misma cantidad de ventanas que el tamaño de la prox gen
     int n_ventanas;
 
-    
+    unsigned int metodo_seleccion;
+
     public:
     static const unsigned int SELECCION_RULETA = 1;
     static const unsigned int SELECCION_VENTANAS = 2;
     static const unsigned int SELECCION_COMPETENCIA = 3;
     
     //Constructor
-    AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, unsigned int max_gen, float pcruza, float pmutacion, unsigned int metodo_seleccion = 3, unsigned int k_competencia = 5, int n_ventanas = -1);
+    AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, unsigned int max_gen, float pcruza, float pmutacion, unsigned int metodo_seleccion = SELECCION_COMPETENCIA , unsigned int k_competencia = 5, int n_ventanas = -1);
 
-    //Realiza la selección de la poblacion, y guarda en nuevos_padres los Cromosomas elegidos, segun el metodo de seleccion definido, llama a Ruleta, Ventanas o Competencia
-    void seleccion(std::vector<Cromosoma> &nuevos_padres);
+    //Crea la nueva generacion
+    void reproduccion();
+
+    //Realiza la selección de la poblacion, y guarda en nuevos_padres los Individuos elegidos, segun el metodo de seleccion definido, llama a Ruleta, Ventanas o Competencia
+    void seleccion(std::vector<Individuo> &nuevos_padres);
     
     //Metodo de la ruleta para la seleccion
-    void ruleta(std::vector<Cromosoma> &nuevos_padres);
+    void ruleta(std::vector<Individuo> &nuevos_padres);
     
     //Metodo de ventanas para la seleccion
-    void ventanas(std::vector<Cromosoma> &nuevos_padres);
+    void ventanas(std::vector<Individuo> &nuevos_padres);
     
     //Metodo de competencias para la seleccion
-    void competencia(std::vector<Cromosoma> &nuevos_padres);
+    void competencia(std::vector<Individuo> &nuevos_padres);
     
     //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
-    void cruza(Cromosoma padre, Cromosoma madre, std::vector<Cromosoma> &hijos);
+    void cruza(Individuo padre, Individuo madre, std::vector<Individuo> &hijos);
     
     //Realiza la mutación de un padre en un hijo
-    void mutacion(Cromosoma padre, &Cromosoma hijo);
+    void mutacion(Individuo &individuo_a_mutar);
 
 };
 #endif

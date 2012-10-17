@@ -1,24 +1,25 @@
-#ifndef __CROMOSOMA_H__
-#define __CROMOSOMA_H__
+#ifndef __INDIVIDUO_H__
+#define __INDIVIDUO_H__
+
 #include <vector>
-#include "AlgoritmoGenetico.h"
-class Cromosoma {
+
+
+class Individuo {
+    public:
     //Vector con los valores de la cadena de bits
     std::vector<bool> genotipo;
     
     //Ultimo valor obtenido de la función de fitness
-    float fitness;
-    
-    
-    public:
-    friend class AlgoritmoGenetico;
-    Cromosoma(unsigned int cantidad_genes);
+    float fitness; 
+
+    //Constructor
+    Individuo(unsigned int cantidad_genes);
+
     //Calcula el fitness actual y lo guarda en la propiedad fitness
-    float calcularFitness();
+    virtual float calcularFitness() = 0; //la hace clase abstracta
 
     //Devuelve el fitness actual
     float getFitness();
 
-    //
 };
 #endif
