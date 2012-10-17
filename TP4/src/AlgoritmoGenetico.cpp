@@ -71,4 +71,3 @@ void cruza(Individuo padre, Individuo madre, std::vector<Individuo> &hijos);
 
 //Realiza la mutación de un padre en un hijo
 void mutacion(Individuo padre, Individuo & hijo);
->>>>>>> 667fc67a031bffdd0292f3f9e9cee80703ef5c70
