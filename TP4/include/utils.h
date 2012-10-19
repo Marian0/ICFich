@@ -92,6 +92,6 @@ std::vector<unsigned int> static int2binary(int value, bool signo);
 float static fitness_1a(float value);
 
 //graficar historiales
-void drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter);
+void static drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter);
 };
 #endif

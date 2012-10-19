@@ -14,6 +14,9 @@ class AlgoritmoGenetico {
     //Define la cantidad de genes que tiene cada Individuo
     unsigned int cantidad_genes;
 
+    //Define por cuanto se va a dividr el fenotipo para dar el valor correcto
+    float escala;
+
     //Cuenta la generacion en la que nos ubicamos
     unsigned int generacion_actual;
     //Maximo de generaciones a simular
@@ -21,6 +24,9 @@ class AlgoritmoGenetico {
 
     //Guarda el indice donde esta el maximo fitness
     unsigned int id_maximo_fitness;
+
+    //Guarda el indice donde esta el minimo fitness
+    unsigned int id_minimo_fitness;
 
     //Parametros para la reproduccion
     //Define los porcentajes para cada operacion
@@ -48,7 +54,7 @@ class AlgoritmoGenetico {
     static const unsigned int SELECCION_COMPETENCIA = 3;
     
     //Constructor
-    AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, unsigned int max_gen,
+    AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, float escala, unsigned int max_gen,
                       float pcruza, float pmutacion, unsigned int elitismo, unsigned int id_funcion_fitness,
                       unsigned int metodo_seleccion = SELECCION_COMPETENCIA ,
                       unsigned int k_competencia = 5, int n_ventanas = -1
@@ -84,8 +90,14 @@ class AlgoritmoGenetico {
     //Devuelve el mejor fitness de la poblacion
     float getMejorFitness();
 
+    //Devuelve el peor fitness de la poblacion
+    float getPeorFitness();
+
     //Devuelve el mejor genotipo de la poblacion
     void getMejorGenotipo(std::vector<bool> &mejor_genotipo);
+
+    //Devuelve el mejor Fenotipo
+    float getMejorSolucion();
 
     //Funcion que sirve para ordenar individuos de mayor a menor
     static bool ordenarIndividuos(Individuo a, Individuo b) {

@@ -195,11 +195,23 @@ unsigned int utils::getMinIdx(std::vector<float> &V ) {
 void utils::drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter) {
     unsigned int n = historial.size();
     assert(n>0);
+    unsigned int generaciones = historial[0].size();
 
-    plotter("set multiplot\n");
+    plotter("set pointsize 1");
+    plotter("set grid back");
+    plotter("set xzeroaxis lt -1");
+    plotter("set yzeroaxis lt -1");
+    plotter("set xrange [0:" + utils::intToStr(generaciones) + "]");
+    plotter("set yrange [-100:500]");
+    plotter("set xlabel \"Generacion\"");
+    plotter("set ylabel \"Fitness\"");
+    plotter("set title \"Fitness durante N Generaciones\"");
+    plotter("set multiplot");
+
     for (unsigned int i = 0; i < n; i++) {
-        unsigned int m = historial.size();
-        std::string str_to_plot = "plot \"-\" notitle pt " + utils::intToStr(i) + " lt " + utils::intToStr(i) + "\n";
+        unsigned int m = historial[i].size();
+        unsigned int rnd = i + 1;
+        std::string str_to_plot = "plot \"-\" notitle pt " + utils::intToStr(rnd) + " lt " + utils::intToStr(rnd) + "\n";
 
         for (unsigned int j = 0; j < m; j++ ) {
             str_to_plot += utils::intToStr(j) + " " + utils::floatToStr( historial[i][j] ) + " \n";

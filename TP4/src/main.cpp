@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
     //inicializacion de semilla
     srand( (unsigned) std::time(NULL));
 
+
     //Leemos los valores de configuracion
     float           porcentaje_cruza        = utils::strToFloat(config.getValue("cruza"));
     float           porcentaje_mutacion     = utils::strToFloat(config.getValue("mutacion"));
@@ -22,6 +23,7 @@ int main(int argc, char *argv[]) {
     unsigned int    tamanio_poblacion       = utils::strToInt(config.getValue("tamanio_poblacion"));
     unsigned int    cantidad_generaciones   = utils::strToInt(config.getValue("cantidad_generaciones"));
     unsigned int    cantidad_genes          = utils::strToInt(config.getValue("cantidad_genes"));
+    float           escala                  = utils::strToFloat(config.getValue("escala"));
     unsigned int    elitismo                = utils::strToInt(config.getValue("elitismo"));
     unsigned int    id_funcion_fitness      = utils::strToInt(config.getValue("id_funcion_fitness"));
     std::string     forma_seleccion         = config.getValue("forma_seleccion");
@@ -48,9 +50,8 @@ int main(int argc, char *argv[]) {
     else
         std::cout<<"Metodo de seleccion no definido\n";
 
-
     //Instanciamos el algoritmo genetico
-    AlgoritmoGenetico AG (tamanio_poblacion, cantidad_genes, cantidad_generaciones,
+    AlgoritmoGenetico AG (tamanio_poblacion, cantidad_genes, escala, cantidad_generaciones,
                           porcentaje_cruza, porcentaje_mutacion, elitismo, id_funcion_fitness,
                           metodo_seleccion, k_competencia, n_ventanas);
 
