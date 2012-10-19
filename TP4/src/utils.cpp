@@ -232,7 +232,7 @@ void utils::drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, un
 int utils::binary2int(std::vector<bool> &V, bool signo) {
     unsigned int n = V.size();
     int ret_val = 0;
-    for (int i = n; i >= 1; i++) {
+    for (int i = n-1; i >= 1; i--) {
         ret_val += V[i]*pow(2,n-i); //sumo potencias de 2
     }
     if (signo == true) {

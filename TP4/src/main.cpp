@@ -7,6 +7,7 @@
 #include "GNUPlot.h"
 #include "AlgoritmoGenetico.h"
 
+
 //Variable global
 Config config("configuracion1.cfg"); //lectura de la configuracion
 
