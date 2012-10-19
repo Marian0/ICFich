@@ -266,11 +266,11 @@ std::vector<unsigned int> utils::int2binary(int value, bool signo) {
 
 
 float utils::fitness_1a(float value) {
-    float fx = -value*sin(sqrt(abs(value)));
-    float ret_val;
-    if (abs(fx) < EPSILON)
-        ret_val = 1/EPSILON;
-    else
-        ret_val = abs(1/fx);
-    return ret_val;
+    return -1*(-value*sin(sqrt(fabs(value))));
+//    float ret_val;
+//    if (fabs(fx) < EPSILON)
+//        ret_val = 1/EPSILON;
+//    else
+//        ret_val = fabs(1/fx);
+//    return ret_val;
 }

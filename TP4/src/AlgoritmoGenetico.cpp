@@ -65,7 +65,9 @@ void AlgoritmoGenetico::reproduccion() {
     unsigned int npadres = padres.size();
     assert(npadres>1);
 
-    for (unsigned int i = 0; i < npadres; i++) {
+    unsigned int n_iteraciones = floor( (npadres - this->n_elitismo ) / 2 ) ;
+
+    for (unsigned int i = 0; i < n_iteraciones; i++) {
         //Tomamos aleatorio los id de un padre y una madre de la poblacion
         unsigned int id_padre = rand() % npadres;
         unsigned int id_madre = rand() % npadres;
@@ -263,6 +265,7 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
         hijos.push_back(madre);
         return;
     }
+//    std::cout<<"aleloeeo eoeo\n";
     //Algoritmo de cruza
     Individuo hijo1( this->cantidad_genes, this->id_funcion_fitness );
     Individuo hijo2( this->cantidad_genes, this->id_funcion_fitness );
@@ -288,7 +291,7 @@ void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
     if (utils::randomDecimal(0,1) >= this->probabilidad_mutacion)
         return;
 
-    unsigned int i_random = abs(trunc( utils::randomDecimal(0, this->cantidad_genes) ));
+    unsigned int i_random = rand() % this->cantidad_genes;
     individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
 }
 
