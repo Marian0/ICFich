@@ -25,7 +25,7 @@ float Individuo::getFitness(){
 }
 
 //Calcula el fitness de este individuo
-float Individio::calcularFitness() {
+float Individuo::calcularFitness() {
     float nuevo_fitness;
     /*
     switch(this->funcion_fitness_id){

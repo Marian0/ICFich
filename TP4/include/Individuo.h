@@ -26,5 +26,6 @@ class Individuo {
     //Devuelve el fitness actual
     float getFitness();
 
+
 };
 #endif

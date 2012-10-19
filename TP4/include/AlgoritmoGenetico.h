@@ -19,6 +19,9 @@ class AlgoritmoGenetico {
     //Maximo de generaciones a simular
     unsigned int generaciones_maximo;
 
+    //Guarda el indice donde esta el maximo fitness
+    unsigned int id_maximo_fitness;
+
     //Parametros para la reproduccion
     //Define los porcentajes para cada operacion
     float probabilidad_cruza;
@@ -33,11 +36,13 @@ class AlgoritmoGenetico {
     //Define la cantidad de elites que se van a quedar en la siguiente poblacion
     unsigned int n_elitismo;
 
+    //Define el metodo de seleccion a usar, de acuerdo a SELECCION_*
     unsigned int metodo_seleccion;
 
     unsigned int id_funcion_fitness;
 
     public:
+
     static const unsigned int SELECCION_RULETA = 1;
     static const unsigned int SELECCION_VENTANAS = 2;
     static const unsigned int SELECCION_COMPETENCIA = 3;
@@ -56,7 +61,7 @@ class AlgoritmoGenetico {
     float evaluar();
 
     //Realiza la selección de la poblacion, y guarda en nuevos_padres los Individuos elegidos, segun el metodo de seleccion definido, llama a Ruleta, Ventanas o Competencia
-    void seleccion(std::vector<Individuo> &nuevos_padres);
+    void seleccion(std::vector<Individuo> &nuevos_padres, unsigned int cantidad_a_generar);
     
     //Metodo de la ruleta para la seleccion
     void ruleta(std::vector<Individuo> &nuevos_padres, unsigned int cantidad_a_generar);
@@ -73,9 +78,14 @@ class AlgoritmoGenetico {
     //Realiza la mutación de un padre en un hijo
     void mutacion(Individuo &individuo_a_mutar);
 
+    //Devuelve por referencia un vector de los fitness de toda la poblacion
     void getFitness(std::vector<float> &fitness_todos);
 
+    //Devuelve el mejor fitness de la poblacion
+    float getMejorFitness();
 
+    //Devuelve el mejor genotipo de la poblacion
+    void getMejorGenotipo(std::vector<bool> &mejor_genotipo);
 
     //Funcion que sirve para ordenar individuos de mayor a menor
     static bool ordenarIndividuos(Individuo a, Individuo b) {

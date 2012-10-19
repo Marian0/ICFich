@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     std::string     forma_seleccion         = config.getValue("forma_seleccion");
     float           error                   = utils::strToFloat(config.getValue("error"));
     unsigned int    brecha_generacional     = utils::strToInt(config.getValue("brecha_generacional"));
-    unsigned int    ventanas_inicial        = utils::strToInt(config.getValue("ventanas_inicial"));
+    unsigned int    n_ventanas              = utils::strToInt(config.getValue("n_ventanas"));
     unsigned int    k_competencia           = utils::strToInt(config.getValue("k_competencia"));
     float           fitness_deseado         = utils::strToFloat(config.getValue("fitness_deseado"));
 
@@ -52,6 +52,25 @@ int main(int argc, char *argv[]) {
     AlgoritmoGenetico AG (tamanio_poblacion, cantidad_genes, cantidad_generaciones,
                           porcentaje_cruza, porcentaje_mutacion, elitismo, id_funcion_fitness,
                           metodo_seleccion, k_competencia, n_ventanas);
+
+    std::vector<float> mejor_fitness;
+    mejor_fitness.push_back(AG.getMejorFitness());
+
+    unsigned int w;
+    for (w = 0; w < cantidad_generaciones; w++) {
+        AG.reproduccion();
+
+        float mejor_fitness_actual = AG.evaluar();
+        mejor_fitness.push_back(mejor_fitness_actual);
+
+        if (mejor_fitness_actual > fitness_deseado) {
+            break;
+        }
+    }
+
+    std::cout<<"Se termino luego de "<<w<<" generaciones.\nEl fitness logrado es de "<<mejor_fitness.back()<<'\n';
+
+
 
     getwchar();
     return 0;

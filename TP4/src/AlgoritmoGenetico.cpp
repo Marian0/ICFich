@@ -37,6 +37,13 @@ AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_
 
 //Crea la nueva generacion
 void AlgoritmoGenetico::reproduccion() {
+    this->generacion_actual++;
+    if(this->generacion_actual > this->generaciones_maximo) {
+        std::cout<<"Maximo de generaciones alcanzadas\n";
+        return;
+    }
+
+
     std::vector<Individuo> nueva_poblacion;
 
     //Ordeno la población de mayor a menor fitness
@@ -89,15 +96,19 @@ void AlgoritmoGenetico::reproduccion() {
 //Evalua la poblacion, calculando los fitness, y devuelve el mejor
 float AlgoritmoGenetico::evaluar() {
     //Variable que guarda el fitness mayor encontrado
-    float fitness_max = 0.0;
+    float fitness_max = this->poblacion[0].calcularFitness();
+    unsigned int id_max_fit = 0;
     //Recorro la poblacion y la evaluo
-    for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
+    for (unsigned int i = 1; i < this->tamanio_poblacion; i++) {
         //Calculo el fitness
         float fitness_i = this->poblacion[i].calcularFitness();
         //Reemplazo si es mejor que el que tenia
-        if (fitness_i > fitness_max)
+        if (fitness_i > fitness_max) {
             fitness_max = fitness_i;
+            id_max_fit = i;
+        }
     }
+    this->id_maximo_fitness = id_max_fit;
     return fitness_max;
 }
 
@@ -106,20 +117,17 @@ float AlgoritmoGenetico::evaluar() {
 //Segun el metodo de seleccion definido, llama a Ruleta, Ventanas o Competencia
 void AlgoritmoGenetico::seleccion(std::vector<Individuo> &nuevos_padres, unsigned int cantidad_a_generar) {
     nuevos_padres.clear();
-
+    std::vector<Individuo> progenitores;
     switch(this->metodo_seleccion) {
     case SELECCION_RULETA: {
-        std::vector<Individuo> progenitores;
         ruleta(progenitores, this->tamanio_poblacion);
         break;
     }
     case SELECCION_VENTANAS: {
-        std::vector<Individuo> progenitores;
         ventanas(progenitores, cantidad_a_generar);
         break;
     }
     case SELECCION_COMPETENCIA: {
-        std::vector<Individuo> progenitores;
         competencia(progenitores, this->tamanio_poblacion);
         break;
     }
@@ -271,8 +279,23 @@ void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
     individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
 }
 
-
+//Devuelve el fitness de toda la poblacion
 void AlgoritmoGenetico::getFitness(std::vector<float> &fitness_todos) {
     for (unsigned int i = 0; i < this->tamanio_poblacion; i++)
         fitness_todos.push_back(this->poblacion[i].getFitness());
+}
+
+//Devuelve el mejor fitness de la poblacion
+float AlgoritmoGenetico::getMejorFitness() {
+    std::vector<float> fitness_todos;
+    //Obtengo todos los fitness
+    this->getFitness(fitness_todos);
+    //Calculo el mayor
+    std::vector<float>::iterator p = std::max_element(fitness_todos.begin(), fitness_todos.end());
+    //Devuelvo su posicion
+    return *p;
+}
+
+void AlgoritmoGenetico::getMejorGenotipo(std::vector<bool> &mejor_genotipo) {
+    mejor_genotipo = this->poblacion[id_maximo_fitness].genotipo;
 }
