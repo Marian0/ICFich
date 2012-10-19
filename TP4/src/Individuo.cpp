@@ -16,11 +16,11 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
         //Asigno
         this->genotipo.push_back(gen);
     }
+    this->calcularFitness();
 }
 
 //Devuelve el fitness actual
 float Individuo::getFitness(){
-
     return this->fitness;
 }
 
@@ -33,7 +33,7 @@ float Individuo::calcularFitness() {
     switch(this->funcion_fitness_id){
 
     case 1: {
-        float f_valor = valor/1000.0;
+        float f_valor = valor/1.00;
         nuevo_fitness = utils::fitness_1a(f_valor);
         break;
     }

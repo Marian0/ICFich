@@ -233,13 +233,13 @@ int utils::binary2int(std::vector<bool> &V, bool signo) {
     unsigned int n = V.size();
     int ret_val = 0;
     for (int i = n-1; i >= 1; i--) {
-        ret_val += V[i]*pow(2,n-i); //sumo potencias de 2
+        ret_val += V[i]*pow(2,n-i-1); //sumo potencias de 2
     }
     if (signo == true) {
         if (V[0] == 1)
            ret_val *= -1;
     } else {
-        ret_val += V[0]*pow(2,n); //si no usaba signo, me olvide de sumar una potencia de 2
+        ret_val += V[0]*pow(2,n-1); //si no usaba signo, me olvide de sumar una potencia de 2
     }
     return ret_val;
 }
@@ -266,11 +266,11 @@ std::vector<unsigned int> utils::int2binary(int value, bool signo) {
 
 
 float utils::fitness_1a(float value) {
-    float fx = -value*sin(sqrt(abs(value)));
-    float ret_val;
-    if (abs(fx) < EPSILON)
-        ret_val = 1/EPSILON;
-    else
-        ret_val = abs(1/fx);
-    return ret_val;
+    return -1*(-value*sin(sqrt(fabs(value))));
+//    float ret_val;
+//    if (fabs(fx) < EPSILON)
+//        ret_val = 1/EPSILON;
+//    else
+//        ret_val = fabs(1/fx);
+//    return ret_val;
 }
