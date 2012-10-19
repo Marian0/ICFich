@@ -192,6 +192,22 @@ unsigned int utils::getMinIdx(std::vector<float> &V ) {
 	return imin;
 }
 
+void utils::drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter) {
+    unsigned int n = historial.size();
+    assert(n>0);
+
+    plotter("set multiplot\n");
+    for (unsigned int i = 0; i < n; i++) {
+        unsigned int m = historial.size();
+        std::string str_to_plot = "plot \"-\" notitle pt " + utils::intToStr(i) + " lt " + utils::intToStr(i) + "\n";
+
+        for (unsigned int j = 0; j < m; j++ ) {
+            str_to_plot += utils::intToStr(j) + " " + utils::floatToStr( historial[i][j] ) + " \n";
+        }
+        str_to_plot += "e\n";
+       plotter(str_to_plot);
+    }
+}
 
 void utils::drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, unsigned int color, unsigned int tipo) {
 	unsigned int cantidad = V.size();
@@ -265,6 +281,9 @@ std::vector<unsigned int> utils::int2binary(int value, bool signo) {
 }
 
 
+
+
+
 float utils::fitness_1a(float value) {
     return -1*(-value*sin(sqrt(fabs(value))));
 //    float ret_val;
@@ -274,3 +293,6 @@ float utils::fitness_1a(float value) {
 //        ret_val = fabs(1/fx);
 //    return ret_val;
 }
+
+
+

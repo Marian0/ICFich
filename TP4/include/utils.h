@@ -91,6 +91,7 @@ std::vector<unsigned int> static int2binary(int value, bool signo);
 //-x*sin(sqrt(abs(x))
 float static fitness_1a(float value);
 
-
+//graficar historiales
+void drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter);
 };
 #endif
