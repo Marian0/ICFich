@@ -49,13 +49,21 @@ int main(int argc, char *argv[]) {
         std::cout<<"Metodo de seleccion no definido\n";
 
 
-
+    //Instanciamos el algoritmo genetico
     AlgoritmoGenetico AG (tamanio_poblacion, cantidad_genes, cantidad_generaciones,
                           porcentaje_cruza, porcentaje_mutacion, elitismo, id_funcion_fitness,
                           metodo_seleccion, k_competencia, n_ventanas);
 
-    std::vector<float> mejor_fitness;
+    //Definimos vectores para graficación
+    std::vector<float> mejor_fitness, prom_fitness, peor_fitness;
+    //Guardo el mejor fitness de la poblacion
     mejor_fitness.push_back(AG.getMejorFitness());
+    //Calculo y guardo el fitness promedio de la poblacion
+    std::vector<float> vector_tmp_fitness;
+    AG.getFitness(vector_tmp_fitness);
+    prom_fitness.push_back(utils::promedio(vector_tmp_fitness));
+    //Guardo el Peor fitness de la poblacion
+    peor_fitness.push_back(AG.getPeorFitness());
 
     unsigned int w;
     for (w = 0; w < cantidad_generaciones; w++) {
@@ -63,8 +71,18 @@ int main(int argc, char *argv[]) {
 
         float mejor_fitness_actual = AG.evaluar();
         std::cout<<"Mejor fitness a iteracion "<<w<<" = "<<mejor_fitness_actual<<'\n';
-        mejor_fitness.push_back(mejor_fitness_actual);
 
+        //Guardo el mejor fitness de la poblacion
+        mejor_fitness.push_back(AG.getMejorFitness());
+        //Calculo y guardo el fitness promedio de la poblacion
+        std::vector<float> vector_tmp_fitness;
+        AG.getFitness(vector_tmp_fitness);
+        prom_fitness.push_back(utils::promedio(vector_tmp_fitness));
+        //Guardo el Peor fitness de la poblacion
+        peor_fitness.push_back(AG.getPeorFitness());
+
+
+        //Criterio de finalización
         if (mejor_fitness_actual > fitness_deseado) {
             break;
         }
@@ -72,7 +90,14 @@ int main(int argc, char *argv[]) {
 
     std::cout<<"Se termino luego de "<<w<<" generaciones.\nEl fitness logrado es de "<<mejor_fitness.back()<<'\n';
 
+    //Vector de vector para graficacion
+    std::vector<std::vector<float> > grafica;
+    grafica.push_back(mejor_fitness);
+    grafica.push_back(prom_fitness);
+    grafica.push_back(peor_fitness);
+    GNUPlot plotter;
 
+    utils::drawHistory(grafica, plotter);
 
     getwchar();
     return 0;
