@@ -33,6 +33,8 @@ void AlgoritmoGenetico::reproduccion() {
     std::vector<Individuo> nueva_poblacion;
 
     //codigo aca
+    std::vector<Individuo> nuevos_padres;
+    this->seleccion(nuevos_padres);
 
 
     this->poblacion = nueva_poblacion;
@@ -44,70 +46,67 @@ void AlgoritmoGenetico::seleccion(std::vector<Individuo> &nuevos_padres) {
     nuevos_padres.clear();
 
 
-    for (int i = tamanio_poblacion; i > 0; ) { //notar que i no se actualiza, se decrementa dentro de cada case
 
-        switch(this->metodo_seleccion) {
-        case SELECCION_RULETA: {
-            Individuo progenitor;
-            ruleta(progenitor);
-            nuevos_padres.push_back(progenitor);
-            //Actualizo i, se agrego un solo progenitor nuevo
-            i--;
-            break;
-        }
-        case SELECCION_VENTANAS: {
-            std::vector<Individuo> progenitores;
-            seleccion(progenitores);
-            nuevos_padres.insert(nuevos_padres.end(), progenitores.begin(), progenitores.end());
-            //Actualizo i, se agregaron tantos padres nuevos como hay en progenitores
-            i = i-progenitores.size();
-            break;
-        }
-        case SELECCION_COMPETENCIA: {
-            Individuo progenitor;
-            competencia(progenitor);
-            nuevos_padres.push_back(progenitor);
-            //Actualizo i, se agrego un solo progenitor nuevo
-            i--;
-            break;
-        }
-        }
+    switch(this->metodo_seleccion) {
+    case SELECCION_RULETA: {
+        std::vector<Individuo> progenitores;
+        ruleta(progenitores, this->tamanio_poblacion);
+        nuevos_padres.insert(nuevos_padres.end(), progenitores.begin(), progenitores.end());
+        break;
     }
+    case SELECCION_VENTANAS: {
+        std::vector<Individuo> progenitores;
+        seleccion(progenitores);
+        nuevos_padres.insert(nuevos_padres.end(), progenitores.begin(), progenitores.end());
+        break;
+    }
+    case SELECCION_COMPETENCIA: {
+
+        std::vector<Individuo> progenitores;
+        competencia(progenitores, this->tamanio_poblacion);
+        nuevos_padres.insert(nuevos_padres.end(), progenitores.begin(), progenitores.end());
+
+        break;
+    }
+    }
+
 
 }
 
 //Metodo de la ruleta para la seleccion
-void AlgoritmoGenetico::ruleta(Individuo &nuevo_padre) {
+void AlgoritmoGenetico::ruleta(std::vector<Individuo> &nuevos_padres, unsigned int cantidad_a_generar) {
     //Calculo la suma de fitness total
     float sum_fitness = 0.0;
     for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
         sum_fitness += this->poblacion[i].getFitness();
     }
 
-    //Calculo la probabilidad de cada individuo
+    //Calculo de las probabilidades de cada individuo
     std::vector<float> probabilidades_individuos;
+    std::vector<float> probabilidades_acumuladas;
+    float q_i = 0.0; //utilizado para la probabilidad acumulada
+
     for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
+        //Calculo la probabilidad de cada individuo
         float p_i = this->poblacion[i].getFitness() / sum_fitness;
         probabilidades_individuos.push_back(p_i);
-    }
 
-    //Calculo la probabilidad acumulada de cada individuo
-    std::vector<float> probabilidades_acumuladas;
-    float acum = 0.0;
-    for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
-        acum += probabilidades_individuos[i]; //acumulo
-        float q_i = acum;
+        //Calculo la probabilidad acumulada de cada individuo
+        q_i += p_i; //acumulo
         probabilidades_acumuladas.push_back(q_i);
     }
 
-    //Genero la posicion en la ruleta
-    float posicion = utils::randomDecimal(0.0, 1.0);
-    unsigned int buscador = 0;
-    while ((probabilidades_acumuladas[buscador+1] < posicion) and (buscador < probabilidades_acumuladas.size()-1))
-        buscador++;
-
-    nuevo_padre = this->poblacion[buscador];
-
+    //Genero tantos padres como me lo dice el parametro
+    for (unsigned int w = 0; w < cantidad_a_generar; w++) {
+        //Genero la posicion en la ruleta
+        float posicion = utils::randomDecimal(0.0, 1.0);
+        unsigned int buscador = 0;
+        //Busco donde se da esa probabilidad
+        while ((probabilidades_acumuladas[buscador+1] < posicion) and (buscador < probabilidades_acumuladas.size()-1))
+            buscador++;
+        //Una vez encontrado, pusheo
+        nuevos_padres.push_back(this->poblacion[buscador]);
+    }
 }
 
 //Metodo de ventanas para la seleccion
@@ -138,11 +137,11 @@ void AlgoritmoGenetico::ventanas(std::vector<Individuo> &nuevos_padres) {
 }
 
 
-
 //Metodo de competencias para la seleccion
-void AlgoritmoGenetico::competencia(Individuo &nuevo_padre) {
+void AlgoritmoGenetico::competencia(std::vector<Individuo> &nuevos_padres, unsigned int cantidad_a_generar) {
     unsigned int npoblacion = this->poblacion.size();
     assert(npoblacion > 0);
+    nuevos_padres.clear();
 
 
     //Creo un vector de índices para referenciar a la poblacion
@@ -152,28 +151,30 @@ void AlgoritmoGenetico::competencia(Individuo &nuevo_padre) {
         vector_id_poblacion.push_back(i);
     }
 
-    //Mezclo el array de indices
-    std::random_shuffle(vector_id_poblacion.begin(), vector_id_poblacion.end() );
+    for (unsigned int w = 0; w < cantidad_a_generar; w++) {
+        //Mezclo el array de indices
+        std::random_shuffle(vector_id_poblacion.begin(), vector_id_poblacion.end() );
 
-    unsigned int id_max_fitness = 0;
-    float max_fitness = this->poblacion[ vector_id_poblacion[0] ].getFitness();
+        unsigned int id_max_fitness = 0;
+        float max_fitness = this->poblacion[ vector_id_poblacion[0] ].getFitness();
 
-    for (unsigned int i = 1; i < this->k_competencia ; i++ ) {
-        if (i > npoblacion) {
-            //El k de competencia es mayor que la poblacion
-            break;
+        for (unsigned int i = 1; i < this->k_competencia ; i++ ) {
+            if (i > npoblacion) {
+                //El k de competencia es mayor que la poblacion
+                break;
+            }
+
+            float fitness_i = this->poblacion[ vector_id_poblacion[i] ].getFitness();
+
+            if (fitness_i > max_fitness) {
+                max_fitness = fitness_i;
+                id_max_fitness = i;
+            }
+
         }
 
-        float fitness_i = this->poblacion[ vector_id_poblacion[i] ].getFitness();
-
-        if (fitness_i > max_fitness) {
-            max_fitness = fitness_i;
-            id_max_fitness = i;
-        }
-
+        nuevos_padres.push_back(this->poblacion[id_max_fitness]);
     }
-
-    nuevo_padre = this->poblacion[id_max_fitness];
 }
 
 //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
