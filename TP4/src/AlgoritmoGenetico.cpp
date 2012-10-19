@@ -5,6 +5,7 @@
 #include <cstdio>
 
 AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_genes,
+                                        float escala,
                                         unsigned int max_gen, float pcruza, float pmutacion,
                                         unsigned int elitismo, unsigned int id_funcion_fitness,
                                         unsigned int met_sel, unsigned int k_competencia, int n_ventanas) {
@@ -20,10 +21,11 @@ AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_
     this->n_ventanas = n_ventanas;
     this->n_elitismo = elitismo;
     this->id_funcion_fitness = id_funcion_fitness;
+    this->escala = escala;
 
     //Crea todos los Individuos
     for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
-        Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness);
+        Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness, this->escala);
         this->poblacion.push_back(new_ind);
     }
 
@@ -316,6 +318,5 @@ void AlgoritmoGenetico::getMejorGenotipo(std::vector<bool> &mejor_genotipo) {
 }
 
 float AlgoritmoGenetico::getMejorSolucion() {
-    std::vector<bool> mejor_genotipo;
-
+    return this->poblacion[id_maximo_fitness].getFenotipo();
 }

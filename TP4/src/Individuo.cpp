@@ -6,8 +6,9 @@
 Individuo::Individuo() { }
 
 //Constructor
-Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id) {
+Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id, float escala) {
     this->funcion_fitness_id = funcion_fitness_id;
+    this->escala = escala;
     //Relleno el individuo con contenido al azar
     for (unsigned int i = 0; i < cantidad_genes; i++) {
         //Genero un numero aleatorio
@@ -28,12 +29,12 @@ float Individuo::getFitness(){
 float Individuo::calcularFitness() {
     float nuevo_fitness;
 
-    int valor = utils::binary2int(this->genotipo, true);
+    int fenotipo = utils::binary2int(this->genotipo, true);
 
     switch(this->funcion_fitness_id){
 
     case 1: {
-        float f_valor = valor/1.00;
+        float f_valor = fenotipo/escala;
         nuevo_fitness = utils::fitness_1a(f_valor);
         break;
     }
@@ -52,6 +53,7 @@ float Individuo::calcularFitness() {
 }
 
 float Individuo::getFenotipo() {
-    return utils::binary2int(this->genotipo, true);
+    int valor = utils::binary2int(this->genotipo, true);
+    return valor/escala;
 }
 

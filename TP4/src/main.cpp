@@ -23,6 +23,7 @@ int main(int argc, char *argv[]) {
     unsigned int    tamanio_poblacion       = utils::strToInt(config.getValue("tamanio_poblacion"));
     unsigned int    cantidad_generaciones   = utils::strToInt(config.getValue("cantidad_generaciones"));
     unsigned int    cantidad_genes          = utils::strToInt(config.getValue("cantidad_genes"));
+    float           escala                  = utils::strToFloat(config.getValue("escala"));
     unsigned int    elitismo                = utils::strToInt(config.getValue("elitismo"));
     unsigned int    id_funcion_fitness      = utils::strToInt(config.getValue("id_funcion_fitness"));
     std::string     forma_seleccion         = config.getValue("forma_seleccion");
@@ -51,7 +52,7 @@ int main(int argc, char *argv[]) {
 
 
 
-    AlgoritmoGenetico AG (tamanio_poblacion, cantidad_genes, cantidad_generaciones,
+    AlgoritmoGenetico AG (tamanio_poblacion, cantidad_genes, escala, cantidad_generaciones,
                           porcentaje_cruza, porcentaje_mutacion, elitismo, id_funcion_fitness,
                           metodo_seleccion, k_competencia, n_ventanas);
 
