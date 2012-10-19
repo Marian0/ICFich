@@ -52,6 +52,9 @@ class AlgoritmoGenetico {
     //Crea la nueva generacion
     void reproduccion();
 
+    //Evalua la poblacion y devuelve el mejor fitness
+    float evaluar();
+
     //Realiza la selección de la poblacion, y guarda en nuevos_padres los Individuos elegidos, segun el metodo de seleccion definido, llama a Ruleta, Ventanas o Competencia
     void seleccion(std::vector<Individuo> &nuevos_padres);
     
@@ -70,10 +73,15 @@ class AlgoritmoGenetico {
     //Realiza la mutación de un padre en un hijo
     void mutacion(Individuo &individuo_a_mutar);
 
+    void getFitness(std::vector<float> &fitness_todos);
+
+
+
     //Funcion que sirve para ordenar individuos de mayor a menor
     static bool ordenarIndividuos(Individuo a, Individuo b) {
         return a.fitness > b.fitness;
     }
+
 
 };
 #endif

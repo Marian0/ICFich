@@ -3,9 +3,7 @@
 #include "utils.h"
 
 //Constructor vacio
-Individuo::Individuo() {
-
-}
+Individuo::Individuo() { }
 
 //Constructor
 Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id) {
@@ -22,6 +20,13 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
 
 //Devuelve el fitness actual
 float Individuo::getFitness(){
+
+    return this->fitness;
+}
+
+//Calcula el fitness de este individuo
+float Individio::calcularFitness() {
+    float nuevo_fitness;
     /*
     switch(this->funcion_fitness_id){
 
@@ -34,7 +39,9 @@ float Individuo::getFitness(){
     default:
         return 1.1;
     }*/
-    return 1.0;
+
+    this->fitness = nuevo_fitness;
+    return nuevo_fitness;
 }
 
 

@@ -27,6 +27,12 @@ AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_
         this->poblacion.push_back(new_ind);
     }
 
+    //Evaluo la poblacion
+    this->evaluar();
+
+    //Ordeno la población de mayor a menor fitness
+    std::sort(this->poblacion.begin(), this->poblacion.end(), AlgoritmoGenetico::ordenarIndividuos);
+
 }
 
 //Crea la nueva generacion
@@ -79,6 +85,22 @@ void AlgoritmoGenetico::reproduccion() {
     this->poblacion = nueva_poblacion;
     this->tamanio_poblacion = nueva_poblacion.size();
 }
+
+//Evalua la poblacion, calculando los fitness, y devuelve el mejor
+float AlgoritmoGenetico::evaluar() {
+    //Variable que guarda el fitness mayor encontrado
+    float fitness_max = 0.0;
+    //Recorro la poblacion y la evaluo
+    for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
+        //Calculo el fitness
+        float fitness_i = this->poblacion[i].calcularFitness();
+        //Reemplazo si es mejor que el que tenia
+        if (fitness_i > fitness_max)
+            fitness_max = fitness_i;
+    }
+    return fitness_max;
+}
+
 
 //Realiza la selección de la poblacion, y guarda en nuevos_padres los Individuos elegidos.
 //Segun el metodo de seleccion definido, llama a Ruleta, Ventanas o Competencia
@@ -234,4 +256,10 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
 void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
     unsigned int i_random = abs(trunc( utils::randomDecimal(0, this->cantidad_genes) ));
     individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
+}
+
+
+void AlgoritmoGenetico::getFitness(std::vector<float> &fitness_todos) {
+    for (unsigned int i = 0; i < this->tamanio_poblacion; i++)
+        fitness_todos.push_back(this->poblacion[i].getFitness());
 }
