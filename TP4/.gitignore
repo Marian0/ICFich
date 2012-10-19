@@ -1,6 +1,6 @@
 bin/TP4
 
-
+*.autosave
 .DS_Store
 .obj
 *.moc

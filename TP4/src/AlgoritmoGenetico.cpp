@@ -209,8 +209,18 @@ void AlgoritmoGenetico::competencia(std::vector<Individuo> &nuevos_padres, unsig
 
 //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
 void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<Individuo> &hijos) {
-    unsigned int posicion_cruza = abs(trunc(utils::randomDecimal(0, this->cantidad_genes )));
+    hijos.clear();
+    unsigned int posicion_cruza;
 
+    if (utils::randomDecimal(0,1) < this->probabilidad_cruza)
+        posicion_cruza = rand() % this->cantidad_genes;
+    else {
+        //No se cruzan, "se clonan los padres"
+        hijos.push_back(padre);
+        hijos.push_back(madre);
+        return;
+    }
+    //Algoritmo de cruza
     Individuo hijo1( this->cantidad_genes, this->id_funcion_fitness );
     Individuo hijo2( this->cantidad_genes, this->id_funcion_fitness );
     hijo1.genotipo.clear();
@@ -222,7 +232,6 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
     hijo1.genotipo.insert(hijo1.genotipo.begin() + posicion_cruza, madre.genotipo.begin() + posicion_cruza, madre.genotipo.end() );
     hijo2.genotipo.insert(hijo2.genotipo.begin() + posicion_cruza, padre.genotipo.begin() + posicion_cruza, padre.genotipo.end() );
 
-    hijos.clear();
 
     hijos.push_back(hijo1);
     hijos.push_back(hijo2);
@@ -232,6 +241,10 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
 
 //Realiza la mutación de un padre en un hijo
 void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
+    //Control de probabilidad
+    if (utils::randomDecimal(0,1) >= this->probabilidad_mutacion)
+        return;
+
     unsigned int i_random = abs(trunc( utils::randomDecimal(0, this->cantidad_genes) ));
     individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
 }
