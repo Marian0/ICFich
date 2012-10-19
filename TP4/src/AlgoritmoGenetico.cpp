@@ -32,12 +32,51 @@ AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_
 void AlgoritmoGenetico::reproduccion() {
     std::vector<Individuo> nueva_poblacion;
 
-    //codigo aca
-    std::vector<Individuo> nuevos_padres;
-    this->seleccion(nuevos_padres);
+    //Ordeno la población de mayor a menor fitness
+    std::sort(this->poblacion.begin(), this->poblacion.end(), AlgoritmoGenetico::ordenarIndividuos);
 
+    //Seleccionamos Padres
+    std::vector<Individuo> padres;
+    this->seleccion(padres, this->tamanio_poblacion - this->n_elitismo );
 
+    //Genero un arreglo de índices para luego mezlcar y ser eficiete
+    unsigned int npoblacion = this->tamanio_poblacion;
+    std::vector<int> vector_id_poblacion;
+
+    for (unsigned int i = 0; i < npoblacion; i++ ) {
+        vector_id_poblacion.push_back(i);
+    }
+    std::random_shuffle(vector_id_poblacion.begin(), vector_id_poblacion.end() );
+
+    unsigned int npadres = padres.size();
+    assert(npadres>1);
+
+    for (unsigned int i = 0; i < npadres; i++) {
+        //Tomamos aleatorio los id de un padre y una madre de la poblacion
+        unsigned int id_padre = rand() % npadres;
+        unsigned int id_madre = rand() % npadres;
+
+        std::vector<Individuo> hijos;
+        //Realizamos la cruza (Se obtendrán 2 hijos)
+        this->cruza(padres[vector_id_poblacion[id_padre]], padres[vector_id_poblacion[id_madre]], hijos );
+
+        //Realizamos la mutación de los hijos
+        this->mutacion(hijos[0]);
+        this->mutacion(hijos[1]);
+
+        //Agregamos los hijos a la nueva población
+        nueva_poblacion.push_back(hijos[0]);
+        nueva_poblacion.push_back(hijos[1]);
+    }
+
+    //Tomo los individuos elite de la población vieja
+    for (unsigned int i = 0; i < this->n_elitismo && i < this->tamanio_poblacion; i++) {
+        nueva_poblacion.push_back(this->poblacion[i]);
+    }
+
+    //Actualizo los valores de la nueva población
     this->poblacion = nueva_poblacion;
+    this->tamanio_poblacion = nueva_poblacion.size();
 }
 
 //Realiza la selección de la poblacion, y guarda en nuevos_padres los Individuos elegidos.
