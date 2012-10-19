@@ -27,18 +27,25 @@ float Individuo::getFitness(){
 //Calcula el fitness de este individuo
 float Individuo::calcularFitness() {
     float nuevo_fitness;
-    /*
+
+    int valor = utils::binary2int(this->genotipo, true);
+
     switch(this->funcion_fitness_id){
 
-    case 1:
+    case 1: {
+        float f_valor = valor/1000.0;
+        nuevo_fitness = utils::fitness_1a(f_valor);
         break;
-    case 2:
+    }
+    case 2: {
         break;
-    case 3:
+    }
+    case 3: {
         break;
+    }
     default:
-        return 1.1;
-    }*/
+        return 1.0;
+    }
 
     this->fitness = nuevo_fitness;
     return nuevo_fitness;

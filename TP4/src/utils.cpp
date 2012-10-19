@@ -229,7 +229,7 @@ void utils::drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, un
 }
 
 
-int utils::binary2int(std::vector<unsigned int> &V, bool signo) {
+int utils::binary2int(std::vector<bool> &V, bool signo) {
     unsigned int n = V.size();
     int ret_val = 0;
     for (int i = n; i >= 1; i++) {
@@ -261,5 +261,16 @@ std::vector<unsigned int> utils::int2binary(int value, bool signo) {
     }
     //da vuelta porque el vector se armo al reves
     std::reverse(ret_val.begin(), ret_val.end());
+    return ret_val;
+}
+
+
+float utils::fitness_1a(float value) {
+    float fx = -value*sin(sqrt(abs(value)));
+    float ret_val;
+    if (abs(fx) < EPSILON)
+        ret_val = 1/EPSILON;
+    else
+        ret_val = abs(1/fx);
     return ret_val;
 }

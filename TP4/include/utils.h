@@ -15,7 +15,7 @@
 class utils{
 public:
 //Representacion de un numero cercano a cero
-unsigned int const static EPSILON = 0.0001;
+unsigned int const static EPSILON = 0.0000001;
 
 //Funciones de trabajo con archivos
 
@@ -82,10 +82,15 @@ void static drawPoints(std::vector<std::vector<float> > &V, GNUPlot &plotter, un
 unsigned int static getMinIdx(std::vector<float> &V );
 
 //Convierte un vector de 1 y 0 a un entero, si signo=true => El primer bit indica el signo
-int static binary2int(std::vector<unsigned int> &V, bool signo=false);
+int static binary2int(std::vector<bool> &V, bool signo=false);
 
 //convierte un entero a un vector de 1 y 0. Si signo es true, agrega un 1 sii value es negativo. Si no, agrega un cero
-
 std::vector<unsigned int> static int2binary(int value, bool signo);
+
+//Funciones de fitness
+//-x*sin(sqrt(abs(x))
+float static fitness_1a(float value);
+
+
 };
 #endif

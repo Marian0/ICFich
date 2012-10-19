@@ -61,6 +61,7 @@ int main(int argc, char *argv[]) {
         AG.reproduccion();
 
         float mejor_fitness_actual = AG.evaluar();
+        std::cout<<"Mejor fitness a iteracion "<<w<<" = "<<mejor_fitness_actual<<'\n';
         mejor_fitness.push_back(mejor_fitness_actual);
 
         if (mejor_fitness_actual > fitness_deseado) {
