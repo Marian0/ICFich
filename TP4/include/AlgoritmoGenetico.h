@@ -30,6 +30,9 @@ class AlgoritmoGenetico {
     //Define la cantidad de ventanas a usar en el metodo de ventanas. Si es -1 => se usa la misma cantidad de ventanas que el tamaño de la prox gen
     int n_ventanas;
 
+    //Define la cantidad de elites que se van a quedar en la siguiente poblacion
+    unsigned int n_elitismo;
+
     unsigned int metodo_seleccion;
 
     unsigned int id_funcion_fitness;
@@ -41,7 +44,7 @@ class AlgoritmoGenetico {
     
     //Constructor
     AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, unsigned int max_gen,
-                      float pcruza, float pmutacion, unsigned int id_funcion_fitness,
+                      float pcruza, float pmutacion, unsigned int elitismo, unsigned int id_funcion_fitness,
                       unsigned int metodo_seleccion = SELECCION_COMPETENCIA ,
                       unsigned int k_competencia = 5, int n_ventanas = -1
                       );
@@ -53,13 +56,13 @@ class AlgoritmoGenetico {
     void seleccion(std::vector<Individuo> &nuevos_padres);
     
     //Metodo de la ruleta para la seleccion
-    void ruleta(Individuo &nuevo_padre);
+    void ruleta(std::vector<Individuo> &nuevos_padres, unsigned int cantidad_a_generar);
     
     //Metodo de ventanas para la seleccion
-    void ventanas(std::vector<Individuo> &nuevos_padres);
+    void ventanas(std::vector<Individuo> &nuevos_padres, unsigned int cantidad_a_generar);
     
     //Metodo de competencias para la seleccion
-    void competencia(Individuo &nuevo_padre);
+    void competencia(std::vector<Individuo> &nuevos_padres, unsigned int cantidad_a_generar);
     
     //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
     void cruza(Individuo & padre, Individuo & madre, std::vector<Individuo> &hijos);

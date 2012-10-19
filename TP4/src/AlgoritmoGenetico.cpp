@@ -6,7 +6,7 @@
 
 AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_genes,
                                         unsigned int max_gen, float pcruza, float pmutacion,
-                                        unsigned int id_funcion_fitness,
+                                        unsigned int elitismo, unsigned int id_funcion_fitness,
                                         unsigned int met_sel, unsigned int k_competencia, int n_ventanas) {
 
     //Copia las propiedades del algoritmo
@@ -18,6 +18,7 @@ AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_
     this->metodo_seleccion = met_sel;
     this->k_competencia = k_competencia;
     this->n_ventanas = n_ventanas;
+    this->n_elitismo = elitismo;
     this->id_funcion_fitness = id_funcion_fitness;
 
     //Crea todos los Individuos
@@ -34,7 +35,8 @@ void AlgoritmoGenetico::reproduccion() {
 
     //codigo aca
     std::vector<Individuo> nuevos_padres;
-    this->seleccion(nuevos_padres);
+
+    this->seleccion(nuevos_padres, this->tamanio_poblacion-this->n_elitismo);
 
 
     this->poblacion = nueva_poblacion;
@@ -42,34 +44,28 @@ void AlgoritmoGenetico::reproduccion() {
 
 //Realiza la selección de la poblacion, y guarda en nuevos_padres los Individuos elegidos.
 //Segun el metodo de seleccion definido, llama a Ruleta, Ventanas o Competencia
-void AlgoritmoGenetico::seleccion(std::vector<Individuo> &nuevos_padres) {
+void AlgoritmoGenetico::seleccion(std::vector<Individuo> &nuevos_padres, unsigned int cantidad_a_generar) {
     nuevos_padres.clear();
-
-
 
     switch(this->metodo_seleccion) {
     case SELECCION_RULETA: {
         std::vector<Individuo> progenitores;
         ruleta(progenitores, this->tamanio_poblacion);
-        nuevos_padres.insert(nuevos_padres.end(), progenitores.begin(), progenitores.end());
         break;
     }
     case SELECCION_VENTANAS: {
         std::vector<Individuo> progenitores;
-        seleccion(progenitores);
-        nuevos_padres.insert(nuevos_padres.end(), progenitores.begin(), progenitores.end());
+        ventanas(progenitores, cantidad_a_generar);
         break;
     }
     case SELECCION_COMPETENCIA: {
-
         std::vector<Individuo> progenitores;
         competencia(progenitores, this->tamanio_poblacion);
-        nuevos_padres.insert(nuevos_padres.end(), progenitores.begin(), progenitores.end());
-
         break;
     }
     }
 
+    nuevos_padres.insert(nuevos_padres.end(), progenitores.begin(), progenitores.end());
 
 }
 
@@ -110,23 +106,19 @@ void AlgoritmoGenetico::ruleta(std::vector<Individuo> &nuevos_padres, unsigned i
 }
 
 //Metodo de ventanas para la seleccion
-void AlgoritmoGenetico::ventanas(std::vector<Individuo> &nuevos_padres) {
+void AlgoritmoGenetico::ventanas(std::vector<Individuo> &nuevos_padres, unsigned int cantidad_a_generar) {
     nuevos_padres.clear();
-    std::vector<Individuo> poblacion_ordenada = this->poblacion;
-
-    //Ordena los individuos de mayor a menor fitness
-    std::sort(poblacion_ordenada.begin(), poblacion_ordenada.end(), AlgoritmoGenetico::ordenarIndividuos);
 
     unsigned int n_ventanas_efectivo;
     if (n_ventanas == -1)
-        n_ventanas_efectivo = this->tamanio_poblacion;
+        n_ventanas_efectivo = cantidad_a_generar;
     else
         n_ventanas_efectivo = this->n_ventanas;
 
     for (unsigned int i = 0; i < n_ventanas_efectivo; i++) {
         std::vector<Individuo> poblacion_ventaneada;
         //Copio una ventana de la poblacion
-        poblacion_ventaneada.assign(poblacion_ordenada.begin(), poblacion_ordenada.end()-i);
+        poblacion_ventaneada.assign(this->poblacion.begin(), this->poblacion.end()-i);
 
         //Genero un indice al azar
         int idx = rand() % poblacion_ventaneada.size();
