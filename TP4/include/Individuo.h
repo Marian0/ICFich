@@ -9,6 +9,9 @@ class Individuo {
     //Vector con los valores de la cadena de bits
     std::vector<bool> genotipo;
 
+    //Valor decodificado del genotipo
+    float fenotipo;
+
     unsigned int funcion_fitness_id;
     
     //Ultimo valor obtenido de la función de fitness

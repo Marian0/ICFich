@@ -20,7 +20,6 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
 
 //Devuelve el fitness actual
 float Individuo::getFitness(){
-
     return this->fitness;
 }
 
@@ -51,4 +50,7 @@ float Individuo::calcularFitness() {
     return nuevo_fitness;
 }
 
+float Individuo::getFenotipo() {
+    return utils::binary2int(this->genotipo, true);
+}
 

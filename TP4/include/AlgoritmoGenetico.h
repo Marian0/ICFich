@@ -22,6 +22,9 @@ class AlgoritmoGenetico {
     //Guarda el indice donde esta el maximo fitness
     unsigned int id_maximo_fitness;
 
+    //Guarda el indice donde esta el minimo fitness
+    unsigned int id_minimo_fitness;
+
     //Parametros para la reproduccion
     //Define los porcentajes para cada operacion
     float probabilidad_cruza;
@@ -83,6 +86,9 @@ class AlgoritmoGenetico {
 
     //Devuelve el mejor fitness de la poblacion
     float getMejorFitness();
+
+    //Devuelve el peor fitness de la poblacion
+    float getPeorFitness();
 
     //Devuelve el mejor genotipo de la poblacion
     void getMejorGenotipo(std::vector<bool> &mejor_genotipo);

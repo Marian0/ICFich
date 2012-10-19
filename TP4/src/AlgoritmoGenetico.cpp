@@ -96,8 +96,14 @@ void AlgoritmoGenetico::reproduccion() {
 //Evalua la poblacion, calculando los fitness, y devuelve el mejor
 float AlgoritmoGenetico::evaluar() {
     //Variable que guarda el fitness mayor encontrado
-    float fitness_max = this->poblacion[0].calcularFitness();
+    this->poblacion[0].calcularFitness();
+    float fitness_max = this->poblacion[0].getFitness();
     unsigned int id_max_fit = 0;
+
+    //Variable que guarda el fitness peor encontrado
+    float fitness_min = this->poblacion[0].getFitness();
+    unsigned int id_min_fit = 0;
+
     //Recorro la poblacion y la evaluo
     for (unsigned int i = 1; i < this->tamanio_poblacion; i++) {
         //Calculo el fitness
@@ -107,8 +113,15 @@ float AlgoritmoGenetico::evaluar() {
             fitness_max = fitness_i;
             id_max_fit = i;
         }
+        //Reemplazo si es peor que el que tenia
+        if (fitness_i < fitness_min) {
+            fitness_min = fitness_i;
+            id_min_fit = i;
+        }
+
     }
     this->id_maximo_fitness = id_max_fit;
+    this->id_minimo_fitness = id_min_fit;
     return fitness_max;
 }
 
@@ -287,15 +300,19 @@ void AlgoritmoGenetico::getFitness(std::vector<float> &fitness_todos) {
 
 //Devuelve el mejor fitness de la poblacion
 float AlgoritmoGenetico::getMejorFitness() {
-    std::vector<float> fitness_todos;
-    //Obtengo todos los fitness
-    this->getFitness(fitness_todos);
-    //Calculo el mayor
-    std::vector<float>::iterator p = std::max_element(fitness_todos.begin(), fitness_todos.end());
-    //Devuelvo su posicion
-    return *p;
+    return this->poblacion[id_maximo_fitness].getFitness();
+}
+
+//Devuelve el peor fitness de la poblacion
+float AlgoritmoGenetico::getPeorFitness() {
+    return this->poblacion[id_minimo_fitness].getFitness();
 }
 
 void AlgoritmoGenetico::getMejorGenotipo(std::vector<bool> &mejor_genotipo) {
     mejor_genotipo = this->poblacion[id_maximo_fitness].genotipo;
+}
+
+float AlgoritmoGenetico::getMejorSolucion() {
+    std::vector<bool> mejor_genotipo;
+
 }
