@@ -10,6 +10,7 @@
 #include <utility>
 #include <cmath>
 #include <algorithm>
+#include <utility>
 
 /*
 Entrada: Path al archivo csv
@@ -315,5 +316,21 @@ float utils::fitness_1c(float x, float y) {
     return -1*(t_cuad*t_sin);
 }
 
-
+//Convierte a bin, un vector de binarios representando muchas variables, en un vector de enteros.
+// Cada variable tiene asignado tantos bits como dice paso
+void utils::vectorBinary2Int(std::vector<bool> &bin, std::vector<int> &res, unsigned int paso){
+    //Calculamos la cantidad de variables que tiene bin
+    unsigned int cantidad_variables = bin.size()/paso;
+    //Recorremos por cada variable
+    for (unsigned int i = 0 ; i < cantidad_variables; i++) {
+        //vector copia
+        std::vector<bool> convertir;
+        //Le asignamos el rango que estamos interesados
+        convertir.assign(bin.begin()+paso*i, bin.begin()+paso*(i+1));
+        //lo convertimos a entero
+        int valor = binary2int(convertir,false);
+        //Lo agregamos al vector
+        res.push_back(valor);
+    }
+}
 

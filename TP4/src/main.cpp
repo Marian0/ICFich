@@ -15,7 +15,6 @@ int main(int argc, char *argv[]) {
     //inicializacion de semilla
     srand( (unsigned) std::time(NULL));
 
-
     //Leemos los valores de configuracion
     float           probabilidad_cruza      = utils::strToFloat(config.getValue("cruza"));
     float           probabilidad_mutacion   = utils::strToFloat(config.getValue("mutacion"));

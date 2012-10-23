@@ -49,6 +49,7 @@ float Individuo::calcularFitness() {
         }
 
     }
+    //ejercicio 1c
     else if (this->variables_fenotipo == 2) {
         unsigned int g_size = this->genotipo.size();
         //Divido el genotipo en dos
@@ -64,6 +65,23 @@ float Individuo::calcularFitness() {
         //recalculo el fitness
         nuevo_fitness = utils::fitness_1c(f_1, f_2);
     }
+    /*
+    //caso del agente viajero
+    else if (this->variables_fenotipo == 10) {
+        std::vector<int> recorrido;
+        //Obtenemos los valores enteros
+        utils::vectorBinary2Int(this->genotipo, recorrido, 4);
+
+        //Corroboramos que sea una solución válida
+        bool valido = utils::solucionValida(recorrido);
+        if (valido) {
+            float distanciaRecorrida = utils::calcularRecorrido(recorrido);
+            nuevo_fitness = 1/distanciaRecorrida;
+        } else {
+            nuevo_fitness = -1;
+        }
+    }
+    */
 
     this->fitness = nuevo_fitness;
     return nuevo_fitness;

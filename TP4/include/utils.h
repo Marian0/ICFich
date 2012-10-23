@@ -87,6 +87,11 @@ int static binary2int(std::vector<bool> &V, bool signo=false);
 //convierte un entero a un vector de 1 y 0. Si signo es true, agrega un 1 sii value es negativo. Si no, agrega un cero
 std::vector<unsigned int> static int2binary(int value, bool signo);
 
+//Convierte a bin, un vector de binarios representando muchas variables, en un vector de enteros.
+// Cada variable tiene asignado tantos bits como dice paso
+void static vectorBinary2Int(std::vector<bool> &bin, std::vector<int> &res, unsigned int paso);
+
+//--------------------------
 //Funciones de fitness
 //-x*sin(sqrt(abs(x))
 float static fitness_1a(float value);
@@ -94,6 +99,11 @@ float static fitness_1a(float value);
 float static fitness_1b(float value);
 //(x^2+y^2)^0.25 * sin( 50((x^2+y^2)^0.1)+1)
 float static fitness_1c(float x, float y);
+
+
+
+//----------------
+
 
 //graficar historiales
 void static drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter);
