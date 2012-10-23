@@ -14,9 +14,6 @@ class AlgoritmoGenetico {
     //Define la cantidad de genes que tiene cada Individuo
     unsigned int cantidad_genes;
 
-    //Define por cuanto se va a dividr el fenotipo para dar el valor correcto
-    float escala;
-
     //Cuenta la generacion en la que nos ubicamos
     unsigned int generacion_actual;
     //Maximo de generaciones a simular
@@ -36,16 +33,21 @@ class AlgoritmoGenetico {
     //Parametros para los algortimos de seleccion
     //Define la cantidad de padres a competir en competencia
     unsigned int k_competencia;
-    //Define la cantidad de ventanas a usar en el metodo de ventanas. Si es -1 => se usa la misma cantidad de ventanas que el tamaño de la prox gen
-    int n_ventanas;
 
     //Define la cantidad de elites que se van a quedar en la siguiente poblacion
     unsigned int n_elitismo;
+
+    //Define la cantidad de individuos que se van a pasar, aleatoriamente, a la proxima generacion
+    unsigned int n_brecha_generacional;
 
     //Define el metodo de seleccion a usar, de acuerdo a SELECCION_*
     unsigned int metodo_seleccion;
 
     unsigned int id_funcion_fitness;
+
+    //Contadores para saber la cantidad de operaciones que se hacen
+    unsigned int cantidad_mutaciones;
+    unsigned int cantidad_cruzas;
 
     public:
 
@@ -54,10 +56,10 @@ class AlgoritmoGenetico {
     static const unsigned int SELECCION_COMPETENCIA = 3;
     
     //Constructor
-    AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, float escala, unsigned int max_gen,
-                      float pcruza, float pmutacion, unsigned int elitismo, unsigned int id_funcion_fitness,
+    AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, float escala, unsigned int variables_fenotipo, unsigned int max_gen,
+                      float pcruza, float pmutacion, unsigned int elitismo, unsigned int brecha_generacional, unsigned int id_funcion_fitness,
                       unsigned int metodo_seleccion = SELECCION_COMPETENCIA ,
-                      unsigned int k_competencia = 5, int n_ventanas = -1
+                      unsigned int k_competencia = 5
                       );
 
     //Crea la nueva generacion
@@ -98,6 +100,9 @@ class AlgoritmoGenetico {
 
     //Devuelve el mejor Fenotipo
     float getMejorSolucion();
+
+    //Muestra un resumen de todas las iteraciones del algoritmo
+    void imprimirResumen();
 
     //Funcion que sirve para ordenar individuos de mayor a menor
     static bool ordenarIndividuos(Individuo a, Individuo b) {

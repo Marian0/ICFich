@@ -17,10 +17,10 @@ int main(int argc, char *argv[]) {
 
 
     //Leemos los valores de configuracion
-    float           porcentaje_cruza        = utils::strToFloat(config.getValue("cruza"));
-    float           porcentaje_mutacion     = utils::strToFloat(config.getValue("mutacion"));
-    unsigned int    maxit                   = utils::strToInt(config.getValue("maxit"));
+    float           probabilidad_cruza      = utils::strToFloat(config.getValue("cruza"));
+    float           probabilidad_mutacion   = utils::strToFloat(config.getValue("mutacion"));
     unsigned int    tamanio_poblacion       = utils::strToInt(config.getValue("tamanio_poblacion"));
+    unsigned int    variables_fenotipo      = utils::strToInt(config.getValue("variables_fenotipo"));
     unsigned int    cantidad_generaciones   = utils::strToInt(config.getValue("cantidad_generaciones"));
     unsigned int    cantidad_genes          = utils::strToInt(config.getValue("cantidad_genes"));
     float           escala                  = utils::strToFloat(config.getValue("escala"));
@@ -29,15 +29,14 @@ int main(int argc, char *argv[]) {
     std::string     forma_seleccion         = config.getValue("forma_seleccion");
     float           error                   = utils::strToFloat(config.getValue("error"));
     unsigned int    brecha_generacional     = utils::strToInt(config.getValue("brecha_generacional"));
-    unsigned int    n_ventanas              = utils::strToInt(config.getValue("n_ventanas"));
     unsigned int    k_competencia           = utils::strToInt(config.getValue("k_competencia"));
     float           fitness_deseado         = utils::strToFloat(config.getValue("fitness_deseado"));
 
     std::cout<<"Bienvenidos al Ejercicio 1\n";
     std::cout<<"Tamanio de poblacion = "<<tamanio_poblacion<<'\n';
     std::cout<<"Metodo de seleccion = "<<forma_seleccion<<'\n';
-    std::cout<<"Porcentaje Cruza = "<<porcentaje_cruza<<'\n';
-    std::cout<<"Porcentaje Mutacion = "<<porcentaje_mutacion<<'\n';
+    std::cout<<"Probabilidad Cruza = "<<probabilidad_cruza<<'\n';
+    std::cout<<"Probabilidad Mutacion = "<<probabilidad_mutacion<<'\n';
     std::cout<<"Elitismo = "<<elitismo<<'\n';
 
     unsigned int metodo_seleccion;
@@ -51,9 +50,9 @@ int main(int argc, char *argv[]) {
         std::cout<<"Metodo de seleccion no definido\n";
 
     //Instanciamos el algoritmo genetico
-    AlgoritmoGenetico AG (tamanio_poblacion, cantidad_genes, escala, cantidad_generaciones,
-                          porcentaje_cruza, porcentaje_mutacion, elitismo, id_funcion_fitness,
-                          metodo_seleccion, k_competencia, n_ventanas);
+    AlgoritmoGenetico AG (tamanio_poblacion, cantidad_genes, escala, variables_fenotipo, cantidad_generaciones,
+                          probabilidad_cruza, probabilidad_mutacion, elitismo, brecha_generacional,
+                          id_funcion_fitness, metodo_seleccion, k_competencia);
 
     //Definimos vectores para graficación
     std::vector<float> mejor_fitness, prom_fitness, peor_fitness;
@@ -91,12 +90,15 @@ int main(int argc, char *argv[]) {
 
     std::cout<<"Se termino luego de "<<w<<" generaciones.\nEl fitness logrado es de "<<mejor_fitness.back()<<'\n';
 
+    AG.imprimirResumen();
+
     //Vector de vector para graficacion
     std::vector<std::vector<float> > grafica;
     grafica.push_back(mejor_fitness);
     grafica.push_back(prom_fitness);
     grafica.push_back(peor_fitness);
     GNUPlot plotter;
+
 
     utils::drawHistory(grafica, plotter);
 

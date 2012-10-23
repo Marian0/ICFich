@@ -18,11 +18,14 @@ class Individuo {
     //Ultimo valor obtenido de la función de fitness
     float fitness; 
 
+    //Dice cuantas variables tiene el fenotipo
+    unsigned int variables_fenotipo;
+
     //Constructor vacio
     Individuo();
 
     //Constructor
-    Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id, float escala = 1.00);
+    Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id, float escala = 1.00, unsigned int variables_fenotipo = 1);
 
     //Calcula el fitness actual y lo guarda en la propiedad fitness
     float calcularFitness();

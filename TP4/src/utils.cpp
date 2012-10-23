@@ -202,7 +202,7 @@ void utils::drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &pl
     plotter("set xzeroaxis lt -1");
     plotter("set yzeroaxis lt -1");
     plotter("set xrange [0:" + utils::intToStr(generaciones) + "]");
-    plotter("set yrange [-100:500]");
+    plotter("set yrange [-520:520]");
     plotter("set xlabel \"Generacion\"");
     plotter("set ylabel \"Fitness\"");
     plotter("set title \"Fitness durante N Generaciones\"");
@@ -294,16 +294,25 @@ std::vector<unsigned int> utils::int2binary(int value, bool signo) {
 
 
 
+//Funciones de fitness para el ejercicio 1:
+// Se multiplica por -1 porque es un problema de minimización
 
-
+//Función de fitness para el ejercicio 1a
 float utils::fitness_1a(float value) {
     return -1*(-value*sin(sqrt(fabs(value))));
-//    float ret_val;
-//    if (fabs(fx) < EPSILON)
-//        ret_val = 1/EPSILON;
-//    else
-//        ret_val = fabs(1/fx);
-//    return ret_val;
+}
+
+//Función de fitness para el ejercicio 1b
+float utils::fitness_1b(float value) {
+    return -1*(value + 5*sin(3*value) + 8*cos(5*value));
+}
+
+//Función de fitness para el ejercicio 1c
+float utils::fitness_1c(float x, float y) {
+    float sum_cuad = pow(x,2) + pow(y,2);
+    float t_cuad = pow(sum_cuad, 0.25);
+    float t_sin = pow(sin(50*pow(sum_cuad,0.1)+1),2);
+    return -1*(t_cuad*t_sin);
 }
 
 

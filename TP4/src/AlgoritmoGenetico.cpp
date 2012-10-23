@@ -5,27 +5,30 @@
 #include <cstdio>
 
 AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_genes,
-                                        float escala,
+                                        float escala, unsigned int variables_fenotipo,
                                         unsigned int max_gen, float pcruza, float pmutacion,
-                                        unsigned int elitismo, unsigned int id_funcion_fitness,
-                                        unsigned int met_sel, unsigned int k_competencia, int n_ventanas) {
+                                        unsigned int elitismo, unsigned int brecha_generacional,
+                                        unsigned int id_funcion_fitness,
+                                        unsigned int met_sel, unsigned int k_competencia) {
 
     //Copia las propiedades del algoritmo
     this->tamanio_poblacion = tam_pob;
     this->cantidad_genes = cant_genes;
     this->generaciones_maximo = max_gen;
+    this->generacion_actual = 0;
     this->probabilidad_cruza = pcruza;
     this->probabilidad_mutacion = pmutacion;
     this->metodo_seleccion = met_sel;
     this->k_competencia = k_competencia;
-    this->n_ventanas = n_ventanas;
     this->n_elitismo = elitismo;
+    this->n_brecha_generacional = brecha_generacional;
     this->id_funcion_fitness = id_funcion_fitness;
-    this->escala = escala;
+    this->cantidad_mutaciones = 0;
+    this->cantidad_cruzas = 0;
 
     //Crea todos los Individuos
     for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
-        Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness, this->escala);
+        Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness, escala, variables_fenotipo);
         this->poblacion.push_back(new_ind);
     }
 
@@ -45,7 +48,6 @@ void AlgoritmoGenetico::reproduccion() {
         return;
     }
 
-
     std::vector<Individuo> nueva_poblacion;
 
     //Ordeno la población de mayor a menor fitness
@@ -53,21 +55,20 @@ void AlgoritmoGenetico::reproduccion() {
 
     //Seleccionamos Padres
     std::vector<Individuo> padres;
-    this->seleccion(padres, this->tamanio_poblacion - this->n_elitismo );
+    this->seleccion(padres, this->tamanio_poblacion - this->n_elitismo - this->n_brecha_generacional);
 
     //Genero un arreglo de índices para luego mezlcar y ser eficiete
-    unsigned int npoblacion = this->tamanio_poblacion;
     std::vector<int> vector_id_poblacion;
-
-    for (unsigned int i = 0; i < npoblacion; i++ ) {
-        vector_id_poblacion.push_back(i);
-    }
-    std::random_shuffle(vector_id_poblacion.begin(), vector_id_poblacion.end() );
 
     unsigned int npadres = padres.size();
     assert(npadres>1);
 
-    unsigned int n_iteraciones = floor( (npadres - this->n_elitismo ) / 2 ) ;
+    for (unsigned int i = 0; i < npadres; i++ ) {
+        vector_id_poblacion.push_back(i);
+    }
+    std::random_shuffle(vector_id_poblacion.begin(), vector_id_poblacion.end() );
+
+    unsigned int n_iteraciones = floor( (npadres / 2 )) ;
 
     for (unsigned int i = 0; i < n_iteraciones; i++) {
         //Tomamos aleatorio los id de un padre y una madre de la poblacion
@@ -92,9 +93,16 @@ void AlgoritmoGenetico::reproduccion() {
         nueva_poblacion.push_back(this->poblacion[i]);
     }
 
+    //Paso los padres sin modificar a la nueva generacion mediante brecha generacional
+    for (unsigned int i = 0; i < this->n_brecha_generacional; i++) {
+        unsigned int pos = rand() % this->tamanio_poblacion;
+        nueva_poblacion.push_back(this->poblacion[pos]);
+    }
+
     //Actualizo los valores de la nueva población
     this->poblacion = nueva_poblacion;
     this->tamanio_poblacion = nueva_poblacion.size();
+
 }
 
 //Evalua la poblacion, calculando los fitness, y devuelve el mejor
@@ -137,7 +145,7 @@ void AlgoritmoGenetico::seleccion(std::vector<Individuo> &nuevos_padres, unsigne
     std::vector<Individuo> progenitores;
     switch(this->metodo_seleccion) {
     case SELECCION_RULETA: {
-        ruleta(progenitores, this->tamanio_poblacion);
+        ruleta(progenitores, cantidad_a_generar);
         break;
     }
     case SELECCION_VENTANAS: {
@@ -145,7 +153,7 @@ void AlgoritmoGenetico::seleccion(std::vector<Individuo> &nuevos_padres, unsigne
         break;
     }
     case SELECCION_COMPETENCIA: {
-        competencia(progenitores, this->tamanio_poblacion);
+        competencia(progenitores, cantidad_a_generar);
         break;
     }
     }
@@ -194,13 +202,7 @@ void AlgoritmoGenetico::ruleta(std::vector<Individuo> &nuevos_padres, unsigned i
 void AlgoritmoGenetico::ventanas(std::vector<Individuo> &nuevos_padres, unsigned int cantidad_a_generar) {
     nuevos_padres.clear();
 
-    unsigned int n_ventanas_efectivo;
-    if (n_ventanas == -1)
-        n_ventanas_efectivo = cantidad_a_generar;
-    else
-        n_ventanas_efectivo = this->n_ventanas;
-
-    for (unsigned int i = 0; i < n_ventanas_efectivo; i++) {
+    for (unsigned int i = 0; i < cantidad_a_generar; i++) {
         std::vector<Individuo> poblacion_ventaneada;
         //Copio una ventana de la poblacion
         poblacion_ventaneada.assign(this->poblacion.begin(), this->poblacion.end()-i);
@@ -258,8 +260,9 @@ void AlgoritmoGenetico::competencia(std::vector<Individuo> &nuevos_padres, unsig
 void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<Individuo> &hijos) {
     hijos.clear();
     unsigned int posicion_cruza;
+    float prob = utils::randomDecimal(0.0,1.0);
 
-    if (utils::randomDecimal(0,1) < this->probabilidad_cruza)
+    if (prob < this->probabilidad_cruza)
         posicion_cruza = rand() % this->cantidad_genes;
     else {
         //No se cruzan, "se clonan los padres"
@@ -267,7 +270,9 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
         hijos.push_back(madre);
         return;
     }
-//    std::cout<<"aleloeeo eoeo\n";
+    this->cantidad_cruzas++;
+
+    //std::cout<<"aleloeeo eoeo\n";
     //Algoritmo de cruza
     Individuo hijo1( this->cantidad_genes, this->id_funcion_fitness );
     Individuo hijo2( this->cantidad_genes, this->id_funcion_fitness );
@@ -290,9 +295,10 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
 //Realiza la mutación de un padre en un hijo
 void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
     //Control de probabilidad
-    if (utils::randomDecimal(0,1) >= this->probabilidad_mutacion)
+    float prob = utils::randomDecimal(0.0,1.0);
+    if (prob >= this->probabilidad_mutacion)
         return;
-
+    this->cantidad_mutaciones++;
     unsigned int i_random = rand() % this->cantidad_genes;
     individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
 }
@@ -319,4 +325,12 @@ void AlgoritmoGenetico::getMejorGenotipo(std::vector<bool> &mejor_genotipo) {
 
 float AlgoritmoGenetico::getMejorSolucion() {
     return this->poblacion[id_maximo_fitness].getFenotipo();
+}
+
+void AlgoritmoGenetico::imprimirResumen() {
+    std::cout<<"Cantidad de generaciones = "<<this->generacion_actual;
+    std::cout<<"\nCantidad de cruzas = "<<this->cantidad_cruzas;
+    std::cout<<"\nCantidad de mutaciones = "<<this->cantidad_mutaciones;
+    std::cout<<"\nMejor Fitness = "<<this->getMejorFitness()<< ", con fenotipo = "<<this->getMejorSolucion();
+    std::cout<<"\nPeor Fitness = "<<this->getPeorFitness();
 }

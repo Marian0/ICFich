@@ -90,6 +90,10 @@ std::vector<unsigned int> static int2binary(int value, bool signo);
 //Funciones de fitness
 //-x*sin(sqrt(abs(x))
 float static fitness_1a(float value);
+//(x + 5sin(3x) + 8cos(5x));
+float static fitness_1b(float value);
+//(x^2+y^2)^0.25 * sin( 50((x^2+y^2)^0.1)+1)
+float static fitness_1c(float x, float y);
 
 //graficar historiales
 void static drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter);
