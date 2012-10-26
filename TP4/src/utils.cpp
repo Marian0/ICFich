@@ -243,7 +243,7 @@ void utils::drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &pl
             break;
         }
         case 5: {
-            plotter("set yrange [0:1]");     //ejercicio 2 con 10 ciudades
+            plotter("set yrange [0:0.01]");     //ejercicio 2 con 10 ciudades
             break;
         }
         default: {
@@ -321,8 +321,8 @@ int utils::binary2int(std::vector<bool> &V, bool signo) {
 }
 
 
-std::vector<unsigned int> utils::int2binary(int value, bool signo) {
-    std::vector<unsigned int> ret_val;
+std::vector<bool> utils::int2binary(int value, bool signo) {
+    std::vector<bool> ret_val;
     int v = abs(value); //trabajo con el valor absoluto
     while(v != 0) {
         int resto = v % 2;

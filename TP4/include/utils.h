@@ -91,7 +91,7 @@ unsigned int static getMinIdx(std::vector<float> &V );
 int static binary2int(std::vector<bool> &V, bool signo=false);
 
 //convierte un entero a un vector de 1 y 0. Si signo es true, agrega un 1 sii value es negativo. Si no, agrega un cero
-std::vector<unsigned int> static int2binary(int value, bool signo);
+std::vector<bool> static int2binary(int value, bool signo);
 
 //Convierte a bin, un vector de binarios representando muchas variables, en un vector de enteros.
 // Cada variable tiene asignado tantos bits como dice paso

@@ -30,4 +30,5 @@ HEADERS += \
     include/Config.h \
     include/AlgoritmoGenetico.h \
     include/Individuo.h \
+    include/AgenteViajero.h \
     include/AgenteViajero.h

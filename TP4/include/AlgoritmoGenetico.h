@@ -94,6 +94,9 @@ class AlgoritmoGenetico {
     //Realiza la mutación de un padre en un hijo
     void mutacion(Individuo &individuo_a_mutar);
 
+    //Sobrecargamos el operador de mutacion para agente viajero
+    void mutacionAgente(Individuo &individuo_a_mutar);
+
     //Devuelve por referencia un vector de los fitness de toda la poblacion
     void getFitness(std::vector<float> &fitness_todos);
 

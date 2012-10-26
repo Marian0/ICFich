@@ -10,13 +10,26 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
     this->funcion_fitness_id = funcion_fitness_id;
     this->escala = escala;
     this->variables_fenotipo = variables_fenotipo;
-    //Relleno el individuo con contenido al azar
-    for (unsigned int i = 0; i < cantidad_genes; i++) {
-        //Genero un numero aleatorio
-        bool gen = rand() % 2;
 
-        //Asigno
-        this->genotipo.push_back(gen);
+    //Problema de agente viajero, sino es otro problema :S
+    if (this->funcion_fitness_id == 5) {
+        for (unsigned int i = 0; i < variables_fenotipo; i++) {
+            unsigned int id_nueva_ciudad = rand() % this->variables_fenotipo;
+            std::vector<bool> id_nueva_ciudad_binary = utils::int2binary(id_nueva_ciudad, false);
+            while (id_nueva_ciudad_binary.size() < 4 ) {
+                id_nueva_ciudad_binary.insert(id_nueva_ciudad_binary.begin(),0);
+            }
+            this->genotipo.insert(this->genotipo.end(), id_nueva_ciudad_binary.begin(), id_nueva_ciudad_binary.end() );
+        }
+    } else {
+        //Relleno el individuo con contenido al azar
+        for (unsigned int i = 0; i < cantidad_genes; i++) {
+            //Genero un numero aleatorio
+            bool gen = rand() % 2;
+
+            //Asigno
+            this->genotipo.push_back(gen);
+        }
     }
 
     //this->calcularFitness();
@@ -96,13 +109,7 @@ float Individuo::calcularFitness() {
         if (fabs(distanciaRecorrida) < 0.000001) { //si no se mueve
             nuevo_fitness = 0.0;
         } else {
-            if (validez < 1.0) {
-                float distanciaPenalizada = distanciaRecorrida + 10*distanciaRecorrida * (1.0-validez);
-                //nuevo_fitness = 1/(distanciaPenalizada);
-                nuevo_fitness = 0.0;
-            } else {
-                nuevo_fitness = 1/distanciaRecorrida;
-            }
+            nuevo_fitness = validez/distanciaRecorrida;
         }
     }
 

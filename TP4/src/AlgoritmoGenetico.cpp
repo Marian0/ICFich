@@ -263,9 +263,15 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
     unsigned int posicion_cruza;
     float prob = utils::randomDecimal(0.0,1.0);
 
-    if (prob < this->probabilidad_cruza)
-        posicion_cruza = rand() % this->cantidad_genes;
-    else {
+    if (prob < this->probabilidad_cruza) {
+        //No tocar esta linea o te arrancaré la piel! (Solo agente de viajero tiene id_funcion_activacion = 5)
+        if (this->id_funcion_fitness == 5) {
+            unsigned int paso = this->cantidad_genes / this->variables_fenotipo;
+            posicion_cruza = (rand() % this->variables_fenotipo) * paso;
+        } else {
+            posicion_cruza = rand() % this->cantidad_genes;
+        }
+    } else {
         //No se cruzan, "se clonan los padres"
         hijos.push_back(padre);
         hijos.push_back(madre);
@@ -305,9 +311,42 @@ void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
     //aumentamos contador
     this->cantidad_mutaciones++;
 
+    //Sobrecarga para operar con el problema de agente.
+    if (this->id_funcion_fitness == 5) {
+        this->mutacionAgente(individuo_a_mutar);
+        return;
+    }
+
     unsigned int i_random = rand() % this->cantidad_genes;
     individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
 }
+
+
+
+//Sobrecargamos el operador de mutacion para agente viajero
+void AlgoritmoGenetico::mutacionAgente(Individuo &individuo_a_mutar) {
+
+    unsigned int cantidad_ciudades = this->variables_fenotipo;
+//    unsigned int cantidad_genes = this->cantidad_genes;
+    unsigned int paso = this->cantidad_genes / cantidad_ciudades;
+
+    unsigned int ciudad_a_mutar = rand() % cantidad_ciudades;
+    unsigned int id_nueva_ciudad = rand() % cantidad_ciudades;
+
+    std::vector<bool> id_nueva_ciudad_binary = utils::int2binary(id_nueva_ciudad, false);
+
+    while (id_nueva_ciudad_binary.size() < 4 ) {
+        id_nueva_ciudad_binary.insert(id_nueva_ciudad_binary.begin(),0);
+    }
+
+    std::vector<bool> nuevo_genotipo;
+    nuevo_genotipo.insert(nuevo_genotipo.end(), individuo_a_mutar.genotipo.begin(), individuo_a_mutar.genotipo.begin() + paso * ciudad_a_mutar );
+    nuevo_genotipo.insert(nuevo_genotipo.end(), id_nueva_ciudad_binary.begin(), id_nueva_ciudad_binary.end() );
+    nuevo_genotipo.insert(nuevo_genotipo.end(), individuo_a_mutar.genotipo.begin() + paso * (ciudad_a_mutar + 1), individuo_a_mutar.genotipo.end() );
+
+    individuo_a_mutar.genotipo = nuevo_genotipo;
+}
+
 
 //Devuelve el fitness de toda la poblacion
 void AlgoritmoGenetico::getFitness(std::vector<float> &fitness_todos) {

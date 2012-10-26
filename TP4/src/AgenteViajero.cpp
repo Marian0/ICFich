@@ -53,49 +53,57 @@ float AgenteViajero::solucionValida(std::vector<int> &recorrido) {
     // * No tiene ciudades repetidas
 
 
-    unsigned int ciudades_invalidas = 0;
-    for (unsigned int i = 0; i < recorrido.size(); i++) {
-        if (recorrido[i] >= this->cantidad_ciudades)
-            ciudades_invalidas++;
-    }
+//Comentado porque se han sobrecargado los operadores de variacion poblacional para que no generen individuos invalidos
+//    unsigned int ciudades_invalidas = 0;
+//    for (unsigned int i = 0; i < recorrido.size(); i++) {
+//        if (recorrido[i] >= this->cantidad_ciudades)
+//            ciudades_invalidas++;
+//    }
 
-    //if (ciudades_invalidas > 0) return 0.0;
+//    if (ciudades_invalidas > 0) return 0.0;
+
+
 
     //Comprobacion basica: si empezamos y terminamos en el mismo lugar
     //Nota: no se tiene en cuenta que el nodo final sea igual al inicial en el cromosoma, pero al calcular la longitud
     //del recorrido, esa distancia se suma al total.
 
-    //Comprobamos que se recorra solo una vez cada ciudad
-    if (recorrido.size() == this->cantidad_ciudades) {
-        //Aqui ya sabemos que hay 10 ciudades recorridas, ahora averiguaremos si son todas distintas
-        //Para ello, haremos una copia del recorrido y le quitaremos los duplicados, para ver si su tamaño coincide con la cantidad de ciudades
 
-        //Copio el contenido
-        std::vector<int> sin_repetir;
-        sin_repetir = recorrido;
+    //Aqui ya sabemos que hay 10 ciudades recorridas, ahora averiguaremos si son todas distintas
+    //Para ello, haremos una copia del recorrido y le quitaremos los duplicados, para ver si su tamaño coincide con la cantidad de ciudades
 
-        //Quitamos los repetidos
-        //Primero Ordenamos
-        std::sort(sin_repetir.begin(), sin_repetir.end());
-        //y luego removemos los repetidos
-        std::vector<int>::iterator nuevo_fin = std::unique(sin_repetir.begin(), sin_repetir.end());
-        //Borramos los elementos que sobran
-        sin_repetir.erase(nuevo_fin, sin_repetir.end());
+    //Copio el contenido
+    std::vector<int> sin_repetir;
+    sin_repetir = recorrido;
 
-        float ret_val;
-        //Compruebo que se recorran todas las ciudades
-        if (sin_repetir.size() == this->cantidad_ciudades and ciudades_invalidas == 0) {
-            //Aqui podemos concluir que el recorrido es valido
-            ret_val = 1.0;
-        }
-        else { //Si hay repetidos o ciudades que no existen en el mapa, devolvemos un porcentaje de error
-            ret_val = fabs(float(sin_repetir.size() - ciudades_invalidas)) / float(this->cantidad_ciudades);
-        }
+    //Quitamos los repetidos
+    //Primero Ordenamos
+    std::sort(sin_repetir.begin(), sin_repetir.end());
+    //y luego removemos los repetidos
+    std::vector<int>::iterator nuevo_fin = std::unique(sin_repetir.begin(), sin_repetir.end());
+    //Borramos los elementos que sobran
+    sin_repetir.erase(nuevo_fin, sin_repetir.end());
 
-        return ret_val;
-    }
 
-    return 1.0/float(this->cantidad_ciudades);
+    unsigned int cantidad_ciudades_repetidas = this->cantidad_ciudades - sin_repetir.size();
+
+    return 1 / pow(cantidad_ciudades_repetidas + 1,2);
+
+
+//    float ret_val;
+//    //Compruebo que se recorran todas las ciudades
+//    if (sin_repetir.size() == this->cantidad_ciudades) {
+//        //Aqui podemos concluir que el recorrido es valido
+//        ret_val = 1.0;
+//    }
+//    else { //Si hay repetidos o ciudades que no existen en el mapa, devolvemos un porcentaje de error
+//        ret_val = float(sin_repetir.size()) / float(this->cantidad_ciudades);
+//    }
+
+//    return ret_val;
+
+
+//    return 1.0/float(this->cantidad_ciudades);
 }
 
 //Calcula la distancia entre pares
