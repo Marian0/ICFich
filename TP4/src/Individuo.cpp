@@ -102,14 +102,14 @@ float Individuo::calcularFitness() {
         //   distancia para penalizar a los individuos que tienen repeticiones
         float validez = this->agente_viajero.solucionValida(recorrido);
 
-        float distanciaRecorrida = this->agente_viajero.calcularRecorrido(recorrido);
+        this->distanciaRecorrida = this->agente_viajero.calcularRecorrido(recorrido);
 
         //std::cout<<"Distancia Recorrida = "<<distanciaRecorrida<<'\n';
 
         if (fabs(distanciaRecorrida) < 0.000001) { //si no se mueve
             nuevo_fitness = 0.0;
         } else {
-            nuevo_fitness = validez/distanciaRecorrida;
+            nuevo_fitness = validez/this->distanciaRecorrida;
         }
     }
 

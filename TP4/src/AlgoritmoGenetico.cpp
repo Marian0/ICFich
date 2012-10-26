@@ -379,6 +379,10 @@ void AlgoritmoGenetico::imprimirResumen() {
     //std::cout<<"\nMejor Fitness = "<<this->getMejorFitness()<< ", con fenotipo = "<<this->getMejorSolucion();
     std::cout<<"\nMejor Fitness = "<<this->getMejorFitness();
     std::cout<<"\nPeor Fitness = "<<this->getPeorFitness();
+    if(this->id_funcion_fitness == 5)
+        std::cout<<"\nDistancia = "<<this->poblacion[id_maximo_fitness].distanciaRecorrida;
+
+
 }
 
 void AlgoritmoGenetico::cargarAgenteViajero(std::string nombre_archivo) {

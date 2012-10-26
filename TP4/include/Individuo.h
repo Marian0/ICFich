@@ -23,6 +23,7 @@ class Individuo {
 
     //Variable del agente viajero
     AgenteViajero agente_viajero;
+    float distanciaRecorrida;
 
     //Constructor vacio
     Individuo();
