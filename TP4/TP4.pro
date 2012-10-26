@@ -19,7 +19,8 @@ SOURCES += src/main.cpp \
     src/GNUPlot.cpp \
     src/Config.cpp \
     src/Individuo.cpp \
-    src/AlgoritmoGenetico.cpp
+    src/AlgoritmoGenetico.cpp \
+    src/AgenteViajero.cpp
 
 INCLUDEPATH += include
 
@@ -28,4 +29,5 @@ HEADERS += \
     include/GNUPlot.h \
     include/Config.h \
     include/AlgoritmoGenetico.h \
-    include/Individuo.h
+    include/Individuo.h \
+    include/AgenteViajero.h

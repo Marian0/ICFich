@@ -18,7 +18,8 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
         //Asigno
         this->genotipo.push_back(gen);
     }
-    this->calcularFitness();
+
+    //this->calcularFitness();
 }
 
 //Devuelve el fitness actual
@@ -28,26 +29,32 @@ float Individuo::getFitness(){
 
 //Calcula el fitness de este individuo
 float Individuo::calcularFitness() {
-    float nuevo_fitness;
-    if (this->variables_fenotipo == 1) { //si tengo una sola variable en el fenotipo
-        int fenotipo = utils::binary2int(this->genotipo, true);
+    float nuevo_fitness = 0.0;
 
-        float f_valor = fenotipo/escala;
+    if (this->variables_fenotipo == 1) { //si tengo una sola variable en el fenotipo
+        utils::printVector(this->genotipo);
+        getwchar();
+        int fenotipo;
+        float f_valor;
         switch(this->funcion_fitness_id){
             case 1: {
+                fenotipo = utils::binary2int(this->genotipo, true);
+                f_valor = fenotipo/escala;
+
                 nuevo_fitness = utils::fitness_1a(f_valor);
                 break;
             }
             case 2: {
-                nuevo_fitness = utils::fitness_1b(f_valor);
-                break;
-            }
-            default: {
-                return 1.0;
+                fenotipo = utils::binary2int(this->genotipo, false);
+                f_valor = fenotipo/escala;
+
+                if (f_valor > 20.0) //individuo invalido, lo desecho
+                    nuevo_fitness = 0.0;
+                else
+                    nuevo_fitness = utils::fitness_1b(f_valor);
                 break;
             }
         }
-
     }
     //ejercicio 1c
     else if (this->variables_fenotipo == 2) {
@@ -62,26 +69,42 @@ float Individuo::calcularFitness() {
         float f_1 = utils::binary2int(v1, true)/this->escala;
         float f_2 = utils::binary2int(v2, true)/this->escala;
 
-        //recalculo el fitness
-        nuevo_fitness = utils::fitness_1c(f_1, f_2);
+        //Desecho el individuo si es invalido
+        if (f_1 > 100 or f_2 > 100 or f_1 < -100 or f_2 < -100)
+            nuevo_fitness = 0.0;
+        else //recalculo el fitness
+            nuevo_fitness = utils::fitness_1c(f_1, f_2);
     }
-    /*
+
     //caso del agente viajero
-    else if (this->variables_fenotipo == 10) {
+    else if (this->variables_fenotipo > 2) {
         std::vector<int> recorrido;
         //Obtenemos los valores enteros
+        //unsigned int paso = (unsigned int) (float(this->genotipo.size()) / float(this->variables_fenotipo));
         utils::vectorBinary2Int(this->genotipo, recorrido, 4);
 
         //Corroboramos que sea una solución válida
-        bool valido = utils::solucionValida(recorrido);
-        if (valido) {
-            float distanciaRecorrida = utils::calcularRecorrido(recorrido);
-            nuevo_fitness = 1/distanciaRecorrida;
+
+        //la validez tiene el efecto de escalar el resultado de la
+        //   distancia para penalizar a los individuos que tienen repeticiones
+        float validez = this->agente_viajero.solucionValida(recorrido);
+
+        float distanciaRecorrida = this->agente_viajero.calcularRecorrido(recorrido);
+
+        //std::cout<<"Distancia Recorrida = "<<distanciaRecorrida<<'\n';
+
+        if (fabs(distanciaRecorrida) < 0.000001) { //si no se mueve
+            nuevo_fitness = 0.0;
         } else {
-            nuevo_fitness = -1;
+            if (validez < 1.0) {
+                float distanciaPenalizada = distanciaRecorrida + 10*distanciaRecorrida * (1.0-validez);
+                //nuevo_fitness = 1/(distanciaPenalizada);
+                nuevo_fitness = 0.0;
+            } else {
+                nuevo_fitness = 1/distanciaRecorrida;
+            }
         }
     }
-    */
 
     this->fitness = nuevo_fitness;
     return nuevo_fitness;
@@ -91,4 +114,3 @@ float Individuo::getFenotipo() {
     int valor = utils::binary2int(this->genotipo, true);
     return valor/escala;
 }
-

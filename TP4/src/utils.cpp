@@ -111,6 +111,28 @@ void utils::printVector(std::vector<unsigned int> &v, char separator){
     std::cout<<'\n';
 }
 
+//Imprime un vector, separando sus valores con char separator
+void utils::printVector(std::vector<int> &v, char separator){
+    for (unsigned int i = 0; i < v.size(); i++){
+        std::cout<<v[i];
+        if(i < v.size()-1) //Si no es el ultimo caso
+            std::cout<<separator;
+    }
+    std::cout<<'\n';
+}
+
+//Imprime un vector, separando sus valores con char separator
+void utils::printVector(std::vector<bool> &v, char separator){
+    for (unsigned int i = 0; i < v.size(); i++){
+        std::cout<<v[i];
+        if(i < v.size()-1) //Si no es el ultimo caso
+            std::cout<<separator;
+    }
+    std::cout<<'\n';
+}
+
+
+
 //Imprime un vector de vectores. Sus parametros representan el vector,
 // el separador entre elementos(v[i]), y el separador entre casos (v[i][j])
 void utils::printVectorVector(std::vector<std::vector<unsigned int> > &v, char separator, 
@@ -193,7 +215,7 @@ unsigned int utils::getMinIdx(std::vector<float> &V ) {
 	return imin;
 }
 
-void utils::drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter) {
+void utils::drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter, unsigned int id_ejercicio) {
     unsigned int n = historial.size();
     assert(n>0);
     unsigned int generaciones = historial[0].size();
@@ -203,7 +225,32 @@ void utils::drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &pl
     plotter("set xzeroaxis lt -1");
     plotter("set yzeroaxis lt -1");
     plotter("set xrange [0:" + utils::intToStr(generaciones) + "]");
-    plotter("set yrange [-520:520]");
+    switch(id_ejercicio){
+        case 1: {
+            plotter("set yrange [-520:520]");   //ejercicio 1a
+            break;
+        }
+        case 2: {
+            plotter("set yrange [-10:30]");     //ejercicio 1b
+            break;
+        }
+        case 3: {
+            plotter("set yrange [-10:30]");     //ejercicio 1c
+            break;
+        }
+        case 4: {
+            plotter("set yrange [0:0.05]");     //ejercicio 2 con 4 ciudades
+            break;
+        }
+        case 5: {
+            plotter("set yrange [0:1]");     //ejercicio 2 con 10 ciudades
+            break;
+        }
+        default: {
+            plotter("set yrange [-100:100]");
+            break;
+        }
+    }
     plotter("set xlabel \"Generacion\"");
     plotter("set ylabel \"Fitness\"");
     plotter("set title \"Fitness durante N Generaciones\"");

@@ -9,9 +9,9 @@
 
 
 //Variable global
-Config config("configuracion1.cfg"); //lectura de la configuracion
+Config config("configuracion2.cfg"); //lectura de la configuracion
 
-int main(int argc, char *argv[]) {
+int main() {
     //inicializacion de semilla
     srand( (unsigned) std::time(NULL));
 
@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     unsigned int    k_competencia           = utils::strToInt(config.getValue("k_competencia"));
     float           fitness_deseado         = utils::strToFloat(config.getValue("fitness_deseado"));
 
-    std::cout<<"Bienvenidos al Ejercicio 1\n";
+    std::cout<<"Bienvenidos al Ejercicio 2\n";
     std::cout<<"Tamanio de poblacion = "<<tamanio_poblacion<<'\n';
     std::cout<<"Metodo de seleccion = "<<forma_seleccion<<'\n';
     std::cout<<"Probabilidad Cruza = "<<probabilidad_cruza<<'\n';
@@ -48,19 +48,30 @@ int main(int argc, char *argv[]) {
     else
         std::cout<<"Metodo de seleccion no definido\n";
 
+
     //Instanciamos el algoritmo genetico
     AlgoritmoGenetico AG (tamanio_poblacion, cantidad_genes, escala, variables_fenotipo, cantidad_generaciones,
                           probabilidad_cruza, probabilidad_mutacion, elitismo, brecha_generacional,
                           id_funcion_fitness, metodo_seleccion, k_competencia);
 
+    //Leo el agente viajero
+    //AG.cargarAgenteViajero("ciudades_facil.txt"); //el recorrido es 0-1-2-3
+    AG.cargarAgenteViajero("ciudades.txt"); //el recorrido es ...
+
+    //Evaluo el fitness inicial
+    AG.evaluar();
+
     //Definimos vectores para graficación
     std::vector<float> mejor_fitness, prom_fitness, peor_fitness;
+
     //Guardo el mejor fitness de la poblacion
     mejor_fitness.push_back(AG.getMejorFitness());
+
     //Calculo y guardo el fitness promedio de la poblacion
     std::vector<float> vector_tmp_fitness;
     AG.getFitness(vector_tmp_fitness);
     prom_fitness.push_back(utils::promedio(vector_tmp_fitness));
+
     //Guardo el Peor fitness de la poblacion
     peor_fitness.push_back(AG.getPeorFitness());
 
@@ -90,6 +101,13 @@ int main(int argc, char *argv[]) {
     std::cout<<"Se termino luego de "<<w<<" generaciones.\nEl fitness logrado es de "<<mejor_fitness.back()<<'\n';
 
     AG.imprimirResumen();
+    std::vector<bool> respuesta;
+    std::vector<int> respuesta_fenotipo;
+
+    AG.getMejorGenotipo(respuesta);
+    utils::vectorBinary2Int(respuesta, respuesta_fenotipo, 4);
+
+    std::cout<<"\nSolucion = "; utils::printVector(respuesta_fenotipo);
 
     //Vector de vector para graficacion
     std::vector<std::vector<float> > grafica;
@@ -98,8 +116,7 @@ int main(int argc, char *argv[]) {
     grafica.push_back(peor_fitness);
     GNUPlot plotter;
 
-
-    utils::drawHistory(grafica, plotter);
+    utils::drawHistory(grafica, plotter, id_funcion_fitness);
 
     getwchar();
     return 0;

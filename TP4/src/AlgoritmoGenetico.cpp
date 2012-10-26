@@ -25,24 +25,30 @@ AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_
     this->id_funcion_fitness = id_funcion_fitness;
     this->cantidad_mutaciones = 0;
     this->cantidad_cruzas = 0;
+    this->escala = escala;
+    this->variables_fenotipo = variables_fenotipo;
 
     //Crea todos los Individuos
     for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
-        Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness, escala, variables_fenotipo);
+        Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness, this->escala, this->variables_fenotipo);
         this->poblacion.push_back(new_ind);
     }
 
+    /*
     //Evaluo la poblacion
     this->evaluar();
 
     //Ordeno la población de mayor a menor fitness
     std::sort(this->poblacion.begin(), this->poblacion.end(), AlgoritmoGenetico::ordenarIndividuos);
+    */
 
 }
 
 //Crea la nueva generacion
 void AlgoritmoGenetico::reproduccion() {
+    //Actualizacion de generacion
     this->generacion_actual++;
+
     if(this->generacion_actual > this->generaciones_maximo) {
         std::cout<<"Maximo de generaciones alcanzadas\n";
         return;
@@ -108,8 +114,7 @@ void AlgoritmoGenetico::reproduccion() {
 //Evalua la poblacion, calculando los fitness, y devuelve el mejor
 float AlgoritmoGenetico::evaluar() {
     //Variable que guarda el fitness mayor encontrado
-    this->poblacion[0].calcularFitness();
-    float fitness_max = this->poblacion[0].getFitness();
+    float fitness_max = this->poblacion[0].calcularFitness();
     unsigned int id_max_fit = 0;
 
     //Variable que guarda el fitness peor encontrado
@@ -130,10 +135,11 @@ float AlgoritmoGenetico::evaluar() {
             fitness_min = fitness_i;
             id_min_fit = i;
         }
-
     }
+
     this->id_maximo_fitness = id_max_fit;
     this->id_minimo_fitness = id_min_fit;
+
     return fitness_max;
 }
 
@@ -222,7 +228,6 @@ void AlgoritmoGenetico::competencia(std::vector<Individuo> &nuevos_padres, unsig
     assert(npoblacion > 0);
     nuevos_padres.clear();
 
-
     //Creo un vector de índices para referenciar a la poblacion
     std::vector<int> vector_id_poblacion;
 
@@ -237,11 +242,7 @@ void AlgoritmoGenetico::competencia(std::vector<Individuo> &nuevos_padres, unsig
         unsigned int id_max_fitness = 0;
         float max_fitness = this->poblacion[ vector_id_poblacion[0] ].getFitness();
 
-        for (unsigned int i = 1; i < this->k_competencia ; i++ ) {
-            if (i > npoblacion) {
-                //El k de competencia es mayor que la poblacion
-                break;
-            }
+        for (unsigned int i = 1; i < this->k_competencia && i < npoblacion ; i++ ) {
 
             float fitness_i = this->poblacion[ vector_id_poblacion[i] ].getFitness();
 
@@ -270,21 +271,23 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
         hijos.push_back(madre);
         return;
     }
+    //Aumento contador
     this->cantidad_cruzas++;
 
-    //std::cout<<"aleloeeo eoeo\n";
     //Algoritmo de cruza
-    Individuo hijo1( this->cantidad_genes, this->id_funcion_fitness );
-    Individuo hijo2( this->cantidad_genes, this->id_funcion_fitness );
+    Individuo hijo1(this->cantidad_genes, this->id_funcion_fitness, escala, variables_fenotipo);
+    hijo1.agente_viajero = this->agente_viajero;
+    Individuo hijo2(this->cantidad_genes, this->id_funcion_fitness, escala, variables_fenotipo);
+    hijo2.agente_viajero = this->agente_viajero;
+
     hijo1.genotipo.clear();
     hijo2.genotipo.clear();
 
     hijo1.genotipo.insert(hijo1.genotipo.begin(), padre.genotipo.begin(), padre.genotipo.begin() + posicion_cruza);
     hijo2.genotipo.insert(hijo2.genotipo.begin(), madre.genotipo.begin(), madre.genotipo.begin() + posicion_cruza);
 
-    hijo1.genotipo.insert(hijo1.genotipo.begin() + posicion_cruza, madre.genotipo.begin() + posicion_cruza, madre.genotipo.end() );
-    hijo2.genotipo.insert(hijo2.genotipo.begin() + posicion_cruza, padre.genotipo.begin() + posicion_cruza, padre.genotipo.end() );
-
+    hijo1.genotipo.insert(hijo1.genotipo.end(), madre.genotipo.begin() + posicion_cruza, madre.genotipo.end() );
+    hijo2.genotipo.insert(hijo2.genotipo.end(), padre.genotipo.begin() + posicion_cruza, padre.genotipo.end() );
 
     hijos.push_back(hijo1);
     hijos.push_back(hijo2);
@@ -298,7 +301,10 @@ void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
     float prob = utils::randomDecimal(0.0,1.0);
     if (prob >= this->probabilidad_mutacion)
         return;
+
+    //aumentamos contador
     this->cantidad_mutaciones++;
+
     unsigned int i_random = rand() % this->cantidad_genes;
     individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
 }
@@ -331,6 +337,13 @@ void AlgoritmoGenetico::imprimirResumen() {
     std::cout<<"Cantidad de generaciones = "<<this->generacion_actual;
     std::cout<<"\nCantidad de cruzas = "<<this->cantidad_cruzas;
     std::cout<<"\nCantidad de mutaciones = "<<this->cantidad_mutaciones;
-    std::cout<<"\nMejor Fitness = "<<this->getMejorFitness()<< ", con fenotipo = "<<this->getMejorSolucion();
+    //std::cout<<"\nMejor Fitness = "<<this->getMejorFitness()<< ", con fenotipo = "<<this->getMejorSolucion();
+    std::cout<<"\nMejor Fitness = "<<this->getMejorFitness();
     std::cout<<"\nPeor Fitness = "<<this->getPeorFitness();
+}
+
+void AlgoritmoGenetico::cargarAgenteViajero(std::string nombre_archivo) {
+    this->agente_viajero.leer(nombre_archivo);
+    for (unsigned int i = 0; i < this->tamanio_poblacion; i++)
+        this->poblacion[i].agente_viajero = this->agente_viajero;
 }

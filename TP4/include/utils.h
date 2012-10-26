@@ -45,6 +45,12 @@ void static printVector(std::vector<unsigned int> &v, char separator = ' ');
 void static printVectorVector(std::vector<std::vector<unsigned int> > &v, char separator = ' ', 
 	std::string newcase = "\n-------\n");
 
+//Imprime un vector, separando sus valores con char separator
+void static printVector(std::vector<int> &v, char separator = ' ');
+
+//Imprime un vector, separando sus valores con char separator
+void static printVector(std::vector<bool> &v, char separator = ' ');
+
 //----------------------------------
 //Funciones de generacion de numeros aleatorios
 
@@ -106,6 +112,6 @@ float static fitness_1c(float x, float y);
 
 
 //graficar historiales
-void static drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter);
+void static drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter, unsigned int id_ejercicio);
 };
 #endif
