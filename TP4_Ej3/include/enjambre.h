@@ -1,7 +1,7 @@
 #ifndef ENJAMBRE_H
 #define ENJAMBRE_H
 #include <vector>
-#include "Particula.h"
+#include "particula.h"
 
 class Enjambre {
     //Dimension del problema
@@ -31,10 +31,13 @@ class Enjambre {
     std::vector<unsigned int> mejores_posiciones;
 
 public:
-    Enjambre();
+
+    Enjambre(std::vector<float> limites_inf, std::vector<float> limites_sup,
+                       unsigned int cant_part,
+                       float c1, float c2, unsigned int tamanio_vecindario);
     void iterar(unsigned int maxit);
     std::vector<float> getMejorVecindario(unsigned int id_particula);
-    float fitness(unsigned int id_particula);
+    float fitness(std::vector<float> posicion);
 
     void actualizarMejoresPosiciones();
 

@@ -1,7 +1,7 @@
 #include "include/enjambre.h"
-#include "Particula.h"
+#include "particula.h"
 #include <vector>
-#include <assert>
+#include <cassert>
 
 
 Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_sup,
@@ -47,9 +47,9 @@ void Enjambre::iterar(unsigned int maxit) {
         for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
 
             //Obtenemos la posicion de la particula
-            std::vector<float> posicion = this->particulas[id_particula].getPosicion();
+            std::vector<float> posicion = this->particulas[p].getPosicion();
             //Obtenemos la mejor posicion de la particula
-            std::vector<float> posicionMejor = this->particulas[id_particula].getMejorPosicion();
+            std::vector<float> posicionMejor = this->particulas[p].getMejorPosicionPersonal();
 
             //Obtenemos la mejor posicion del vecindario de la particula
             unsigned int id_mejor_particula_p = this->mejores_posiciones[p];
@@ -67,15 +67,16 @@ void Enjambre::iterar(unsigned int maxit) {
 
             //Si la posicion actual es mejor que la mejor historica
             if (fitness_p  < fitness_p_y)
-                this->particulas[p].setMejorPosicion(posicion);
+                this->particulas[p].setMejorPosicionPersonal(posicion);
 
             //Si la posicion actual es mejor que la mejor del vecindario
             if (fitness_p_y < fitness_p_yhat)
-                this->particulas[p].setMejorPosicionVecindario(posicion);
+                this->particulas[p].setMejorVecindario(p);
         }
 
         //Ahora actualizamos las posiciones de cada particula
         for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
+            unsigned int id_mejor_particula_p = this->mejores_posiciones[p];
 
             //Obtenemos la mejor posicion de su vecindario
             std::vector<float> posicionMejorVecindario = this->particulas[id_mejor_particula_p].getPosicion();
@@ -87,7 +88,7 @@ void Enjambre::iterar(unsigned int maxit) {
         //Calculamos los nuevos fitness
         for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
             //Obtenemos la posicion de la particula
-            std::vector<float> posicion = this->particulas[id_particula].getPosicion();
+            std::vector<float> posicion = this->particulas[p].getPosicion();
             //Actualizo el fitness de la particula p
             this->fitness_particulas[p] = this->fitness(posicion);
         }
@@ -122,7 +123,7 @@ void Enjambre::actualizarMejoresPosiciones() {
         unsigned int inicio = (p - this->tamanio_vecindario) % this->cantidad_particulas;
         unsigned int pasos_total = 2*this->tamanio_vecindario + 1;
         unsigned int paso_actual = 0;
-        for (paso_actual = 0; i < pasos_total; paso_actual++) {
+        for (paso_actual = 0; paso_actual < pasos_total; paso_actual++) {
             //tener Fe en esto
             unsigned int posicion = (inicio + paso_actual) % this->cantidad_particulas;
 
