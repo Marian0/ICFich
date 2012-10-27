@@ -22,11 +22,11 @@ SOURCES += \
     src/particula.cpp \
     src/main.cpp \
     src/Config.cpp \
-    src/utils.cpp
+    src/utils.cpp \
 
 HEADERS += \
     include/enjambre.h \
     include/GNUPlot.h \
     include/particula.h \
     include/utils.h \
-    include/Config.h
+    include/Config.h \
