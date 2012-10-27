@@ -26,8 +26,6 @@ public:
     void actualizarPosicion(std::vector<float> mejor_posicion_entorno,
                   float c1, float c2 );
 
-    //Setea el mejor vecindario
-    void setMejorVecindario(unsigned int id_mejor_posicion_entorno);
 
     void setMejorPosicionPersonal(std::vector<float> mejor_posicion_personal );
     std::vector<float> getMejorPosicionPersonal();
