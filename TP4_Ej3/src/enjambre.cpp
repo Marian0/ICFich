@@ -130,7 +130,7 @@ float Enjambre::fitness(std::vector<float> posicion) {
         float x = posicion[0];
         float y = posicion[1];
         float cuad = pow(x,2) + pow(y,2);
-        nuevo_fitness = pow(cuad, 0.25)*sin(50*pow(cuad,0.1) + 1);
+        nuevo_fitness = pow(cuad, 0.25)*pow(sin(50*pow(cuad,0.1) + 1),2);
 
     }
 
@@ -170,6 +170,12 @@ void Enjambre::actualizarMejoresPosiciones() {
 }
 
 std::vector<float> Enjambre::getSolucion() {
+    unsigned int mejor_id = this->getMejorId();
+    std::vector<float> ret_val = this->particulas[mejor_id].getPosicion();
+    return ret_val;
+}
+
+unsigned int Enjambre::getMejorId() {
     unsigned int mejor_id = 0;
     float mejor = this->fitness_particulas[0];
     for (unsigned int p = 1; p < this->cantidad_particulas; p++) {
@@ -178,6 +184,11 @@ std::vector<float> Enjambre::getSolucion() {
             mejor_id = p;
         }
     }
-    std::vector<float> ret_val = this->particulas[mejor_id].getPosicion();
-    return ret_val;
+    return mejor_id;
+}
+
+float Enjambre::getMejorFitness() {
+    unsigned int mejor_id = this->getMejorId();
+    return this->fitness_particulas[mejor_id];
+
 }

@@ -47,6 +47,8 @@ public:
 
     void actualizarMejoresPosiciones();
     std::vector<float> getSolucion();
+    unsigned int getMejorId();
+    float getMejorFitness();
 
 };
 

@@ -51,6 +51,8 @@ int main() {
     Enjambre enjambre (limites_inf, limites_sup, maxit, cantidad_de_particulas, id_funcion_fitness, c1, c2, entorno_size);
     for (unsigned int i = 0; i < maxit; i++) {
         enjambre.iterar();
+        std::vector<float> solucion = enjambre.getSolucion();
+        std::cout<<"Fitness = "<<enjambre.getMejorFitness()<<". Solucion a iteracion "<<i<<" = "; utils::printVector(solucion);
 
     }
 

@@ -31,19 +31,17 @@ void Particula::actualizarPosicion(
     std::vector<float> error_entorno;
     utils::vectorResta(mejor_posicion_entorno, this->posicion, error_entorno);
 
-    float r1 = utils::randomDecimal(0,1);
-    float r2 = utils::randomDecimal(0,1);
 
-    //Calculos auxiliares para llegar a la nueva expresion de velocidad
-    utils::vectorEscalar(error_personal, c1, error_personal);
-    utils::vectorEscalar(error_personal, r1, error_personal);
-
-    utils::vectorEscalar(error_entorno, c2, error_entorno);
-    utils::vectorEscalar(error_entorno, r2, error_entorno);
+    for (unsigned int i = 0 ; i < this->dimension; i++ ) {
+        float r1 = utils::randomDecimal(0,1);
+        float r2 = utils::randomDecimal(0,1);
+        //Calculos auxiliares para llegar a la nueva expresion de velocidad
+        error_personal[i] *= c1*r1;
+        error_entorno[i]  *= c2*r2;
+    }
 
     //Hacemos v(t+1) = v(t) + c1 r1 * ...
     std::vector<float> nueva_velocidad;
-
 
     utils::vectorSuma(this->velocidad, error_personal, nueva_velocidad);
     utils::vectorSuma(nueva_velocidad, error_entorno, nueva_velocidad);
