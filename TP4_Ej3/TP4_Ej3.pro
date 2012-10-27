@@ -16,4 +16,8 @@ TEMPLATE = app
 INCLUDEPATH += include
 
 
-SOURCES +=
+SOURCES += \
+    src/enjambre.cpp
+
+HEADERS += \
+    include/enjambre.h
