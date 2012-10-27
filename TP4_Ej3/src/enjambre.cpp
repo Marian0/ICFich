@@ -127,7 +127,7 @@ void Enjambre::actualizarMejoresPosiciones() {
 
         //Recorremos el vecindario
         //Magia, no tocar
-        unsigned int inicio = (p - this->tamanio_vecindario) % this->cantidad_particulas;
+        unsigned int inicio = (p + this->cantidad_particulas - this->tamanio_vecindario) % this->cantidad_particulas;
         unsigned int pasos_total = 2*this->tamanio_vecindario + 1;
         unsigned int paso_actual = 0;
         for (paso_actual = 0; paso_actual < pasos_total; paso_actual++) {
