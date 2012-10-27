@@ -19,9 +19,12 @@ INCLUDEPATH += include
 SOURCES += \
     src/particula.cpp \
     src/utils.cpp \
-    src/GNUPlot.cpp
+    src/GNUPlot.cpp \
+    src/main.cpp \
+    src/Config.cpp
 
 HEADERS += \
     include/particula.h \
     include/utils.h \
-    include/GNUPlot.h
+    include/GNUPlot.h \
+    include/Config.h
