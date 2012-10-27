@@ -21,7 +21,7 @@ SOURCES += \
     src/GNUPlot.cpp \
     src/particula.cpp \
     src/main.cpp \
-    src/Config.cpp
+    src/Config.cpp \
     src/utils.cpp
 
 HEADERS += \

@@ -30,12 +30,15 @@ class Enjambre {
     //Vector que almacena los id de mejores posiciones para cada particula
     std::vector<unsigned int> mejores_posiciones;
 
+    unsigned int cantidad_iteraciones;
+    unsigned int iteraciones_maximas;
+
 public:
 
     Enjambre(std::vector<float> limites_inf, std::vector<float> limites_sup,
-                       unsigned int cant_part,
+                       unsigned int maxit, unsigned int cant_part,
                        float c1, float c2, unsigned int tamanio_vecindario);
-    void iterar(unsigned int maxit);
+    void iterar();
     std::vector<float> getMejorVecindario(unsigned int id_particula);
     float fitness(std::vector<float> posicion);
 

@@ -2,10 +2,11 @@
 #include "particula.h"
 #include <vector>
 #include <cassert>
+#include <iostream>
 
 
 Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_sup,
-                   unsigned int cant_part,
+                   unsigned int maxit, unsigned int cant_part,
                    float c1, float c2, unsigned int tamanio_vecindario) {
     //Compruebo que sean coherentes los limites
     assert(limites_sup.size() == limites_inf.size());
@@ -17,6 +18,8 @@ Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_su
     this->c1 = c1;
     this->c2 = c2;
     this->tamanio_vecindario = tamanio_vecindario;
+    this->iteraciones_maximas = maxit;
+    this->cantidad_iteraciones = 0;
 
     //Construye las particulas
     for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
@@ -39,63 +42,66 @@ Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_su
 
 }
 
-void Enjambre::iterar(unsigned int maxit) {
-    unsigned int i;
-    //Recorremos hasta maxit
-    for (i = 0; i < maxit; i++) {
-        //Para cada particula, actualizamos sus mejores
-        for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
-
-            //Obtenemos la posicion de la particula
-            std::vector<float> posicion = this->particulas[p].getPosicion();
-            //Obtenemos la mejor posicion de la particula
-            std::vector<float> posicionMejor = this->particulas[p].getMejorPosicionPersonal();
-
-            //Obtenemos la mejor posicion del vecindario de la particula
-            unsigned int id_mejor_particula_p = this->mejores_posiciones[p];
-
-
-            //Calculamos los fitness para cada una de las posiciones
-            //Obtenemos el fitness de la posicion actual
-            float fitness_p = this->fitness_particulas[p];
-
-            //Calculamos el fitness de la posicion mejor de la particula personal
-            float fitness_p_y = this->fitness(posicionMejor);
-
-            //Calculamos el fitness de la mejor posicion de su vecindario
-            float fitness_p_yhat = this->fitness_particulas[id_mejor_particula_p];
-
-            //Si la posicion actual es mejor que la mejor historica
-            if (fitness_p  < fitness_p_y)
-                this->particulas[p].setMejorPosicionPersonal(posicion);
-
-            //Si la posicion actual es mejor que la mejor del vecindario
-            if (fitness_p_y < fitness_p_yhat)
-                this->particulas[p].setMejorVecindario(p);
-        }
-
-        //Ahora actualizamos las posiciones de cada particula
-        for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
-            unsigned int id_mejor_particula_p = this->mejores_posiciones[p];
-
-            //Obtenemos la mejor posicion de su vecindario
-            std::vector<float> posicionMejorVecindario = this->particulas[id_mejor_particula_p].getPosicion();
-
-            //Actualizamos sus coordenadas
-            this->particulas[p].actualizarPosicion(posicionMejorVecindario, c1, c2);
-        }
-
-        //Calculamos los nuevos fitness
-        for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
-            //Obtenemos la posicion de la particula
-            std::vector<float> posicion = this->particulas[p].getPosicion();
-            //Actualizo el fitness de la particula p
-            this->fitness_particulas[p] = this->fitness(posicion);
-        }
-
-        //Luego actualizamos los mejores de cada vecindario
-        this->actualizarMejoresPosiciones();
+void Enjambre::iterar() {
+    this->cantidad_iteraciones++;
+    if (this->cantidad_iteraciones >= this->iteraciones_maximas) {
+        std::cout<<"Maximo de iteraciones alcanzadas.\n";
+        return;
     }
+
+    //Para cada particula, actualizamos sus mejores
+    for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
+
+        //Obtenemos la posicion de la particula
+        std::vector<float> posicion = this->particulas[p].getPosicion();
+        //Obtenemos la mejor posicion de la particula
+        std::vector<float> posicionMejor = this->particulas[p].getMejorPosicionPersonal();
+
+        //Obtenemos la mejor posicion del vecindario de la particula
+        unsigned int id_mejor_particula_p = this->mejores_posiciones[p];
+
+
+        //Calculamos los fitness para cada una de las posiciones
+        //Obtenemos el fitness de la posicion actual
+        float fitness_p = this->fitness_particulas[p];
+
+        //Calculamos el fitness de la posicion mejor de la particula personal
+        float fitness_p_y = this->fitness(posicionMejor);
+
+        //Calculamos el fitness de la mejor posicion de su vecindario
+        float fitness_p_yhat = this->fitness_particulas[id_mejor_particula_p];
+
+        //Si la posicion actual es mejor que la mejor historica
+        if (fitness_p  < fitness_p_y)
+            this->particulas[p].setMejorPosicionPersonal(posicion);
+
+        //Si la posicion actual es mejor que la mejor del vecindario
+        if (fitness_p_y < fitness_p_yhat)
+            this->particulas[p].setMejorVecindario(p);
+    }
+
+    //Ahora actualizamos las posiciones de cada particula
+    for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
+        unsigned int id_mejor_particula_p = this->mejores_posiciones[p];
+
+        //Obtenemos la mejor posicion de su vecindario
+        std::vector<float> posicionMejorVecindario = this->particulas[id_mejor_particula_p].getPosicion();
+
+        //Actualizamos sus coordenadas
+        this->particulas[p].actualizarPosicion(posicionMejorVecindario, c1, c2);
+    }
+
+    //Calculamos los nuevos fitness
+    for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
+        //Obtenemos la posicion de la particula
+        std::vector<float> posicion = this->particulas[p].getPosicion();
+        //Actualizo el fitness de la particula p
+        this->fitness_particulas[p] = this->fitness(posicion);
+    }
+
+    //Luego actualizamos los mejores de cada vecindario
+    this->actualizarMejoresPosiciones();
+
 }
 
 //Devuelve el mejor del vecindario de la particula dada por id_particula
