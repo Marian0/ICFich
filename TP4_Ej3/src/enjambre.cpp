@@ -3,10 +3,10 @@
 #include <vector>
 #include <cassert>
 #include <iostream>
-
+#include <cmath>
 
 Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_sup,
-                   unsigned int maxit, unsigned int cant_part,
+                   unsigned int maxit, unsigned int cant_part, unsigned int id_funcion_fitness,
                    float c1, float c2, unsigned int tamanio_vecindario) {
     //Compruebo que sean coherentes los limites
     assert(limites_sup.size() == limites_inf.size());
@@ -20,6 +20,7 @@ Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_su
     this->tamanio_vecindario = tamanio_vecindario;
     this->iteraciones_maximas = maxit;
     this->cantidad_iteraciones = 0;
+    this->id_funcion_fitness = id_funcion_fitness;
 
     //Construye las particulas
     for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
@@ -35,7 +36,6 @@ Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_su
     this->mejores_posiciones.resize(this->cantidad_particulas);
     //Actualizar mejores
     this->actualizarMejoresPosiciones();
-
 
     for (unsigned int i = 0; i < this->cantidad_particulas; i++) {
         this->particulas[i].setMejorVecindario(this->mejores_posiciones[i]);
@@ -114,7 +114,32 @@ std::vector<float> Enjambre::getMejorVecindario(unsigned int id_particula) {
 
 //Calcula el fitness para la posicion dada
 float Enjambre::fitness(std::vector<float> posicion) {
-    return 1.0;
+    float nuevo_fitness = 0.0;
+    switch (this->id_funcion_fitness) {
+    case 1: { //ejercicio 3a
+        float valor = posicion[0];
+        nuevo_fitness = -valor*sin(sqrt(fabs(valor)));
+        break;
+    }
+    case 2: { //ejercicio 3b
+        float x = posicion[0];
+        nuevo_fitness = x + 5*sin(3*x) + 8*cos(5*x);
+        break;
+    }
+    case 3: { //ejecicio 3c
+        float x = posicion[0];
+        float y = posicion[1];
+        float cuad = pow(x,2) + pow(y,2);
+        nuevo_fitness = pow(cuad, 0.25)*sin(50*pow(cuad,0.1) + 1);
+
+    }
+
+
+    }
+
+    return nuevo_fitness;
+
+
 }
 
 //Para cada particula, setea el mejor de su vecindario
@@ -127,12 +152,13 @@ void Enjambre::actualizarMejoresPosiciones() {
 
         //Recorremos el vecindario
         //Magia, no tocar
-        unsigned int inicio = (p - this->tamanio_vecindario) % this->cantidad_particulas;
+        unsigned int inicio = (p + this->cantidad_particulas - this->tamanio_vecindario) % this->cantidad_particulas;
         unsigned int pasos_total = 2*this->tamanio_vecindario + 1;
         unsigned int paso_actual = 0;
         for (paso_actual = 0; paso_actual < pasos_total; paso_actual++) {
             //tener Fe en esto
             unsigned int posicion = (inicio + paso_actual) % this->cantidad_particulas;
+
 
             if (this->fitness_particulas[posicion] < mejor_fitness) {
                 mejor_fitness = this->fitness_particulas[posicion];
@@ -141,4 +167,17 @@ void Enjambre::actualizarMejoresPosiciones() {
         }
         this->mejores_posiciones[p] = id_mejor_vecindario;
     }
+}
+
+std::vector<float> Enjambre::getSolucion() {
+    unsigned int mejor_id = 0;
+    float mejor = this->fitness_particulas[0];
+    for (unsigned int p = 1; p < this->cantidad_particulas; p++) {
+        if (this->fitness_particulas[p] < mejor) {
+            mejor = this->fitness_particulas[p];
+            mejor_id = p;
+        }
+    }
+    std::vector<float> ret_val = this->particulas[mejor_id].getPosicion();
+    return ret_val;
 }

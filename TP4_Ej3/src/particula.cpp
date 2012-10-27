@@ -15,8 +15,8 @@ Particula::Particula(std::vector<float> limites_inferior, std::vector<float> lim
 
     this->mejor_posicion_personal = this->posicion;
     this->velocidad = velocidad_inicial;
-    this->limite_inferior = limite_inferior;
-    this->limite_superior = limite_superior;
+    this->limite_inferior = limites_inferior;
+    this->limite_superior = limites_superior;
 
 }
 

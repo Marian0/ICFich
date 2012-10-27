@@ -9,7 +9,7 @@
 
 
 //Variable global
-Config config("configuracion.cfg"); //lectura de la configuracion
+Config config("configuracion3c.cfg"); //lectura de la configuracion
 
 int main() {
     //inicializacion de semilla
@@ -33,20 +33,29 @@ int main() {
     std::cout<<"Tamaño del Entorno Anillo = "<<entorno_size<<'\n';
     std::vector<std::vector<float> > limites;
 
-    utils::parseCSV("limites.csv", limites);
+    if (id_funcion_fitness == 1)
+        utils::parseCSV("limites3a.csv", limites);
+    else if (id_funcion_fitness == 2)
+        utils::parseCSV("limites3b.csv", limites);
+    else if (id_funcion_fitness == 3)
+        utils::parseCSV("limites3c.csv", limites);
+
+
+
     std::vector<float> limites_inf = limites[0];
     std::vector<float> limites_sup = limites[1];
 
     std::cout<<"Limites Inferiores = "; utils::printVector(limites_inf);
     std::cout<<"Limites Superiores = "; utils::printVector(limites_sup);
 
-    std::cerr<<"Wololo\n";
-    Enjambre enjambre (limites_inf, limites_sup, maxit, cantidad_de_particulas, c1, c2, entorno_size);
+    Enjambre enjambre (limites_inf, limites_sup, maxit, cantidad_de_particulas, id_funcion_fitness, c1, c2, entorno_size);
     for (unsigned int i = 0; i < maxit; i++) {
-        std::cerr<<i<<' ';
         enjambre.iterar();
 
     }
+
+    std::vector<float> solucion = enjambre.getSolucion();
+    std::cout<<"Solucion = "; utils::printVector(solucion);
 
 
 //    GNUPlot plotter;
