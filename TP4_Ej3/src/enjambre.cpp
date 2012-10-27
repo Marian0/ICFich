@@ -32,6 +32,7 @@ Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_su
         this->fitness_particulas.push_back(this->fitness(posicion));
     }
 
+    this->mejores_posiciones.resize(this->cantidad_particulas);
     //Actualizar mejores
     this->actualizarMejoresPosiciones();
 

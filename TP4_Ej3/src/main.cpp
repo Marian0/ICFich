@@ -40,7 +40,7 @@ int main() {
     std::cout<<"Limites Inferiores = "; utils::printVector(limites_inf);
     std::cout<<"Limites Superiores = "; utils::printVector(limites_sup);
 
-
+    std::cerr<<"Wololo\n";
     Enjambre enjambre (limites_inf, limites_sup, maxit, cantidad_de_particulas, c1, c2, entorno_size);
     for (unsigned int i = 0; i < maxit; i++) {
         std::cerr<<i<<' ';
