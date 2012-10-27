@@ -18,6 +18,12 @@ INCLUDEPATH += include
 
 SOURCES += \
     src/enjambre.cpp
+    src/particula.cpp \
+    src/utils.cpp \
+    src/GNUPlot.cpp
 
 HEADERS += \
     include/enjambre.h
+    include/particula.h \
+    include/utils.h \
+    include/GNUPlot.h
