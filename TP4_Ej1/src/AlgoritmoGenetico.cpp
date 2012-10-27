@@ -34,14 +34,11 @@ AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_
         this->poblacion.push_back(new_ind);
     }
 
-    /*
     //Evaluo la poblacion
     this->evaluar();
 
     //Ordeno la población de mayor a menor fitness
     std::sort(this->poblacion.begin(), this->poblacion.end(), AlgoritmoGenetico::ordenarIndividuos);
-    */
-
 }
 
 //Crea la nueva generacion
@@ -86,8 +83,8 @@ void AlgoritmoGenetico::reproduccion() {
         this->cruza(padres[vector_id_poblacion[id_padre]], padres[vector_id_poblacion[id_madre]], hijos );
 
         //Realizamos la mutación de los hijos
-        this->mutacionAgente(hijos[0]);
-        this->mutacionAgente(hijos[1]);
+        this->mutacion(hijos[0]);
+        this->mutacion(hijos[1]);
 
         //Agregamos los hijos a la nueva población
         nueva_poblacion.push_back(hijos[0]);
@@ -243,12 +240,16 @@ void AlgoritmoGenetico::competencia(std::vector<Individuo> &nuevos_padres, unsig
         float max_fitness = this->poblacion[ vector_id_poblacion[0] ].getFitness();
 
         for (unsigned int i = 1; i < this->k_competencia && i < npoblacion ; i++ ) {
+
             float fitness_i = this->poblacion[ vector_id_poblacion[i] ].getFitness();
+
             if (fitness_i > max_fitness) {
                 max_fitness = fitness_i;
                 id_max_fitness = i;
             }
+
         }
+
         nuevos_padres.push_back(this->poblacion[id_max_fitness]);
     }
 }
@@ -260,8 +261,8 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
     float prob = utils::randomDecimal(0.0,1.0);
 
     if (prob < this->probabilidad_cruza) {
-        unsigned int paso = this->cantidad_genes / this->variables_fenotipo;
-        posicion_cruza = (rand() % this->variables_fenotipo) * paso;
+        posicion_cruza = rand() % this->cantidad_genes;
+
     } else {
         //No se cruzan, "se clonan los padres"
         hijos.push_back(padre);
@@ -273,9 +274,7 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
 
     //Algoritmo de cruza
     Individuo hijo1(this->cantidad_genes, this->id_funcion_fitness, escala, variables_fenotipo);
-    hijo1.agente_viajero = this->agente_viajero;
     Individuo hijo2(this->cantidad_genes, this->id_funcion_fitness, escala, variables_fenotipo);
-    hijo2.agente_viajero = this->agente_viajero;
 
     hijo1.genotipo.clear();
     hijo2.genotipo.clear();
@@ -290,27 +289,18 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
     hijos.push_back(hijo2);
 }
 
-//Sobrecargamos el operador de mutacion para agente viajero
-void AlgoritmoGenetico::mutacionAgente(Individuo &individuo_a_mutar) {
+//Realiza la mutación de un padre en un hijo
+void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
+    //Control de probabilidad
+    float prob = utils::randomDecimal(0.0,1.0);
+    if (prob >= this->probabilidad_mutacion)
+        return;
 
-    unsigned int cantidad_ciudades = this->variables_fenotipo;
-    unsigned int paso = this->cantidad_genes / cantidad_ciudades;
+    //aumentamos contador
+    this->cantidad_mutaciones++;
 
-    unsigned int ciudad_a_mutar = rand() % cantidad_ciudades;
-    unsigned int id_nueva_ciudad = rand() % cantidad_ciudades;
-
-    std::vector<bool> id_nueva_ciudad_binary = utils::int2binary(id_nueva_ciudad, false);
-
-    while (id_nueva_ciudad_binary.size() < 4 ) {
-        id_nueva_ciudad_binary.insert(id_nueva_ciudad_binary.begin(),0);
-    }
-
-    std::vector<bool> nuevo_genotipo;
-    nuevo_genotipo.insert(nuevo_genotipo.end(), individuo_a_mutar.genotipo.begin(), individuo_a_mutar.genotipo.begin() + paso * ciudad_a_mutar );
-    nuevo_genotipo.insert(nuevo_genotipo.end(), id_nueva_ciudad_binary.begin(), id_nueva_ciudad_binary.end() );
-    nuevo_genotipo.insert(nuevo_genotipo.end(), individuo_a_mutar.genotipo.begin() + paso * (ciudad_a_mutar + 1), individuo_a_mutar.genotipo.end() );
-
-    individuo_a_mutar.genotipo = nuevo_genotipo;
+    unsigned int i_random = rand() % this->cantidad_genes;
+    individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
 }
 
 
@@ -342,13 +332,8 @@ void AlgoritmoGenetico::imprimirResumen() {
     std::cout<<"Cantidad de generaciones = "<<this->generacion_actual;
     std::cout<<"\nCantidad de cruzas = "<<this->cantidad_cruzas;
     std::cout<<"\nCantidad de mutaciones = "<<this->cantidad_mutaciones;
+    //std::cout<<"\nMejor Fitness = "<<this->getMejorFitness()<< ", con fenotipo = "<<this->getMejorSolucion();
     std::cout<<"\nMejor Fitness = "<<this->getMejorFitness();
     std::cout<<"\nPeor Fitness = "<<this->getPeorFitness();
-    std::cout<<"\nDistancia = "<<this->poblacion[id_maximo_fitness].distanciaRecorrida;
-}
 
-void AlgoritmoGenetico::cargarAgenteViajero(std::string nombre_archivo) {
-    this->agente_viajero.leer(nombre_archivo);
-    for (unsigned int i = 0; i < this->tamanio_poblacion; i++)
-        this->poblacion[i].agente_viajero = this->agente_viajero;
 }

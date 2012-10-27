@@ -226,6 +226,18 @@ void utils::drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &pl
     plotter("set yzeroaxis lt -1");
     plotter("set xrange [0:" + utils::intToStr(generaciones) + "]");
     switch(id_ejercicio){
+        case 1: {
+            plotter("set yrange [-520:520]");   //ejercicio 1a
+            break;
+        }
+        case 2: {
+            plotter("set yrange [-10:30]");     //ejercicio 1b
+            break;
+        }
+        case 3: {
+            plotter("set yrange [-21:2]");     //ejercicio 1c
+            break;
+        }
         case 4: {
             plotter("set yrange [0:0.05]");     //ejercicio 2 con 4 ciudades
             break;
@@ -328,6 +340,27 @@ std::vector<bool> utils::int2binary(int value, bool signo) {
     return ret_val;
 }
 
+
+//Funciones de fitness para el ejercicio 1:
+// Se multiplica por -1 porque es un problema de minimización
+
+//Función de fitness para el ejercicio 1a
+float utils::fitness_1a(float value) {
+    return -1*(-value*sin(sqrt(fabs(value))));
+}
+
+//Función de fitness para el ejercicio 1b
+float utils::fitness_1b(float value) {
+    return -1*(value + 5*sin(3*value) + 8*cos(5*value));
+}
+
+//Función de fitness para el ejercicio 1c
+float utils::fitness_1c(float x, float y) {
+    float sum_cuad = pow(x,2) + pow(y,2);
+    float t_cuad = pow(sum_cuad, 0.25);
+    float t_sin = pow(sin(50*pow(sum_cuad,0.1)+1),2);
+    return -1*(t_cuad*t_sin);
+}
 
 //Convierte a bin, un vector de binarios representando muchas variables, en un vector de enteros.
 // Cada variable tiene asignado tantos bits como dice paso

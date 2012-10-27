@@ -1,8 +1,6 @@
 #ifndef __INDIVIDUO_H__
 #define __INDIVIDUO_H__
-
 #include <vector>
-#include "AgenteViajero.h"
 
 class Individuo {
     public:
@@ -21,10 +19,6 @@ class Individuo {
     //Dice cuantas variables tiene el fenotipo
     unsigned int variables_fenotipo;
 
-    //Variable del agente viajero
-    AgenteViajero agente_viajero;
-    float distanciaRecorrida;
-
     //Constructor vacio
     Individuo();
 
@@ -39,7 +33,5 @@ class Individuo {
 
     //Devuelve el Fenotipo del Individuo
     float getFenotipo();
-
-
 };
 #endif

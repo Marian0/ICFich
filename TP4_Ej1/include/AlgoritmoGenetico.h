@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "Individuo.h"
-#include "AgenteViajero.h"
 
 class AlgoritmoGenetico {
     //Vector que tiene todos los Individuos de esta poblacion
@@ -56,8 +55,6 @@ class AlgoritmoGenetico {
     unsigned int variables_fenotipo;
 
     public:
-    //Clase que guarda todo lo relacionado al problema del agente viajero
-    AgenteViajero agente_viajero;
 
     static const unsigned int SELECCION_RULETA = 1;
     static const unsigned int SELECCION_VENTANAS = 2;
@@ -90,9 +87,9 @@ class AlgoritmoGenetico {
     
     //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
     void cruza(Individuo & padre, Individuo & madre, std::vector<Individuo> &hijos);
-
-    //Sobrecargamos el operador de mutacion para agente viajero
-    void mutacionAgente(Individuo &individuo_a_mutar);
+    
+    //Realiza la mutación de un padre en un hijo
+    void mutacion(Individuo &individuo_a_mutar);
 
     //Devuelve por referencia un vector de los fitness de toda la poblacion
     void getFitness(std::vector<float> &fitness_todos);
@@ -111,9 +108,6 @@ class AlgoritmoGenetico {
 
     //Muestra un resumen de todas las iteraciones del algoritmo
     void imprimirResumen();
-
-    //Carga el agente viajero y se lo asigna a todos sus hijos
-    void cargarAgenteViajero(std::string nombre_archivo);
 
     //Funcion que sirve para ordenar individuos de mayor a menor
     static bool ordenarIndividuos(Individuo a, Individuo b) {
