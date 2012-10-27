@@ -16,4 +16,12 @@ TEMPLATE = app
 INCLUDEPATH += include
 
 
-SOURCES +=
+SOURCES += \
+    src/particula.cpp \
+    src/utils.cpp \
+    src/GNUPlot.cpp
+
+HEADERS += \
+    include/particula.h \
+    include/utils.h \
+    include/GNUPlot.h
