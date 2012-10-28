@@ -112,6 +112,6 @@ class Red {
         //Devuelve la posicion de la neurona idx en la estructura
         void getPosition(unsigned int idx, unsigned int &capa, unsigned int &pos );
 
-        void setPesos( std::vector<float> W);
+        void setPesos( std::vector<float> &W);
 };
 #endif

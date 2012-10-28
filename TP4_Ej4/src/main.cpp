@@ -63,25 +63,37 @@ int main() {
         limites_inf.push_back(-10);
         limites_sup.push_back( 10);
     }
-    std::vector<float> error_history_entrenamiento;
 
+    std::vector<float> historial_error;
+    std::vector<float> historial_fitness;
 
-    std::cout<<"Limites Inferiores = "; utils::printVector(limites_inf);
-    std::cout<<"Limites Superiores = "; utils::printVector(limites_sup);
-
-    Enjambre enjambre (limites_inf, limites_sup, maxit, cantidad_de_particulas, id_funcion_fitness, c1, c2, entorno_size, perceptron);
+    Enjambre enjambre (limites_inf, limites_sup, maxit, cantidad_de_particulas, id_funcion_fitness, c1, c2, entorno_size, perceptron, X, Yd);
 
     for (unsigned int i = 0; i < maxit; i++) {
-        enjambre.iterar();
+        float error = 1-enjambre.iterar();
         std::vector<float> nuevos_pesos = enjambre.getSolucion();
+        //std::cout<<"\nError = "<<error;
+        //std::cout<<"\nFitness = "<<enjambre.getMejorFitness();
+        //std::cout<<"\nSolucion a iteracion "<<i<<" = "; utils::printVector(nuevos_pesos);
 
-
-                //std::cout<<"Fitness = "<<enjambre.getMejorFitness()<<". Solucion a iteracion "<<i<<" = "; utils::printVector(solucion);
-
+        historial_error.push_back(error);
+        historial_fitness.push_back(enjambre.getMejorFitness());
+        std::cout<<i<<'\n';
     }
+
+    GNUPlot plotter;
+    std::vector<std::vector<float> > historiales;
+    //historiales.push_back(historial_error);
+    historiales.push_back(historial_fitness);
+    utils::drawHistory(historiales, plotter, 6);
 
     std::vector<float> solucion = enjambre.getSolucion();
     std::cout<<"Solucion = "; utils::printVector(solucion);
+
+    perceptron.setPesos(solucion);
+    float error_postita = 1-perceptron.train(X,Yd,false);
+    std::cout<<error_postita*100<<"\%\n";
+
 
     //Cargo el conjunto de prueba
     //utils::splitVector(prueba, X, Yd, 1);

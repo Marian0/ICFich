@@ -194,10 +194,10 @@ float Red::train(std::vector<std::vector<float> > X,
     }
     float promedio_error = utils::promedio(error_energia);
     //std::cout<<"Error = "<<promedio_error<<'\n';
-    return 1-promedio_error;
+    return promedio_error;
 
-//    float porcentaje = ((float) total_aciertos) / ((float) X.size());
-  //  return porcentaje;
+    //float porcentaje = ((float) total_aciertos) / ((float) X.size());
+    //return porcentaje;
 }
 
 bool Red::backpropagation(std::vector<float> X,
@@ -790,7 +790,7 @@ void Red::genFullStructure(std::string nombre_archivo) {
     //std::getchar();
 }
 
-<<<<<<< HEAD
+
 void Red::setPesos( std::vector<float> & W ) {
     unsigned int nneuronas = this->neuronas.size();
     unsigned int nadyacencias_entradas = this->adyacencias_entradas.size();
@@ -811,14 +811,14 @@ void Red::setPesos( std::vector<float> & W ) {
             entradas += this->adyacencias[j][i];
 
         std::vector<float> Wtemp;
-        assert(W.size() < indicew + entradas);
-        for (indicew; indicew < indicew + entradas; indicew++) {
+        assert(W.size() > indicew + entradas);
+        //Mas uno por el bias de cada neurona
+        unsigned int cant_pasos = indicew + entradas + 1;
+
+        for (; indicew < cant_pasos; indicew++) {
             Wtemp.push_back(W[indicew]);
         }
 
         this->neuronas[i].setW(Wtemp);
     }
 }
-=======
-
->>>>>>> be20cfdd362f97c56b9ff6c2a480b184cb2d69d3

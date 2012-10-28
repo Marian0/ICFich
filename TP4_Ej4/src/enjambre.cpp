@@ -4,6 +4,7 @@
 #include <cassert>
 #include <iostream>
 #include <cmath>
+#include "utils.h"
 
 Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_sup,
                    unsigned int maxit, unsigned int cant_part, unsigned int id_funcion_fitness,
@@ -45,12 +46,13 @@ Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_su
 
 }
 
-void Enjambre::iterar() {
+float Enjambre::iterar() {
     this->cantidad_iteraciones++;
     if (this->cantidad_iteraciones >= this->iteraciones_maximas) {
         std::cout<<"Maximo de iteraciones alcanzadas.\n";
-        return;
+        return 0.0;
     }
+
 
     //Para cada particula, actualizamos sus mejores
     for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
@@ -104,6 +106,8 @@ void Enjambre::iterar() {
     //Luego actualizamos los mejores de cada vecindario
     this->actualizarMejoresPosiciones();
 
+    //el error es el mejor fitness, lo devolvemos
+    return this->getMejorFitness();
 }
 
 //Devuelve el mejor del vecindario de la particula dada por id_particula
@@ -121,7 +125,8 @@ float Enjambre::fitness(std::vector<float> posicion) {
     this->perceptron.setPesos(posicion);
 
     //Capturo el error del perceptron
-    float error = 1-this->perceptron.train(this->patrones_entradas, this->patrones_salidas, false);
+    float error = this->perceptron.train(this->patrones_entradas, this->patrones_salidas, false);
+
 
     //El nuevo fitness es el error cuadratico medio del entrenamiento
     nuevo_fitness = error;

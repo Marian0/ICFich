@@ -234,6 +234,10 @@ void utils::drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &pl
             plotter("set yrange [0:0.01]");     //ejercicio 2 con 10 ciudades
             break;
         }
+        case 6: {
+            plotter("set yrange [0:2]");     //ejercicio 4
+            break;
+        }
         default: {
             plotter("set yrange [-100:100]");
             break;

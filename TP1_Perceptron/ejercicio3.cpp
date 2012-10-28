@@ -128,13 +128,14 @@ int main (int argc, char *argv[]) {
         //Entrena y calcula error
         perceptron.train(X, Yd, ultimas_salidas, true);
         float error = 1-perceptron.train(X, Yd, ultimas_salidas, false);
+        std::cout<<"error = "<<error<<'\n';
 
-
+        /*
         if(i < intervalo_dibujo || i % intervalo_dibujo == 0) {
                     //Graficador para la dispersion de puntos
             plotter2("clear\n");
             utils::drawPlot(X, Yd, ultimas_salidas, plotter2);
-        }
+        }*/
 
 		error_history_entrenamiento.push_back(error); 
 				

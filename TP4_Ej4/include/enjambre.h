@@ -48,7 +48,7 @@ public:
              unsigned int maxit, unsigned int cant_part, unsigned int id_funcion_fitness,
              float c1, float c2, unsigned int tamanio_vecindario, Red perceptron,
              std::vector<std::vector<float> > patrones_entradas, std::vector<std::vector<float> > patrones_salidas);
-    void iterar();
+    float iterar();
     std::vector<float> getMejorVecindario(unsigned int id_particula);
     float fitness(std::vector<float> posicion);
 
