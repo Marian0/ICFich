@@ -1,3 +1,5 @@
+#ifndef __RED_H__
+#define __RED_H__
 #include <map>
 #include <vector>
 #include <string>
@@ -41,6 +43,9 @@ class Red {
         //Vector que guardara el error instantaneo en cada iteracion
         std::vector<float> error_instantaneo;
 	public:
+
+        //Constructor vacio
+        Red() {}
 
         //Construye la red leyendola desde un archivo pasado por argumento
         Red(std::string nombre_archivo,
@@ -109,3 +114,4 @@ class Red {
 
         void setPesos( std::vector<float> W);
 };
+#endif

@@ -61,18 +61,22 @@ int main() {
     //Agregamos todos los limites
     for (unsigned int i = 0; i < dimension; i++) {
         limites_inf.push_back(-10);
-        limites_inf.push_back( 10);
+        limites_sup.push_back( 10);
     }
+    std::vector<float> error_history_entrenamiento;
 
 
     std::cout<<"Limites Inferiores = "; utils::printVector(limites_inf);
     std::cout<<"Limites Superiores = "; utils::printVector(limites_sup);
 
-    Enjambre enjambre (limites_inf, limites_sup, maxit, cantidad_de_particulas, id_funcion_fitness, c1, c2, entorno_size);
+    Enjambre enjambre (limites_inf, limites_sup, maxit, cantidad_de_particulas, id_funcion_fitness, c1, c2, entorno_size, perceptron);
+
     for (unsigned int i = 0; i < maxit; i++) {
         enjambre.iterar();
-        std::vector<float> solucion = enjambre.getSolucion();
-        std::cout<<"Fitness = "<<enjambre.getMejorFitness()<<". Solucion a iteracion "<<i<<" = "; utils::printVector(solucion);
+        std::vector<float> nuevos_pesos = enjambre.getSolucion();
+
+
+                //std::cout<<"Fitness = "<<enjambre.getMejorFitness()<<". Solucion a iteracion "<<i<<" = "; utils::printVector(solucion);
 
     }
 
@@ -80,7 +84,7 @@ int main() {
     std::cout<<"Solucion = "; utils::printVector(solucion);
 
     //Cargo el conjunto de prueba
-    utils::splitVector(prueba, X, Yd, 1);
+    //utils::splitVector(prueba, X, Yd, 1);
 
 //    GNUPlot plotter;
 

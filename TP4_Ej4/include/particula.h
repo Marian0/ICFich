@@ -11,8 +11,10 @@ class Particula
     unsigned int dimension;
     unsigned int id_mejor_posicion_entorno;
 
-    //Mejores posiciones
+    //Mejor posicion
     std::vector<float> mejor_posicion_personal;
+    //Fitness de la mejor posicion
+    float mejor_fitness;
 
     //Limites dimensionales
     std::vector<float> limite_inferior;
@@ -26,11 +28,13 @@ public:
     void actualizarPosicion(std::vector<float> mejor_posicion_entorno,
                   float c1, float c2 );
 
-
     void setMejorPosicionPersonal(std::vector<float> mejor_posicion_personal );
     std::vector<float> getMejorPosicionPersonal();
-
     std::vector<float> getPosicion();
+
+    float getMejorFitness();
+    void setMejorFitness(float mejor_fitness);
+
 };
 
 #endif // PARTICULA_H
