@@ -71,6 +71,7 @@ int main() {
 
     for (unsigned int i = 0; i < maxit; i++) {
         float error = 1-enjambre.iterar();
+        std::cout<<"Iteracion "<<i<<' ';
         std::vector<float> nuevos_pesos = enjambre.getSolucion();
         //std::cout<<"\nError = "<<error;
         //std::cout<<"\nFitness = "<<enjambre.getMejorFitness();
@@ -90,16 +91,13 @@ int main() {
     std::cout<<"Solucion = "; utils::printVector(solucion);
 
     perceptron.setPesos(solucion);
-    float error_postita = perceptron.train(X,Yd,false);
-    std::cout<<"Error final = "<<error_postita*100<<"\%\n";
+    float error_entrenamiento = perceptron.train(X,Yd,false);
+    std::cout<<"Error (entrenamiento) = "<<error_entrenamiento*100<<"\%\n";
 
-
-    //Cargo el conjunto de prueba
-    //utils::splitVector(prueba, X, Yd, 1);
-
-//    GNUPlot plotter;
-
-//    utils::drawHistory(grafica, plotter, id_funcion_fitness);
+    //Divido en X y Yd los casos de entrenamiento
+    utils::splitVector(prueba, X, Yd, 1);
+    float error_prueba = perceptron.train(X,Yd,false);
+    std::cout<<"Error (prueba) = "<<error_prueba*100<<"\%\n";
 
     getwchar();
     return 0;
