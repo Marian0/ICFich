@@ -1,3 +1,6 @@
+#Esto ignora user configs
+*.pro.user
+
 # Compiled Object files
 *.slo
 *.lo
