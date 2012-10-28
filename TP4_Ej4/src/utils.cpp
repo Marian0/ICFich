@@ -235,7 +235,7 @@ void utils::drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &pl
             break;
         }
         case 6: {
-            plotter("set yrange [0:2]");     //ejercicio 4
+            plotter("set yrange [0.1:1.1]");     //ejercicio 4
             break;
         }
         default: {

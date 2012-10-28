@@ -78,7 +78,6 @@ int main() {
 
         historial_error.push_back(error);
         historial_fitness.push_back(enjambre.getMejorFitness());
-        std::cout<<i<<'\n';
     }
 
     GNUPlot plotter;
@@ -91,8 +90,8 @@ int main() {
     std::cout<<"Solucion = "; utils::printVector(solucion);
 
     perceptron.setPesos(solucion);
-    float error_postita = 1-perceptron.train(X,Yd,false);
-    std::cout<<error_postita*100<<"\%\n";
+    float error_postita = perceptron.train(X,Yd,false);
+    std::cout<<"Error final = "<<error_postita*100<<"\%\n";
 
 
     //Cargo el conjunto de prueba

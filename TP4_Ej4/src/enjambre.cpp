@@ -126,7 +126,10 @@ float Enjambre::fitness(std::vector<float> posicion) {
 
     //Capturo el error del perceptron
     float error = this->perceptron.train(this->patrones_entradas, this->patrones_salidas, false);
-
+    if (fabs(error) < 0.00000001) {
+        utils::printVector(posicion);
+        getwchar();
+    }
 
     //El nuevo fitness es el error cuadratico medio del entrenamiento
     nuevo_fitness = error;
@@ -161,6 +164,7 @@ void Enjambre::actualizarMejoresPosiciones() {
 
 std::vector<float> Enjambre::getSolucion() {
     unsigned int mejor_id = this->getMejorId();
+    std::cout<<"Fitness de la solucion = "<<this->particulas[mejor_id].getMejorFitness()<<'\n';
     std::vector<float> ret_val = this->particulas[mejor_id].getPosicion();
     return ret_val;
 }
