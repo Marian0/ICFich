@@ -17,7 +17,7 @@ Particula::Particula(std::vector<float> limites_inferior, std::vector<float> lim
     this->velocidad = velocidad_inicial;
     this->limite_inferior = limites_inferior;
     this->limite_superior = limites_superior;
-
+    this->mejor_fitness = 10.0;
 }
 
 
