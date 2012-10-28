@@ -790,7 +790,6 @@ void Red::genFullStructure(std::string nombre_archivo) {
     //std::getchar();
 }
 
-<<<<<<< HEAD
 void Red::setPesos( std::vector<float> & W ) {
     unsigned int nneuronas = this->neuronas.size();
     unsigned int nadyacencias_entradas = this->adyacencias_entradas.size();
@@ -819,6 +818,3 @@ void Red::setPesos( std::vector<float> & W ) {
         this->neuronas[i].setW(Wtemp);
     }
 }
-=======
-
->>>>>>> be20cfdd362f97c56b9ff6c2a480b184cb2d69d3
