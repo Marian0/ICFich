@@ -68,3 +68,11 @@ std::vector<float> Particula::getMejorPosicionPersonal() {
 std::vector<float> Particula::getPosicion() {
     return this->posicion;
 }
+
+float Particula::getMejorFitness() {
+    return this->mejor_fitness;
+}
+
+void Particula::setMejorFitness(float mejor_fitness){
+    this->mejor_fitness = mejor_fitness;
+}

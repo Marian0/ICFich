@@ -386,61 +386,59 @@ bool Red::backpropagation(std::vector<float> X,
     }
 
     //utils::printVectorVector(deltas);
-    
 
-    //Actualizar pesos
-    //Para cada capa l:
-    //delta(w(n)) = cte_aprendizaje*delta(l)*y(l-1)
-    //w(n+1) = w(n) + cte_momento*delta(w(n-1)) + cte_aprendizaje*delta(l)*y(l-1)
-    n = this->estructura.size();
-    for (unsigned int i = 0; i < n; i++) { //Recorremos por "capa" sobre la estructura
-        unsigned int m = this->estructura[i].size();
-        for (unsigned int j = 0 ; j < m ; j++) {
-            unsigned int id_neurona = this->estructura[i][j];
+    if (update) { //si quiero actualizar...
+        //Actualizar pesos
+        //Para cada capa l:
+        //delta(w(n)) = cte_aprendizaje*delta(l)*y(l-1)
+        //w(n+1) = w(n) + cte_momento*delta(w(n-1)) + cte_aprendizaje*delta(l)*y(l-1)
+        n = this->estructura.size();
+        for (unsigned int i = 0; i < n; i++) { //Recorremos por "capa" sobre la estructura
+            unsigned int m = this->estructura[i].size();
+            for (unsigned int j = 0 ; j < m ; j++) {
+                unsigned int id_neurona = this->estructura[i][j];
 
-            std::vector<float> term1 = this->neuronas[ id_neurona ].getW();
-            
-            std::vector<float> term2, term2_t;
-            term2_t = this->deltas_w_ji[ id_neurona ];
+                std::vector<float> term1 = this->neuronas[ id_neurona ].getW();
 
-            utils::vectorEscalar(term2_t, this->parametro_momento, term2);
+                std::vector<float> term2, term2_t;
+                term2_t = this->deltas_w_ji[ id_neurona ];
 
-            //std::vector<float> pesos_anteriores = this->neuronas[ this->estructura[i][j] ].getWn_1();
-            //utils::vectorEscalar(pesos_anteriores, this->parametro_momento, term2);
-    
-        
-            std::vector<float> term3;
-            //entradas por neurona = y_i(l-1)
-            std::vector<float> entradas_ij = entradas_por_neurona[i][j];
-            
-            //entradas_ij.insert(entradas_ij.begin(), -1.0); //agrego el bias
-            entradas_ij.insert(entradas_ij.begin(), 1.0); //agrego el bias
-            
-            utils::vectorEscalar(entradas_ij , this->neuronas[  id_neurona ].getConstanteAprendizaje() * deltas[i][j], term3);
-           
-            std::vector<float> term12;
-            utils::vectorSuma(term1, term2, term12);
-                
-            //Guarda el delta actual para la sgte iteracion
-            std::vector<float> term23;
-            utils::vectorSuma(term2, term3, term23);
-            this->deltas_w_ji[ id_neurona ] = term23;
-            
-            /*
-            std::cout<<"(i,j) = "<<i<<' '<<j<<'\n';
-            std::cout<<"term1: "; utils::printVector(term1);
-            std::cout<<"term3: "; utils::printVector(term3);
-         */
+                utils::vectorEscalar(term2_t, this->parametro_momento, term2);
 
-            std::vector<float> nuevoW;
-            utils::vectorSuma(term12, term3, nuevoW);
-           
-            if (update) { //si quiero actualizar...
+                //std::vector<float> pesos_anteriores = this->neuronas[ this->estructura[i][j] ].getWn_1();
+                //utils::vectorEscalar(pesos_anteriores, this->parametro_momento, term2);
+
+
+                std::vector<float> term3;
+                //entradas por neurona = y_i(l-1)
+                std::vector<float> entradas_ij = entradas_por_neurona[i][j];
+
+                //entradas_ij.insert(entradas_ij.begin(), -1.0); //agrego el bias
+                entradas_ij.insert(entradas_ij.begin(), 1.0); //agrego el bias
+
+                utils::vectorEscalar(entradas_ij , this->neuronas[  id_neurona ].getConstanteAprendizaje() * deltas[i][j], term3);
+
+                std::vector<float> term12;
+                utils::vectorSuma(term1, term2, term12);
+
+                //Guarda el delta actual para la sgte iteracion
+                std::vector<float> term23;
+                utils::vectorSuma(term2, term3, term23);
+                this->deltas_w_ji[ id_neurona ] = term23;
+
+                /*
+                std::cout<<"(i,j) = "<<i<<' '<<j<<'\n';
+                std::cout<<"term1: "; utils::printVector(term1);
+                std::cout<<"term3: "; utils::printVector(term3);
+             */
+
+                std::vector<float> nuevoW;
+                utils::vectorSuma(term12, term3, nuevoW);
                 this->neuronas[ id_neurona ].setW(nuevoW);
             }
         }
     }
-//    std::getchar();
+    //std::getchar();
     return salida_sin_error;
 }
 
@@ -791,3 +789,5 @@ void Red::genFullStructure(std::string nombre_archivo) {
     */
     //std::getchar();
 }
+
+

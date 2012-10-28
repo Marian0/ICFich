@@ -7,7 +7,8 @@
 
 Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_sup,
                    unsigned int maxit, unsigned int cant_part, unsigned int id_funcion_fitness,
-                   float c1, float c2, unsigned int tamanio_vecindario) {
+                   float c1, float c2, unsigned int tamanio_vecindario, Red perceptron,
+                   std::vector<std::vector<float> > patrones_entradas, std::vector<std::vector<float> > patrones_salidas) {
     //Compruebo que sean coherentes los limites
     assert(limites_sup.size() == limites_inf.size());
 
@@ -21,6 +22,11 @@ Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_su
     this->iteraciones_maximas = maxit;
     this->cantidad_iteraciones = 0;
     this->id_funcion_fitness = id_funcion_fitness;
+
+    //Seteo los datos para el perceptron
+    this->perceptron = perceptron;
+    this->patrones_entradas = patrones_entradas;
+    this->patrones_salidas = patrones_salidas;
 
     //Construye las particulas
     for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
@@ -51,31 +57,37 @@ void Enjambre::iterar() {
 
         //Obtenemos la posicion de la particula
         std::vector<float> posicion = this->particulas[p].getPosicion();
-        //Obtenemos la mejor posicion de la particula
-        std::vector<float> posicionMejor = this->particulas[p].getMejorPosicionPersonal();
 
-        //Calculamos los fitness para cada una de las posiciones
         //Obtenemos el fitness de la posicion actual
-        this->fitness_particulas[p] = this->fitness(posicion);
-        float fitness_p = this->fitness_particulas[p];
+        float fitness_p = this->fitness(posicion); //primero lo calculamos
+        this->fitness_particulas[p] = fitness_p;  //luego lo guardamos en el vector de fitness de todas
 
         //Calculamos el fitness de la posicion mejor de la particula personal
+        //Obtenemos la mejor posicion de la particula
+        /*
+        std::vector<float> posicionMejor = this->particulas[p].getMejorPosicionPersonal();
         float fitness_p_y = this->fitness(posicionMejor);
+        */
+        float fitness_p_y = this->particulas[p].getMejorFitness();
 
+        //Si la posicion actual es mejor que la mejor historica
+        if (fitness_p  < fitness_p_y) {
+            this->particulas[p].setMejorPosicionPersonal(posicion);
+            this->particulas[p].setMejorFitness(fitness_p);
+        }
+
+        /*--------Esto es inutil, nunca se usa y se actualiza despues de setear las nuevas posiciones
         //Calculamos el fitness de la mejor posicion de su vecindario
         //Obtenemos la mejor posicion del vecindario de la particula
         unsigned int id_mejor_particula_p = this->mejores_posiciones[p];
         float fitness_p_yhat = this->fitness_particulas[id_mejor_particula_p];
 
-        //Si la posicion actual es mejor que la mejor historica
-        if (fitness_p  < fitness_p_y)
-            this->particulas[p].setMejorPosicionPersonal(posicion);
-
         //Si la posicion actual es mejor que la mejor del vecindario
-        //Esto es inutil, nunca se usa y se actualiza despues
+        //
         if (fitness_p_y < fitness_p_yhat)
             this->mejores_posiciones[p] = p;
             //this->particulas[p].setMejorVecindario(p);
+        */
     }
 
     //Ahora actualizamos las posiciones de cada particula
@@ -104,24 +116,16 @@ std::vector<float> Enjambre::getMejorVecindario(unsigned int id_particula) {
 //Calcula el fitness para la posicion dada
 float Enjambre::fitness(std::vector<float> posicion) {
     float nuevo_fitness = 0.0;
-    switch (this->id_funcion_fitness) {
-    case 1: { //ejercicio 3a
-        float valor = posicion[0];
-        nuevo_fitness = -valor*sin(sqrt(fabs(valor)));
-        break;
-    }
-    case 2: { //ejercicio 3b
-        float x = posicion[0];
-        nuevo_fitness = x + 5*sin(3*x) + 8*cos(5*x);
-        break;
-    }
-    case 3: { //ejecicio 3c
-        float x = posicion[0];
-        float y = posicion[1];
-        float cuad = pow(x,2) + pow(y,2);
-        nuevo_fitness = pow(cuad, 0.25)*pow(sin(50*pow(cuad,0.1) + 1),2);
-    }
-    }
+
+    //Seteo los pesos del perceptron como la posicion de la particula a evaluar
+    this->perceptron.setPesos(posicion);
+
+    //Capturo el error del perceptron
+    float error = 1-this->perceptron.train(this->patrones_entradas, this->patrones_salidas, false);
+
+    //El nuevo fitness es el error cuadratico medio del entrenamiento
+    nuevo_fitness = error;
+
     return nuevo_fitness;
 }
 
