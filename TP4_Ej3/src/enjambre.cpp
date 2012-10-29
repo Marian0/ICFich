@@ -39,11 +39,11 @@ Enjambre::Enjambre(std::vector<float> limites_inf, std::vector<float> limites_su
 
 }
 
-void Enjambre::iterar() {
+bool Enjambre::iterar() {
     this->cantidad_iteraciones++;
     if (this->cantidad_iteraciones >= this->iteraciones_maximas) {
         std::cout<<"Maximo de iteraciones alcanzadas.\n";
-        return;
+        return false;
     }
 
     //Para cada particula, actualizamos sus mejores
@@ -78,6 +78,23 @@ void Enjambre::iterar() {
             //this->particulas[p].setMejorVecindario(p);
     }
 
+    //Se reduciran linealmente c1 y c2 para el ejercicio 3c
+    float c1_actual;
+    float c2_actual;
+
+    if (this->id_funcion_fitness == 3) {
+        //interpolamos entre c1 y c2
+
+        float alfa = float(this->cantidad_iteraciones)/float(this->iteraciones_maximas);
+
+        c1_actual = this->c1 * (1 - alfa) + this->c2 * alfa;
+        c2_actual = this->c1 * alfa + this->c2 * (1 - alfa);
+    } else { //si no, se mantienen constantes
+        c1_actual = c1;
+        c2_actual = c2;
+    }
+
+
     //Ahora actualizamos las posiciones de cada particula
     for (unsigned int p = 0; p < this->cantidad_particulas; p++) {
         unsigned int id_mejor_particula_p = this->mejores_posiciones[p];
@@ -87,11 +104,12 @@ void Enjambre::iterar() {
 
         //Actualizamos sus coordenadas
         this->particulas[p].actualizarPosicion(posicionMejorVecindario, c1, c2);
+        this->particulas[p].actualizarPosicion(posicionMejorVecindario, c1_actual, c2_actual);
     }
 
     //Luego actualizamos los mejores de cada vecindario
     this->actualizarMejoresPosiciones();
-
+    return true;
 }
 
 //Devuelve el mejor del vecindario de la particula dada por id_particula

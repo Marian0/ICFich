@@ -136,15 +136,15 @@ int main() {
         break;
     }
     case 3: { //ejercicio 1c
-        x_ini.push_back(0.3);
-        x_ini.push_back(0.3);
+        x_ini.push_back(0.1);
+        x_ini.push_back(0.1);
         break;
     }
     }
 
     //float tasa_inicial = 0.1; //tasa para 1a
     //float tasa_inicial = 0.01; //tasa para 1b
-    float tasa_inicial = 0.1; //tasa para 1c
+    float tasa_inicial = 0.01; //tasa para 1c
     float criterio_error = 0.01;
     unsigned int maxit = 300;
 

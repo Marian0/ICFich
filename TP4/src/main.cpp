@@ -80,7 +80,7 @@ int main() {
         AG.reproduccion();
 
         float mejor_fitness_actual = AG.evaluar();
-        std::cout<<"Mejor fitness a iteracion "<<w<<" = "<<mejor_fitness_actual<<'\n';
+        std::cout<<"Mejor fitness a iteracion "<<w<<" = "<<mejor_fitness_actual<<'\r';
 
         //Guardo el mejor fitness de la poblacion
         mejor_fitness.push_back(AG.getMejorFitness());
@@ -98,7 +98,8 @@ int main() {
         }
     }
 
-    std::cout<<"Se termino luego de "<<w<<" generaciones.\nEl fitness logrado es de "<<mejor_fitness.back()<<'\n';
+
+    std::cout<<"\nSe termino luego de "<<w<<" generaciones.\nEl fitness logrado es de "<<mejor_fitness.back()<<'\n';
 
     AG.imprimirResumen();
     std::vector<bool> respuesta;
