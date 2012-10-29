@@ -41,7 +41,7 @@ public:
     Enjambre(std::vector<float> limites_inf, std::vector<float> limites_sup,
                        unsigned int maxit, unsigned int cant_part, unsigned int id_funcion_fitness,
                        float c1, float c2, unsigned int tamanio_vecindario);
-    void iterar();
+    bool iterar();
     std::vector<float> getMejorVecindario(unsigned int id_particula);
     float fitness(std::vector<float> posicion);
 

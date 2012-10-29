@@ -356,10 +356,16 @@ float utils::fitness_1b(float value) {
 
 //Función de fitness para el ejercicio 1c
 float utils::fitness_1c(float x, float y) {
+    /*
     float sum_cuad = pow(x,2) + pow(y,2);
     float t_cuad = pow(sum_cuad, 0.25);
-    float t_sin = pow(sin(50*pow(sum_cuad,0.1)+1),2);
+    float t_sin = pow(sin(50 * pow(sum_cuad,0.1)),2) + 1;
+
     return -1*(t_cuad*t_sin);
+    */
+    float cuad = pow(x,2) + pow(y,2);
+
+    return -1 * pow(cuad, 0.25)*(pow(sin(50 * pow(cuad,0.1)),2) + 1);
 }
 
 //Convierte a bin, un vector de binarios representando muchas variables, en un vector de enteros.
@@ -378,5 +384,45 @@ void utils::vectorBinary2Int(std::vector<bool> &bin, std::vector<int> &res, unsi
         //Lo agregamos al vector
         res.push_back(valor);
     }
+}
+
+//Distancia entre vectores
+float utils::vectorDistancia(std::vector<float> &X, std::vector<float> &Y ) {
+    std::vector<float> temp;
+    utils::vectorResta(X,Y,temp);
+    return utils::vectorNorma(temp);
+}
+
+//Calcula la norma euclidea de un vector
+float utils::vectorNorma(std::vector<float> &X){
+    float sum = 0;
+    for (unsigned int i = 0; i < X.size(); i++){
+        sum += X[i]*X[i];
+    }
+    return sqrt(sum);
+}
+
+void utils::vectorEscalar(std::vector<float> &X, float value, std::vector<float> &Z){
+    Z.resize(X.size());
+    for(unsigned int i = 0; i < X.size(); i++){
+        Z[i] = X[i]*value;
+    }
+}
+
+void utils::vectorSuma(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z){
+    assert(X.size() == Y.size());
+    std::vector<float> temp;
+
+    temp.resize(X.size());
+    for(unsigned int i = 0; i < X.size(); i++){
+        temp[i] = X[i] + Y[i];
+    }
+    Z = temp;
+}
+
+void utils::vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z){
+    std::vector<float> temp;
+    utils::vectorEscalar(Y,-1,temp);
+    utils::vectorSuma(X, temp ,Z);
 }
 

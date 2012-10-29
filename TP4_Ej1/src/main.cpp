@@ -6,6 +6,7 @@
 #include "Config.h"
 #include "GNUPlot.h"
 #include "AlgoritmoGenetico.h"
+#include "gradiente.h"
 
 
 //Variable global
@@ -49,6 +50,8 @@ int main() {
         std::cout<<"Metodo de seleccion no definido\n";
 
 
+
+
     //Instanciamos el algoritmo genetico
     AlgoritmoGenetico AG (tamanio_poblacion, cantidad_genes, escala, variables_fenotipo, cantidad_generaciones,
                           probabilidad_cruza, probabilidad_mutacion, elitismo, brecha_generacional,
@@ -67,12 +70,12 @@ int main() {
 
     //Guardo el Peor fitness de la poblacion
     peor_fitness.push_back(AG.getPeorFitness());
-
+    float mejor_fitness_actual = 10.0;
     unsigned int w;
     for (w = 0; w < cantidad_generaciones; w++) {
         AG.reproduccion();
 
-        float mejor_fitness_actual = AG.evaluar();
+        mejor_fitness_actual = AG.evaluar();
         std::cout<<"Mejor fitness a iteracion "<<w<<" = "<<mejor_fitness_actual<<'\n';
 
         //Guardo el mejor fitness de la poblacion
@@ -99,15 +102,16 @@ int main() {
     AG.getMejorGenotipo(respuesta);
 
     if(id_funcion_fitness == 1 or id_funcion_fitness == 2)
-        std::cout<<"\nSolucion = "<<utils::binary2int(respuesta);
+        std::cout<<"\nSolucion = "<<utils::binary2int(respuesta)/escala;
     if(id_funcion_fitness == 3) {
         std::vector<int> soluciones;
-        utils::vectorBinary2Int(respuesta,soluciones, 7);
+        utils::vectorBinary2Int(respuesta,soluciones, 18);
         std::cout<<"\nSoluciones = ";
         for (unsigned int i = 0; i < soluciones.size(); i++)
-            std::cout<<soluciones[i]<<' ';
-        std::cout<<std::endl;
+            std::cout<<soluciones[i]/escala<<' ';
+
     }
+    std::cout<<" con fitness = "<<mejor_fitness_actual<<'\n';
 
     //Vector de vector para graficacion
     std::vector<std::vector<float> > grafica;
@@ -117,6 +121,45 @@ int main() {
     GNUPlot plotter;
 
     utils::drawHistory(grafica, plotter, id_funcion_fitness);
+
+    std::cout<<"\nFin del Algoritmo Genetico. Ahora se realizara el metodo de gradiente desciendiente\n";
+
+
+    //Gradiente
+    std::vector<float> x_ini;
+    switch(id_funcion_fitness){
+    case 1: { //ejercicio 1a
+        x_ini.push_back(359.0);
+        break;
+    }
+    case 2: { //ejercicio 1b
+        x_ini.push_back(2.0);
+        break;
+    }
+    case 3: { //ejercicio 1c
+        x_ini.push_back(0.1);
+        x_ini.push_back(0.1);
+        break;
+    }
+    }
+    std::cout<<"Gradiente inicializado en "; utils::printVector((x_ini));
+    //float tasa_inicial = 0.1; //tasa para 1a
+    //float tasa_inicial = 0.01; //tasa para 1b
+    float tasa_inicial = 0.01; //tasa para 1c
+
+    float criterio_error = 0.0001;
+    unsigned int maxit = 300;
+
+    Gradiente gradiente(tasa_inicial, x_ini, id_funcion_fitness, criterio_error, maxit);
+
+    unsigned int iteraciones;
+    iteraciones = gradiente.descender();
+    std::vector<float> solucion_segun_gradiente = gradiente.getSolucion();
+
+    std::cout<<"\nGradiente descendiente:\nIteraciones = "<<iteraciones;
+    std::cout<<"\nSolucion del gradiente = "; utils::printVector(solucion_segun_gradiente);
+
+
 
     getwchar();
     return 0;

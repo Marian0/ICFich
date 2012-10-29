@@ -37,7 +37,7 @@ void Particula::actualizarPosicion(
         float r2 = utils::randomDecimal(0,1);
         //Calculos auxiliares para llegar a la nueva expresion de velocidad
         error_personal[i] *= c1*r1;
-        error_entorno [i]  *= c2*r2;
+        error_entorno [i] *= c2*r2;
     }
 
     //Hacemos v(t+1) = v(t) + c1 r1 * ...

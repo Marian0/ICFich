@@ -19,6 +19,7 @@ int main() {
     unsigned int    cantidad_de_particulas       = utils::strToInt(config.getValue("cantidad_de_particulas"));
     float           c1      = utils::strToFloat(config.getValue("c1"));
     float           c2   = utils::strToFloat(config.getValue("c2"));
+    float           error   = utils::strToFloat(config.getValue("error"));
     unsigned int    maxit      = utils::strToInt(config.getValue("maxit"));
     unsigned int    id_funcion_fitness   = utils::strToInt(config.getValue("id_funcion_fitness"));
     unsigned int    entorno_size          = utils::strToInt(config.getValue("entorno_size"));
@@ -48,21 +49,33 @@ int main() {
     std::cout<<"Limites Inferiores = "; utils::printVector(limites_inf);
     std::cout<<"Limites Superiores = "; utils::printVector(limites_sup);
 
+    float mejor_f_n_1 = 10;
     Enjambre enjambre (limites_inf, limites_sup, maxit, cantidad_de_particulas, id_funcion_fitness, c1, c2, entorno_size);
-    for (unsigned int i = 0; i < maxit; i++) {
-        enjambre.iterar();
+    unsigned int i = 0;
+    for (; i < maxit; i++) {
+        if(!enjambre.iterar())
+            break;
         std::vector<float> solucion = enjambre.getSolucion();
-        std::cout<<"Fitness = "<<enjambre.getMejorFitness()<<". Solucion a iteracion "<<i<<" = "; utils::printVector(solucion);
+        float mejor_f = enjambre.getMejorFitness();
 
+        /*
+        std::cout<<mejor_f<<" "<<mejor_f_n_1<<'\n';
+        if (fabs(mejor_f - mejor_f_n_1) < error) {
+            std::cout<<"Se terminaro a iteracion "<<i<<" porque el cambio en el fitness es menor a "<<error<<'\n';
+            break;
+        }
+        mejor_f_n_1 = mejor_f;
+        */
+
+        if(i % 10 == 0) {
+            std::cout<<"Fitness = "<<mejor_f<<". Solucion a iteracion "<<i<<" = "; utils::printVector(solucion);
+        }
     }
 
     std::vector<float> solucion = enjambre.getSolucion();
-    std::cout<<"Solucion = "; utils::printVector(solucion);
+    std::cout<<"Solucion a iteracion "<<i<<" = "; utils::printVector(solucion);
 
 
-//    GNUPlot plotter;
-
-//    utils::drawHistory(grafica, plotter, id_funcion_fitness);
 
     getwchar();
     return 0;
