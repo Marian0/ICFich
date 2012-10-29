@@ -380,3 +380,43 @@ void utils::vectorBinary2Int(std::vector<bool> &bin, std::vector<int> &res, unsi
     }
 }
 
+//Distancia entre vectores
+float utils::vectorDistancia(std::vector<float> &X, std::vector<float> &Y ) {
+    std::vector<float> temp;
+    utils::vectorResta(X,Y,temp);
+    return utils::vectorNorma(temp);
+}
+
+//Calcula la norma euclidea de un vector
+float utils::vectorNorma(std::vector<float> &X){
+    float sum = 0;
+    for (unsigned int i = 0; i < X.size(); i++){
+        sum += X[i]*X[i];
+    }
+    return sqrt(sum);
+}
+
+void utils::vectorEscalar(std::vector<float> &X, float value, std::vector<float> &Z){
+    Z.resize(X.size());
+    for(unsigned int i = 0; i < X.size(); i++){
+        Z[i] = X[i]*value;
+    }
+}
+
+void utils::vectorSuma(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z){
+    assert(X.size() == Y.size());
+    std::vector<float> temp;
+
+    temp.resize(X.size());
+    for(unsigned int i = 0; i < X.size(); i++){
+        temp[i] = X[i] + Y[i];
+    }
+    Z = temp;
+}
+
+void utils::vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z){
+    std::vector<float> temp;
+    utils::vectorEscalar(Y,-1,temp);
+    utils::vectorSuma(X, temp ,Z);
+}
+

@@ -109,6 +109,18 @@ float static fitness_1c(float x, float y);
 
 
 //----------------
+//Distancia entre vectores
+float static vectorDistancia(std::vector<float> &X, std::vector<float> &Y );
+
+//Calcula la norma euclidea de un vector
+float static vectorNorma(std::vector<float> &X);
+
+void static vectorEscalar(std::vector<float> &X, float value, std::vector<float> &Z);
+
+void static vectorSuma(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z);
+
+void static vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z);
+
 
 
 //graficar historiales
