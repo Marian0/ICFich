@@ -356,10 +356,16 @@ float utils::fitness_1b(float value) {
 
 //Función de fitness para el ejercicio 1c
 float utils::fitness_1c(float x, float y) {
+    /*
     float sum_cuad = pow(x,2) + pow(y,2);
     float t_cuad = pow(sum_cuad, 0.25);
-    float t_sin = pow(sin(50*pow(sum_cuad,0.1)+1),2);
+    float t_sin = pow(sin(50 * pow(sum_cuad,0.1)),2) + 1;
+
     return -1*(t_cuad*t_sin);
+    */
+    float cuad = pow(x,2) + pow(y,2);
+
+    return -1 * pow(cuad, 0.25)*(pow(sin(50 * pow(cuad,0.1)),2) + 1);
 }
 
 //Convierte a bin, un vector de binarios representando muchas variables, en un vector de enteros.

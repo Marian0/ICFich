@@ -71,6 +71,7 @@ bool Enjambre::iterar() {
         if (fitness_p  < fitness_p_y)
             this->particulas[p].setMejorPosicionPersonal(posicion);
 
+
         //Si la posicion actual es mejor que la mejor del vecindario
         //Esto es inutil, nunca se usa y se actualiza despues
         if (fitness_p_y < fitness_p_yhat)
@@ -137,7 +138,8 @@ float Enjambre::fitness(std::vector<float> posicion) {
         float x = posicion[0];
         float y = posicion[1];
         float cuad = pow(x,2) + pow(y,2);
-        nuevo_fitness = pow(cuad, 0.25)*pow(sin(50*pow(cuad,0.1) + 1),2);
+
+        nuevo_fitness = pow(cuad, 0.25)*(pow(sin(50 * pow(cuad,0.1)),2) + 1);
     }
     }
     return nuevo_fitness;

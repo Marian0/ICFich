@@ -70,12 +70,12 @@ int main() {
 
     //Guardo el Peor fitness de la poblacion
     peor_fitness.push_back(AG.getPeorFitness());
-
+    float mejor_fitness_actual = 10.0;
     unsigned int w;
     for (w = 0; w < cantidad_generaciones; w++) {
         AG.reproduccion();
 
-        float mejor_fitness_actual = AG.evaluar();
+        mejor_fitness_actual = AG.evaluar();
         std::cout<<"Mejor fitness a iteracion "<<w<<" = "<<mejor_fitness_actual<<'\n';
 
         //Guardo el mejor fitness de la poblacion
@@ -109,8 +109,9 @@ int main() {
         std::cout<<"\nSoluciones = ";
         for (unsigned int i = 0; i < soluciones.size(); i++)
             std::cout<<soluciones[i]/escala<<' ';
-        std::cout<<std::endl;
+
     }
+    std::cout<<" con fitness = "<<mejor_fitness_actual<<'\n';
 
     //Vector de vector para graficacion
     std::vector<std::vector<float> > grafica;
@@ -141,17 +142,20 @@ int main() {
         break;
     }
     }
-
+    std::cout<<"Gradiente inicializado en "; utils::printVector((x_ini));
     //float tasa_inicial = 0.1; //tasa para 1a
     //float tasa_inicial = 0.01; //tasa para 1b
     float tasa_inicial = 0.01; //tasa para 1c
-    float criterio_error = 0.01;
+
+    float criterio_error = 0.0001;
     unsigned int maxit = 300;
 
     Gradiente gradiente(tasa_inicial, x_ini, id_funcion_fitness, criterio_error, maxit);
+
     unsigned int iteraciones;
     iteraciones = gradiente.descender();
     std::vector<float> solucion_segun_gradiente = gradiente.getSolucion();
+
     std::cout<<"\nGradiente descendiente:\nIteraciones = "<<iteraciones;
     std::cout<<"\nSolucion del gradiente = "; utils::printVector(solucion_segun_gradiente);
 
