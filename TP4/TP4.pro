@@ -32,3 +32,12 @@ HEADERS += \
     include/Individuo.h \
     include/AgenteViajero.h \
     include/AgenteViajero.h
+
+OTHER_FILES += \
+    bin/configuracion2.cfg \
+    bin/configuracion1c.cfg \
+    bin/configuracion1b.cfg \
+    bin/configuracion1a.cfg \
+    bin/configuracion1.cfg \
+    bin/ciudades_facil.txt \
+    bin/ciudades.txt

@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2012-10-27T08:48:54
+# Project created by QtCreator 2012-10-30T19:14:32
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core
 
 QT       -= gui
 
-TARGET = TP4_Ej3
+TARGET = TPF
 CONFIG   += console
 CONFIG   -= app_bundle
 
@@ -17,21 +17,19 @@ INCLUDEPATH += include
 
 
 SOURCES += \
-    src/GNUPlot.cpp \
+    src/main.cpp \
     src/utils.cpp \
+    src/Individuo.cpp \
+    src/GNUPlot.cpp \
     src/Config.cpp \
-    src/particula.cpp \
-    src/enjambre.cpp \
-    src/main.cpp
+    src/AlgoritmoGenetico.cpp
 
 HEADERS += \
-    include/GNUPlot.h \
     include/utils.h \
+    include/Individuo.h \
+    include/GNUPlot.h \
     include/Config.h \
-    include/particula.h \
-    include/enjambre.h \
+    include/AlgoritmoGenetico.h
 
 OTHER_FILES += \
-    bin/configuracion3c.cfg \
-    bin/configuracion3b.cfg \
-    bin/configuracion3a.cfg
+    bin/configuracion.cfg

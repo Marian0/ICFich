@@ -124,6 +124,7 @@ int main() {
 
     std::cout<<"\nFin del Algoritmo Genetico. Ahora se realizara el metodo de gradiente desciendiente\n";
 
+    getwchar();
 
     //Gradiente
     std::vector<float> x_ini;

@@ -1,5 +1,6 @@
 #Esto ignora user configs
 *.pro.user
+octave-core
 
 # Compiled Object files
 *.slo

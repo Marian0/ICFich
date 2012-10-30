@@ -21,3 +21,8 @@ HEADERS += \
     include/utils.h \
     include/gradiente.h
 
+OTHER_FILES += \
+    bin/configuracion1c.cfg \
+    bin/configuracion1b.cfg \
+    bin/configuracion1a.cfg
+

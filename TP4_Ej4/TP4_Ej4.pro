@@ -23,3 +23,8 @@ HEADERS += \
     include/enjambre.h \
     include/Config.h
 
+OTHER_FILES += \
+    bin/estructura4.txt \
+    bin/configuracion4.cfg \
+    bin/limites4.csv
+
