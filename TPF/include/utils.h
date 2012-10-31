@@ -126,11 +126,13 @@ std::vector<std::vector<bool> > static sumarMatrices(std::vector<std::vector<boo
 std::vector<std::vector<bool> > static multiplicarMatrices(std::vector<std::vector<bool> > &M1,
                                                      std::vector<std::vector<bool> > &M2);
 
+
 //graficar historiales
 void static drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter, unsigned int id_ejercicio);
 
 std::pair<unsigned int, unsigned int> static posicionMatriz(unsigned int cantidad_filas,
                                                             unsigned int cantidad_columnas,
                                                             unsigned int bloque);
+std::vector<unsigned int> static distanciasEnUnDia(std::vector<std::vector<bool> > matriz_bool);
 };
 #endif

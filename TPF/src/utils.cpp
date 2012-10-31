@@ -471,3 +471,33 @@ std::vector<std::vector<bool> > utils::multiplicarMatrices( std::vector<std::vec
     }
     return ret_val;
 }
+
+//Para cada día, cuenta la separación que hay en la primer clase de ese dia y la última
+//Devuelve un vector con la separación en cada día
+std::vector<unsigned int> utils::distanciasEnUnDia(std::vector<std::vector<bool> > matriz_bool) {
+    unsigned int cantidad_dias = matriz_bool.size();
+    std::vector<unsigned int> distancias;
+    //Para cada dia
+    for(unsigned int i = 0; i < cantidad_dias; i++) {
+        unsigned int pos_ini = 0;
+        int pos_fin = matriz_bool[i].size()-1;
+
+        //encuentra el indice del primer true del dia
+        while(pos_ini < matriz_bool[i].size() and matriz_bool[i][pos_ini] == false)
+            pos_ini++;
+
+        //Encuentra el indice del ultimo true del dia
+        while(pos_fin >= 0 and matriz_bool[i][pos_fin] == false)
+            pos_fin--;
+        //calcula la separacion
+        unsigned int separacion;
+        //si se pasaron de rosca, es que no hay clases en ese dia
+        if(pos_fin < 0 or pos_ini == matriz_bool[i].size())
+            separacion = 0;
+        else
+            separacion = abs(pos_fin - pos_ini);
+        //la agrega al vector
+        distancias.push_back(separacion);
+    }
+    return distancias;
+}
