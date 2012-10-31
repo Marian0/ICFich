@@ -2,17 +2,82 @@
 #include <cstdlib>
 #include <vector>
 #include <ctime>
+#include <fstream>
+#include <cassert>
+#include <sstream>
+#include <string>
 #include "utils.h"
 #include "Config.h"
 #include "GNUPlot.h"
 #include "AlgoritmoGenetico.h"
+#include "Clase.h"
+
 
 //Variable global
 Config config("configuracion.cfg"); //lectura de la configuracion
 
+//Lee todas las clases y las guarda en un vector
+std::vector<Clase> leerClases(std::string nombre_archivo) {
+    //Leemos el archivo
+    std::ifstream file (nombre_archivo.c_str());
+    //Comprobamos que este abierto
+    assert(file.is_open());
+    //Valor a retornar, vector con todas las clases
+    std::vector<Clase> ret_val;
+    std::string line;
+    //Hasta llegar al final
+    //Lee una linea
+    while (getline(file, line)) {
+        std::stringstream iss;
+        //Pasa la string a streamstring
+        iss<<line;
+
+        //Cometario, no se procesa
+        if(!iss.str().empty() && iss.str()[0] == '#'){
+            std::cout<<iss.str()<<std::endl;
+            continue;
+        }
+
+        //Separa la linea en 3
+        std::string nom_mat;
+        unsigned int id_mat;
+        unsigned int cant_horas;
+        unsigned int anio;
+
+
+        //std::stringstream ss;
+        for (unsigned int i = 0; i < 4; i++) {
+            std::string s;
+            //Lee un parametro
+            getline(iss,s,',');
+
+            //Segun que tipo de parametro sea...
+            if (i == 0)
+                nom_mat = s;
+            if (i == 1)
+                id_mat = utils::strToInt(s);
+            if (i == 2)
+                cant_horas = utils::strToInt(s);
+            if (i == 3)
+                anio = utils::strToInt(s);
+        }
+        //Construye una clase
+        Clase clase (nom_mat, id_mat, cant_horas, anio);
+        //La agrega al vector
+        ret_val.push_back(clase);
+
+    }
+
+    return ret_val;
+}
+
+
 int main() {
     //inicializacion de semilla
     srand( (unsigned) std::time(NULL));
+
+    std::vector<Clase> clases = leerClases("clases.txt");
+    getwchar();
 
     //Leemos los valores de configuracion
       float           probabilidad_cruza      = utils::strToFloat(config.getValue("cruza"));

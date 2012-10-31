@@ -125,5 +125,9 @@ void static vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vecto
 
 //graficar historiales
 void static drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter, unsigned int id_ejercicio);
+
+std::pair<unsigned int, unsigned int> static posicionMatriz(unsigned int cantidad_filas,
+                                                            unsigned int cantidad_columnas,
+                                                            unsigned int bloque);
 };
 #endif

@@ -426,3 +426,12 @@ void utils::vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vecto
     utils::vectorSuma(X, temp ,Z);
 }
 
+//Calcula las coordenadas (i,j) dentro de la matriz que tiene N filas y M columnas
+std::pair<unsigned int, unsigned int> utils::posicionMatriz(unsigned int cantidad_filas,
+                                                            unsigned int cantidad_columnas,
+                                                            unsigned int bloque) {
+    std::pair<unsigned int, unsigned int> ret_val;
+    ret_val.first = floor(bloque / cantidad_columnas);
+    ret_val.second = floor(bloque % cantidad_columnas);
+    return ret_val;
+}

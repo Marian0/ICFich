@@ -1,7 +1,7 @@
 #ifndef __INDIVIDUO_H__
 #define __INDIVIDUO_H__
 #include <vector>
-
+#include "Clase.h"
 class Individuo {
     public:
     //Vector con los valores de la cadena de bits
@@ -19,11 +19,19 @@ class Individuo {
     //Dice cuantas variables tiene el fenotipo
     unsigned int variables_fenotipo;
 
+    //Guarda las caracteristicas de cada clase
+    std::vector<Clase> clases;
+
+    //Matriz de bool que representa los bloques ocupados en este individuo
+    std::vector<std::vector<std::vector<bool> > > matriz_bool;
+    //Matriz de int que representa el bloque que ocupa cada materia en este individuo
+    std::vector<std::vector<std::vector<int> > > matriz_int;
+
     //Constructor vacio
     Individuo();
 
     //Constructor
-    Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id, float escala = 1.00, unsigned int variables_fenotipo = 1);
+    Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id,  std::vector<Clase> clases, float escala = 1.00, unsigned int variables_fenotipo = 1);
 
     //Calcula el fitness actual y lo guarda en la propiedad fitness
     float calcularFitness();
@@ -33,5 +41,12 @@ class Individuo {
 
     //Devuelve el Fenotipo del Individuo
     float getFenotipo();
+
+    //Llama a los calculos de las dos matrices
+    void calcularMatrices();
+    //Calcula la matriz int
+    void calcularMatrizInt();
+    //Calcula la matriz bool
+    void calcularMatrizBool();
 };
 #endif
