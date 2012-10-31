@@ -4,7 +4,7 @@
 #include "Individuo.h"
 #include <cstdio>
 
-AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, float escala, unsigned int variables_fenotipo, unsigned int max_gen, float pcruza, float pmutacion_movimiento, float pmutacion_permutacion, unsigned int elitismo, unsigned int brecha_generacional, unsigned int id_funcion_fitness, unsigned int metodo_seleccion, std::vector & Clases, unsigned int k_competencia, unsigned int bits_por_materia) {
+AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, float escala, unsigned int variables_fenotipo, unsigned int max_gen, float pcruza, float pmutacion_movimiento, float pmutacion_permutacion, unsigned int elitismo, unsigned int brecha_generacional, unsigned int id_funcion_fitness, std::vector<Clase>  Clases, unsigned int metodo_seleccion, unsigned int k_competencia, unsigned int bits_por_materia) {
 
     //Copia las propiedades del algoritmo
     this->tamanio_poblacion = tam_pob;
@@ -14,7 +14,7 @@ AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_gen
     this->probabilidad_cruza = pcruza;
     this->probabilidad_mutacion_movimiento = pmutacion_movimiento;
     this->probabilidad_mutacion_permutacion = pmutacion_permutacion;
-    this->metodo_seleccion = met_sel;
+    this->metodo_seleccion = metodo_seleccion;
     this->k_competencia = k_competencia;
     this->n_elitismo = elitismo;
     this->n_brecha_generacional = brecha_generacional;
@@ -66,7 +66,7 @@ AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_gen
 
     //Crea todos los Individuos
     for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
-        Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness, this->escala, this->variables_fenotipo);
+        Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness, Clases, this->escala, this->variables_fenotipo);
         this->poblacion.push_back(new_ind);
     }
 
@@ -325,8 +325,8 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
 
 
     //Algoritmo de cruza
-    Individuo hijo1(this->cantidad_genes, this->id_funcion_fitness, escala, variables_fenotipo);
-    Individuo hijo2(this->cantidad_genes, this->id_funcion_fitness, escala, variables_fenotipo);
+    Individuo hijo1(this->cantidad_genes, this->id_funcion_fitness, Clases, escala, variables_fenotipo);
+    Individuo hijo2(this->cantidad_genes, this->id_funcion_fitness, Clases, escala, variables_fenotipo);
 
     hijo1.genotipo.clear();
     hijo2.genotipo.clear();
@@ -347,7 +347,8 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
 //Realiza la mutación de un padre en un hijo
 void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
     //Control de probabilidad para el metodo de mutacion 1
-    float prob = utils::randomDecimal(0.0,1.0);
+    float prob;
+    prob = utils::randomDecimal(0.0,1.0);
     if (prob >= this->probabilidad_mutacion_permutacion) {
         mutacionPermutacion(individuo_a_mutar);
         //aumentamos contador
@@ -355,7 +356,7 @@ void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
     }
 
     //Control de probabilidad para el metodo de mutacion 1
-    float prob = utils::randomDecimal(0.0,1.0);
+    prob = utils::randomDecimal(0.0,1.0);
     if (prob >= this->probabilidad_mutacion_movimiento) {
         mutacionMovimiento(individuo_a_mutar);
         //aumentamos contador
@@ -423,7 +424,8 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
     unsigned int anio = this->Clases[posicion_random].anio;
 
     //Definimos la matriz a buscar de acuerdo al año
-    std::vector<std::vector<bool> > matriz_horarios_bool = this->Clases[posicion_random].matriz_bool[anio];
+    std::vector<std::vector<bool> > matriz_horarios_bool = individuo_a_mutar.matriz_bool[anio];
+    //std::vector<std::vector<bool> > matriz_horarios_bool = this->Clases[posicion_random].matriz_bool[anio];
 
     //Definimos en que rango buscar, si de 3 o de 2
     unsigned int horas = this->Clases[posicion_random].cantidad_horas;

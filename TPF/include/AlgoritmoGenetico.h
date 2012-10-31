@@ -82,8 +82,8 @@ class AlgoritmoGenetico {
                        unsigned int elitismo,
                        unsigned int brecha_generacional,
                        unsigned int id_funcion_fitness,
+                       std::vector<Clase> Clases,
                        unsigned int metodo_seleccion = SELECCION_COMPETENCIA ,
-                       std::vector<Clase> & Clases,
                        unsigned int k_competencia = 5,
                        unsigned int bits_por_materia = 6
                       );
