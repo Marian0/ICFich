@@ -68,7 +68,30 @@ std::vector<Clase> leerClases(std::string nombre_archivo) {
 
     }
 
+    file.close();
     return ret_val;
+}
+
+void escribirSolucion(std::vector<std::vector<std::vector<int> > >matriz_int, std::vector<Clase> clases, std::string archivo_salida) {
+    std::ofstream file(archivo_salida.c_str());
+    assert(file.is_open());
+    //por cada aÃ±o
+    for (unsigned int i = 1; i < matriz_int.size(); i++) {
+        file<<"\nAnio "<<i<<"\n";
+        //por cada dia
+        for (unsigned int j = 0; j < matriz_int[i].size(); j++) {
+            //por cada bloque
+            for (unsigned int k = 0; k < matriz_int[i][j].size(); k++) {
+                unsigned id_clase = matriz_int[i][j][k];
+                std::string nombre_clase = clases[id_clase].nombre;
+                file<<nombre_clase<<'\t';
+            }
+            file<<'\n';
+        }
+        file<<'\n';
+    }
+    file<<'\n';
+    file.close();
 }
 
 

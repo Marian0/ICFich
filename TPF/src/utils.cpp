@@ -432,6 +432,42 @@ std::pair<unsigned int, unsigned int> utils::posicionMatriz(unsigned int cantida
                                                             unsigned int bloque) {
     std::pair<unsigned int, unsigned int> ret_val;
     ret_val.first = floor(bloque / cantidad_columnas);
-    ret_val.second = floor(bloque % cantidad_columnas);
+    ret_val.second = bloque % cantidad_columnas;
+    return ret_val;
+}
+
+//Suma las dos matrices miembro a miembro. Devuelve la matriz resultado
+std::vector<std::vector<bool> > utils::sumarMatrices(std::vector<std::vector<bool> > &M1,
+                                                     std::vector<std::vector<bool> > &M2) {
+    unsigned int m1_filas       = M1.size();
+    unsigned int m1_columnas    = M1[0].size();
+    unsigned int m2_filas       = M2.size();
+    unsigned int m2_columnas    = M2[0].size();
+    assert(m1_filas == m2_filas);
+    assert(m1_columnas == m2_columnas);
+    std::vector<std::vector<bool> > ret_val;
+    for (unsigned int i = 0; i < m1_filas; i++) {
+        for (unsigned int j = 0; j < m1_columnas; j++) {
+            ret_val[i][j] = M1[i][j] + M2[i][j];
+        }
+    }
+    return ret_val;
+}
+
+//Multiplica las dos matrices miembro a miembro. Devuelve una matriz
+std::vector<std::vector<bool> > utils::multiplicarMatrices( std::vector<std::vector<bool> > &M1,
+                                                            std::vector<std::vector<bool> > &M2) {
+    unsigned int m1_filas       = M1.size();
+    unsigned int m1_columnas    = M1[0].size();
+    unsigned int m2_filas       = M2.size();
+    unsigned int m2_columnas    = M2[0].size();
+    assert(m1_filas == m2_filas);
+    assert(m1_columnas == m2_columnas);
+    std::vector<std::vector<bool> > ret_val;
+    for (unsigned int i = 0; i < m1_filas; i++) {
+        for (unsigned int j = 0; j < m1_columnas; j++) {
+            ret_val[i][j] = M1[i][j] * M2[i][j];
+        }
+    }
     return ret_val;
 }

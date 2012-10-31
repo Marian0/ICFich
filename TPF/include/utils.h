@@ -121,7 +121,10 @@ void static vectorSuma(std::vector<float> &X, std::vector<float> &Y, std::vector
 
 void static vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z);
 
-
+std::vector<std::vector<bool> > static sumarMatrices(std::vector<std::vector<bool> > &M1,
+                                                     std::vector<std::vector<bool> > &M2);
+std::vector<std::vector<bool> > static multiplicarMatrices(std::vector<std::vector<bool> > &M1,
+                                                     std::vector<std::vector<bool> > &M2);
 
 //graficar historiales
 void static drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter, unsigned int id_ejercicio);
