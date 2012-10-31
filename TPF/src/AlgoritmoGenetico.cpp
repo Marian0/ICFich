@@ -418,14 +418,11 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
     genotipo_bloque.insert( genotipo_bloque.begin(),
                            genotipo.begin() + posicion_random * this->bits_por_materia ,
                            genotipo.begin() + (posicion_random + 1) * this->bits_por_materia );
-
-
-    int id_bloque = utils::binary2int(genotipo_bloque); //0...25 y referencia la matriz de horarios
+    //Obtengo el año
     unsigned int anio = this->Clases[posicion_random].anio;
 
     //Definimos la matriz a buscar de acuerdo al año
     std::vector<std::vector<bool> > matriz_horarios_bool = individuo_a_mutar.matriz_bool[anio];
-    //std::vector<std::vector<bool> > matriz_horarios_bool = this->Clases[posicion_random].matriz_bool[anio];
 
     //Definimos en que rango buscar, si de 3 o de 2
     unsigned int horas = this->Clases[posicion_random].cantidad_horas;
@@ -479,7 +476,7 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
 
     }
 
-
+    this->cantidad_mutaciones_movimiento++;
 }
 
 void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
