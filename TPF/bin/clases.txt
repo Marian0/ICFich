@@ -1,0 +1,7 @@
+#materia, id_materia, cantidad_horas, anio
+Matematica Basica (Teoria), 1, 2, 1
+Matematica Basica (Practica1), 1, 2, 1
+Matematica Basica (Practica2), 1, 2, 1
+Fundamentos de Programacion (Teoria), 2, 2, 1
+Fundamentos de Programacion (Practica1), 2, 2, 1
+Fundamentos de Programacion (Practica2), 2, 2, 1

@@ -22,14 +22,16 @@ SOURCES += \
     src/Individuo.cpp \
     src/GNUPlot.cpp \
     src/Config.cpp \
-    src/AlgoritmoGenetico.cpp
+    src/AlgoritmoGenetico.cpp \
+    src/Clase.cpp
 
 HEADERS += \
     include/utils.h \
     include/Individuo.h \
     include/GNUPlot.h \
     include/Config.h \
-    include/AlgoritmoGenetico.h
+    include/AlgoritmoGenetico.h \
+    include/Clase.h
 
 OTHER_FILES += \
     bin/configuracion.cfg
