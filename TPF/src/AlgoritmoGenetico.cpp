@@ -4,12 +4,7 @@
 #include "Individuo.h"
 #include <cstdio>
 
-AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_genes,
-                                        float escala, unsigned int variables_fenotipo,
-                                        unsigned int max_gen, float pcruza, float pmutacion,
-                                        unsigned int elitismo, unsigned int brecha_generacional,
-                                        unsigned int id_funcion_fitness,
-                                        unsigned int met_sel, unsigned int k_competencia) {
+AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, float escala, unsigned int variables_fenotipo, unsigned int max_gen, float pcruza, float pmutacion_movimiento, float pmutacion_permutacion, unsigned int elitismo, unsigned int brecha_generacional, unsigned int id_funcion_fitness, unsigned int metodo_seleccion, std::vector & Clases, unsigned int k_competencia, unsigned int bits_por_materia) {
 
     //Copia las propiedades del algoritmo
     this->tamanio_poblacion = tam_pob;
@@ -17,16 +12,57 @@ AlgoritmoGenetico::AlgoritmoGenetico(   unsigned int tam_pob, unsigned int cant_
     this->generaciones_maximo = max_gen;
     this->generacion_actual = 0;
     this->probabilidad_cruza = pcruza;
-    this->probabilidad_mutacion = pmutacion;
+    this->probabilidad_mutacion_movimiento = pmutacion_movimiento;
+    this->probabilidad_mutacion_permutacion = pmutacion_permutacion;
     this->metodo_seleccion = met_sel;
     this->k_competencia = k_competencia;
     this->n_elitismo = elitismo;
     this->n_brecha_generacional = brecha_generacional;
     this->id_funcion_fitness = id_funcion_fitness;
-    this->cantidad_mutaciones = 0;
+    this->cantidad_mutaciones_movimiento = 0;
+    this->cantidad_mutaciones_permutacion = 0;
     this->cantidad_cruzas = 0;
     this->escala = escala;
     this->variables_fenotipo = variables_fenotipo;
+
+    this->Clases = Clases;
+
+    this->bits_por_materia = bits_por_materia;
+
+
+    // A MODIFICAR
+    // A MODIFICAR
+    // A MODIFICAR
+    // A MODIFICAR
+    //Vectores que representan la distribucion de los horarios. Osea
+    // QUe bloques son de 2 horas y que bloques son de 31
+    this->Bloques2.push_back(0);
+    this->Bloques2.push_back(5);
+    this->Bloques2.push_back(10);
+    this->Bloques2.push_back(15);
+    this->Bloques2.push_back(20);
+    this->Bloques2.push_back(2);
+    this->Bloques2.push_back(7);
+    this->Bloques2.push_back(12);
+    this->Bloques2.push_back(17);
+    this->Bloques2.push_back(22);
+    this->Bloques2.push_back(3);
+    this->Bloques2.push_back(8);
+    this->Bloques2.push_back(13);
+    this->Bloques2.push_back(18);
+    this->Bloques2.push_back(23);
+    this->Bloques3.push_back(1);
+    this->Bloques3.push_back(6);
+    this->Bloques3.push_back(11);
+    this->Bloques3.push_back(16);
+    this->Bloques3.push_back(21);
+    this->Bloques3.push_back(4);
+    this->Bloques3.push_back(9);
+    this->Bloques3.push_back(14);
+    this->Bloques3.push_back(19);
+    this->Bloques3.push_back(24);
+
+
 
     //Crea todos los Individuos
     for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
@@ -106,6 +142,10 @@ void AlgoritmoGenetico::reproduccion() {
     this->poblacion = nueva_poblacion;
     this->tamanio_poblacion = nueva_poblacion.size();
 
+    //Recalculamos las matrices de horarios
+    for (unsigned int i = 0 ; i < this->tamanio_poblacion; i++ ) {
+        this->poblacion[i].calcularMatrices();
+    }
 }
 
 //Evalua la poblacion, calculando los fitness, y devuelve el mejor
@@ -257,20 +297,32 @@ void AlgoritmoGenetico::competencia(std::vector<Individuo> &nuevos_padres, unsig
 //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
 void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<Individuo> &hijos) {
     hijos.clear();
-    unsigned int posicion_cruza;
+
+    //Tiro la moneda para ver si tengo que cruzar
     float prob = utils::randomDecimal(0.0,1.0);
-
-    if (prob < this->probabilidad_cruza) {
-        posicion_cruza = rand() % this->cantidad_genes;
-
-    } else {
+    if (prob >= this->probabilidad_cruza) {
         //No se cruzan, "se clonan los padres"
         hijos.push_back(padre);
         hijos.push_back(madre);
         return;
     }
-    //Aumento contador
+
+    // Se producirá la cruza => Aumento contador
     this->cantidad_cruzas++;
+
+
+    unsigned int posicion_cruza1;
+    unsigned int posicion_cruza2, temp;
+    posicion_cruza1 = rand() % this->cantidad_genes;
+    posicion_cruza2 = rand() % this->cantidad_genes;
+
+    if (posicion_cruza1 > posicion_cruza2) {
+        //swapping
+        temp = posicion_cruza1;
+        posicion_cruza1 = posicion_cruza2;
+        posicion_cruza2 = temp;
+    }
+
 
     //Algoritmo de cruza
     Individuo hijo1(this->cantidad_genes, this->id_funcion_fitness, escala, variables_fenotipo);
@@ -279,11 +331,14 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
     hijo1.genotipo.clear();
     hijo2.genotipo.clear();
 
-    hijo1.genotipo.insert(hijo1.genotipo.begin(), padre.genotipo.begin(), padre.genotipo.begin() + posicion_cruza);
-    hijo2.genotipo.insert(hijo2.genotipo.begin(), madre.genotipo.begin(), madre.genotipo.begin() + posicion_cruza);
-
-    hijo1.genotipo.insert(hijo1.genotipo.end(), madre.genotipo.begin() + posicion_cruza, madre.genotipo.end() );
-    hijo2.genotipo.insert(hijo2.genotipo.end(), padre.genotipo.begin() + posicion_cruza, padre.genotipo.end() );
+    //Cruza hijo 1
+    hijo1.genotipo.insert(hijo1.genotipo.begin(), padre.genotipo.begin(), padre.genotipo.begin() + posicion_cruza1);
+    hijo1.genotipo.insert(hijo1.genotipo.end(), madre.genotipo.begin() + posicion_cruza1 , madre.genotipo.begin() + posicion_cruza2 );
+    hijo1.genotipo.insert(hijo1.genotipo.end(), padre.genotipo.begin() + posicion_cruza2 , padre.genotipo.end() );
+    //Cruza hijo 2
+    hijo2.genotipo.insert(hijo2.genotipo.begin(), madre.genotipo.begin(), madre.genotipo.begin() + posicion_cruza1);
+    hijo2.genotipo.insert(hijo2.genotipo.end(), padre.genotipo.begin() + posicion_cruza1 , padre.genotipo.begin() + posicion_cruza2 );
+    hijo2.genotipo.insert(hijo2.genotipo.end(), madre.genotipo.begin() + posicion_cruza2 , madre.genotipo.end() );
 
     hijos.push_back(hijo1);
     hijos.push_back(hijo2);
@@ -291,16 +346,26 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
 
 //Realiza la mutación de un padre en un hijo
 void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
-    //Control de probabilidad
+    //Control de probabilidad para el metodo de mutacion 1
     float prob = utils::randomDecimal(0.0,1.0);
-    if (prob >= this->probabilidad_mutacion)
-        return;
+    if (prob >= this->probabilidad_mutacion_permutacion) {
+        mutacionPermutacion(individuo_a_mutar);
+        //aumentamos contador
+        this->cantidad_mutaciones_permutacion++;
+    }
 
-    //aumentamos contador
-    this->cantidad_mutaciones++;
+    //Control de probabilidad para el metodo de mutacion 1
+    float prob = utils::randomDecimal(0.0,1.0);
+    if (prob >= this->probabilidad_mutacion_movimiento) {
+        mutacionMovimiento(individuo_a_mutar);
+        //aumentamos contador
 
-    unsigned int i_random = rand() % this->cantidad_genes;
-    individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
+        this->cantidad_mutaciones_movimiento++;
+    }
+
+
+//    unsigned int i_random = rand() % this->cantidad_genes;
+//    individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
 }
 
 
@@ -331,9 +396,64 @@ float AlgoritmoGenetico::getMejorSolucion() {
 void AlgoritmoGenetico::imprimirResumen() {
     std::cout<<"Cantidad de generaciones = "<<this->generacion_actual;
     std::cout<<"\nCantidad de cruzas = "<<this->cantidad_cruzas;
-    std::cout<<"\nCantidad de mutaciones = "<<this->cantidad_mutaciones;
+    std::cout<<"\nCantidad de mutaciones por Movimiento = "<<this->cantidad_mutaciones_movimiento;
+    std::cout<<"\nCantidad de mutaciones por Permutación = "<<this->cantidad_mutaciones_permutacion;
     //std::cout<<"\nMejor Fitness = "<<this->getMejorFitness()<< ", con fenotipo = "<<this->getMejorSolucion();
     std::cout<<"\nMejor Fitness = "<<this->getMejorFitness();
     std::cout<<"\nPeor Fitness = "<<this->getPeorFitness();
+
+}
+
+
+void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
+    //Obtengo una posición al azar del fenotipo
+    unsigned int posicion_random = rand() % individuo_a_mutar.variables_fenotipo;
+
+    //Obtengo el Genotipo del individuo
+    std::vector<bool> genotipo = individuo_a_mutar.genotipo;
+    //Variable para recortar el genotipo del individuo y obtener UN fenotipo
+    std::vector<bool> genotipo_bloque;
+
+    genotipo_bloque.insert( genotipo_bloque.begin(),
+                           genotipo.begin() + posicion_random * this->bits_por_materia ,
+                           genotipo.begin() + (posicion_random + 1) * this->bits_por_materia );
+
+
+    int id_bloque = utils::binary2int(genotipo_bloque); //0...25 y referencia la matriz de horarios
+    unsigned int anio = this->Clases[posicion_random].anio;
+
+    //Definimos la matriz a buscar de acuerdo al año
+    std::vector<std::vector<bool> > matriz_horarios_bool = this->Clases[posicion_random].matriz_bool[anio];
+
+    //Definimos en que rango buscar, si de 3 o de 2
+    unsigned int horas = this->Clases[posicion_random].cantidad_horas;
+
+    std::vector<unsigned int> bloques_a_buscar;
+    if ( horas == 2 ) {
+        bloques_a_buscar = this->Bloques2;
+    } else {
+        bloques_a_buscar = this->Bloques2;
+    }
+
+
+    unsigned int control_iteraciones = 0;
+    unsigned int i = rand() % 25;
+    unsigned int j = rand() % 25;
+
+    bool buscar = true;
+    while   (buscar) {
+        //Buscaremos un espacio en blanco
+
+        if (!matriz_horarios_bool[i][j]) {
+            //encontramos
+            break;
+        }
+
+    }
+
+
+}
+
+void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
 
 }

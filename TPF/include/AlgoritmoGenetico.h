@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Individuo.h"
+#include "Clase.h"
 
 class AlgoritmoGenetico {
     //Vector que tiene todos los Individuos de esta poblacion
@@ -28,7 +29,8 @@ class AlgoritmoGenetico {
     //Parametros para la reproduccion
     //Define los porcentajes para cada operacion
     float probabilidad_cruza;
-    float probabilidad_mutacion;
+    float probabilidad_mutacion_movimiento;
+    float probabilidad_mutacion_permutacion;
 
     //Parametros para los algortimos de seleccion
     //Define la cantidad de padres a competir en competencia
@@ -46,13 +48,21 @@ class AlgoritmoGenetico {
     unsigned int id_funcion_fitness;
 
     //Contadores para saber la cantidad de operaciones que se hacen
-    unsigned int cantidad_mutaciones;
+    unsigned int cantidad_mutaciones_movimiento;
+    unsigned int cantidad_mutaciones_permutacion;
     unsigned int cantidad_cruzas;
 
     //Escala con la que se dividen los fenotipos
     float escala;
     //Cantidad de variables en el fenotipo
     unsigned int variables_fenotipo;
+
+    //Agregados para el TP FINAL
+    unsigned int bits_por_materia;
+    std::vector<Clase> Clases;
+
+    std::vector<unsigned int> Bloques3;
+    std::vector<unsigned int> Bloques2;
 
     public:
 
@@ -61,10 +71,21 @@ class AlgoritmoGenetico {
     static const unsigned int SELECCION_COMPETENCIA = 3;
     
     //Constructor
-    AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, float escala, unsigned int variables_fenotipo, unsigned int max_gen,
-                      float pcruza, float pmutacion, unsigned int elitismo, unsigned int brecha_generacional, unsigned int id_funcion_fitness,
-                      unsigned int metodo_seleccion = SELECCION_COMPETENCIA ,
-                      unsigned int k_competencia = 5
+    AlgoritmoGenetico( unsigned int tam_pob,
+                       unsigned int cant_genes,
+                       float escala,
+                       unsigned int variables_fenotipo,
+                       unsigned int max_gen,
+                       float pcruza,
+                       float pmutacion_movimiento,
+                       float pmutacion_permutacion,
+                       unsigned int elitismo,
+                       unsigned int brecha_generacional,
+                       unsigned int id_funcion_fitness,
+                       unsigned int metodo_seleccion = SELECCION_COMPETENCIA ,
+                       std::vector<Clase> & Clases,
+                       unsigned int k_competencia = 5,
+                       unsigned int bits_por_materia = 6
                       );
 
     //Crea la nueva generacion
@@ -113,5 +134,14 @@ class AlgoritmoGenetico {
     static bool ordenarIndividuos(Individuo a, Individuo b) {
         return a.fitness > b.fitness;
     }
+
+
+    //Mutacion con movimiento
+    void mutacionMovimiento(Individuo & individuo_a_mutar);
+
+    //Mutacion con movimiento
+    void mutacionPermutacion(Individuo & individuo_a_mutar);
+
+
 };
 #endif

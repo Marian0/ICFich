@@ -29,6 +29,7 @@ int main() {
       unsigned int    brecha_generacional     = utils::strToInt(config.getValue("brecha_generacional"));
       unsigned int    k_competencia           = utils::strToInt(config.getValue("k_competencia"));
       float           fitness_deseado         = utils::strToFloat(config.getValue("fitness_deseado"));
+      unsigned int    bits_por_clase           = utils::strToInt(config.getValue("bits_por_clase"));
 
 
     std::cout<<"Bienvenidos al Trabajo Final - Inteligencia Computacional - 2012\n";
