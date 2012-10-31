@@ -418,14 +418,11 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
     genotipo_bloque.insert( genotipo_bloque.begin(),
                            genotipo.begin() + posicion_random * this->bits_por_materia ,
                            genotipo.begin() + (posicion_random + 1) * this->bits_por_materia );
-
-
-    int id_bloque = utils::binary2int(genotipo_bloque); //0...25 y referencia la matriz de horarios
+    //Obtengo el año
     unsigned int anio = this->Clases[posicion_random].anio;
 
     //Definimos la matriz a buscar de acuerdo al año
     std::vector<std::vector<bool> > matriz_horarios_bool = individuo_a_mutar.matriz_bool[anio];
-    //std::vector<std::vector<bool> > matriz_horarios_bool = this->Clases[posicion_random].matriz_bool[anio];
 
     //Definimos en que rango buscar, si de 3 o de 2
     unsigned int horas = this->Clases[posicion_random].cantidad_horas;
@@ -434,28 +431,136 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
     if ( horas == 2 ) {
         bloques_a_buscar = this->Bloques2;
     } else {
-        bloques_a_buscar = this->Bloques2;
+        bloques_a_buscar = this->Bloques3;
     }
 
 
-    unsigned int control_iteraciones = 0;
-    unsigned int i = rand() % 25;
-    unsigned int j = rand() % 25;
+    unsigned int control_iteraciones = floor(bloques_a_buscar.size() * 2.5);
+
 
     bool buscar = true;
     while   (buscar) {
-        //Buscaremos un espacio en blanco
+        unsigned int buscando = rand() % bloques_a_buscar.size();
+        std::pair<unsigned int, unsigned int> posicion =  utils::posicionMatriz(5,5,buscando);
+        unsigned int i = posicion.first;
+        unsigned int j = posicion.second;
 
         if (!matriz_horarios_bool[i][j]) {
-            //encontramos
+            //Esta vacío!
+            std::vector<bool> nuevo_genotipo;
+            std::vector<bool> buscando_binary = utils::int2binary(buscando, false);
+            nuevo_genotipo.insert( nuevo_genotipo.begin(),
+                                   individuo_a_mutar.genotipo.begin(),
+                                   individuo_a_mutar.genotipo.begin() + posicion_random * this->bits_por_materia
+                                   );
+
+            nuevo_genotipo.insert( nuevo_genotipo.end(),
+                                   buscando_binary.begin(),
+                                   buscando_binary.end()
+                                   );
+
+            nuevo_genotipo.insert( nuevo_genotipo.end(),
+                                   individuo_a_mutar.genotipo.begin() + (posicion_random + 1) * this->bits_por_materia,
+                                   individuo_a_mutar.genotipo.end()
+                                   );
+
+            individuo_a_mutar.genotipo = nuevo_genotipo;
+
+            individuo_a_mutar.calcularMatrices();
             break;
         }
 
+        control_iteraciones--;
+        if (control_iteraciones == 0)
+            break; //Control anti while true infinito
+
     }
 
-
+    this->cantidad_mutaciones_movimiento++;
 }
 
 void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
+    //Obtengo una posición al azar del fenotipo
+    unsigned int posicion_random = rand() % individuo_a_mutar.variables_fenotipo;
+
+    //Obtengo el Genotipo del individuo
+    std::vector<bool> genotipo = individuo_a_mutar.genotipo;
+    //Variable para recortar el genotipo del individuo y obtener UN fenotipo
+    std::vector<bool> genotipo_bloque;
+
+    genotipo_bloque.insert( genotipo_bloque.begin(),
+                           genotipo.begin() + posicion_random * this->bits_por_materia ,
+                           genotipo.begin() + (posicion_random + 1) * this->bits_por_materia );
+
+    //Obtengo el año de esa clase
+    unsigned int anio = this->Clases[posicion_random].anio;
+    //Obtengo la cantidad de horas que tiene la clase
+    unsigned int horas = this->Clases[posicion_random].cantidad_horas;
+
+    //Definimos en que rango buscar, si de 3 o de 2
+    std::vector<unsigned int> bloques_a_buscar;
+    if ( horas == 2 ) {
+        bloques_a_buscar = this->Bloques2;
+    } else {
+        bloques_a_buscar = this->Bloques3;
+    }
+
+    //Busco una posicion para permutación válida
+    int control_iteraciones = floor(bloques_a_buscar.size() * 2.5);
+    unsigned int posicion_permutacion;
+    while(true) {
+        posicion_permutacion = rand() % individuo_a_mutar.variables_fenotipo;
+        if (posicion_permutacion != posicion_random && this->Clases[posicion_permutacion].cantidad_horas == horas && this->Clases[posicion_permutacion].anio == anio ) {
+            //Encontramos una posicion de la longitud deseada y que no es la misma que la random del inicio
+            break;
+        }
+
+        if (control_iteraciones == 0)
+            return; //No se encuentra con quien permutar
+
+        control_iteraciones--;
+    }
+    //Swappeo si la posicion de permutacion es menor que la inicial
+    unsigned int temp;
+    if (posicion_random > posicion_permutacion) {
+        temp = posicion_random;
+        posicion_random = posicion_permutacion;
+        posicion_permutacion = temp;
+    }
+    std::vector<bool> nuevo_genotipo, permutacion1_binary, permutacion2_binary;
+    //Obtengo los valores del genotipo en la posicion
+    permutacion1_binary.insert(permutacion1_binary.begin(), individuo_a_mutar.genotipo.begin() + posicion_random * this->bits_por_materia, individuo_a_mutar.genotipo.begin() + (posicion_random + 1) * this->bits_por_materia  );
+    permutacion2_binary.insert(permutacion2_binary.begin(), individuo_a_mutar.genotipo.begin() + posicion_permutacion * this->bits_por_materia, individuo_a_mutar.genotipo.begin() + (posicion_permutacion + 1) * this->bits_por_materia  );
+
+    nuevo_genotipo.insert( nuevo_genotipo.begin(),
+                            individuo_a_mutar.genotipo.begin(),
+                            individuo_a_mutar.genotipo.begin() + posicion_random * this->bits_por_materia
+                          );
+
+    nuevo_genotipo.insert( nuevo_genotipo.end(),
+                            permutacion2_binary.begin(),
+                            permutacion2_binary.end()
+                          );
+
+    nuevo_genotipo.insert( nuevo_genotipo.end(),
+                            individuo_a_mutar.genotipo.begin() + (posicion_random + 1) * this->bits_por_materia ,
+                            individuo_a_mutar.genotipo.begin() + (posicion_permutacion) * this->bits_por_materia
+                          );
+
+    nuevo_genotipo.insert( nuevo_genotipo.end(),
+                           permutacion1_binary.begin(),
+                           permutacion1_binary.end()
+                         );
+
+    nuevo_genotipo.insert( nuevo_genotipo.end(),
+                            individuo_a_mutar.genotipo.begin() + (posicion_permutacion + 1) * this->bits_por_materia,
+                            individuo_a_mutar.genotipo.end()
+                          );
+
+    individuo_a_mutar.genotipo = nuevo_genotipo;
+
+    individuo_a_mutar.calcularMatrices();
+
+    this->cantidad_mutaciones_permutacion++;
 
 }
