@@ -320,8 +320,8 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
 
     unsigned int posicion_cruza1;
     unsigned int posicion_cruza2, temp;
-    posicion_cruza1 = rand() % this->cantidad_genes;
-    posicion_cruza2 = rand() % this->cantidad_genes;
+    posicion_cruza1 = (rand() % this->variables_fenotipo )* this->bits_por_materia;
+    posicion_cruza2 = (rand() % this->variables_fenotipo )* this->bits_por_materia;
 
     if (posicion_cruza1 > posicion_cruza2) {
         //swapping
@@ -415,7 +415,7 @@ void AlgoritmoGenetico::imprimirResumen() {
 
 void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
     //Obtengo una posición al azar del fenotipo
-    unsigned int posicion_random = rand() % individuo_a_mutar.variables_fenotipo;
+    unsigned int posicion_random = rand() % (individuo_a_mutar.variables_fenotipo-1);
 
     //Obtengo el Genotipo del individuo
     std::vector<bool> genotipo = individuo_a_mutar.genotipo;
@@ -488,7 +488,7 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
 
 void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
     //Obtengo una posición al azar del fenotipo
-    unsigned int posicion_random = rand() % individuo_a_mutar.variables_fenotipo;
+    unsigned int posicion_random = rand() % (individuo_a_mutar.variables_fenotipo-1);
 
     //Obtengo el Genotipo del individuo
     std::vector<bool> genotipo = individuo_a_mutar.genotipo;

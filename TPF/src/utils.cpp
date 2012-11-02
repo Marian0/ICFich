@@ -447,7 +447,9 @@ std::vector<std::vector<unsigned int> > utils::sumarMatrices(std::vector<std::ve
     assert(m1_filas == m2_filas);
     assert(m1_columnas == m2_columnas);
     std::vector<std::vector<unsigned int> > ret_val;
+    ret_val.resize(m1_filas);
     for (unsigned int i = 0; i < m1_filas; i++) {
+        ret_val[i].resize(m1_columnas);
         for (unsigned int j = 0; j < m1_columnas; j++) {
             ret_val[i][j] = M1[i][j] + M2[i][j];
         }
@@ -465,7 +467,9 @@ std::vector<std::vector<unsigned int> > utils::sumarMatrices(std::vector<std::ve
     assert(m1_filas == m2_filas);
     assert(m1_columnas == m2_columnas);
     std::vector<std::vector<unsigned int> > ret_val;
+    ret_val.resize(m1_filas);
     for (unsigned int i = 0; i < m1_filas; i++) {
+        ret_val[i].resize(m1_columnas);
         for (unsigned int j = 0; j < m1_columnas; j++) {
             ret_val[i][j] = M1[i][j] + (unsigned int) M2[i][j];
         }
@@ -483,7 +487,9 @@ std::vector<std::vector<bool> > utils::multiplicarMatrices( std::vector<std::vec
     assert(m1_filas == m2_filas);
     assert(m1_columnas == m2_columnas);
     std::vector<std::vector<bool> > ret_val;
+    ret_val.resize(m1_filas);
     for (unsigned int i = 0; i < m1_filas; i++) {
+        ret_val[i].resize(m1_columnas);
         for (unsigned int j = 0; j < m1_columnas; j++) {
             ret_val[i][j] = M1[i][j] * M2[i][j];
         }

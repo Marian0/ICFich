@@ -16,14 +16,15 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
     this->clases = clases;
     this->aulas_disponibles = aulas_disponibles;
 
-    //Relleno el individuo con contenido al azar
-    for (unsigned int i = 0; i < cantidad_genes; i++) {
-        //Genero un numero aleatorio
-        bool gen = rand() % 2;
-
-        //Asigno
-        this->genotipo.push_back(gen);
+    for (unsigned int i = 0; i < variables_fenotipo; i++) {
+        unsigned int bloque = rand() % 25;
+        std::vector<bool> bloque_binary = utils::int2binary(bloque, false);
+        while (bloque_binary.size() < 5 ) {
+            bloque_binary.insert(bloque_binary.begin(),0);
+        }
+        this->genotipo.insert(this->genotipo.end(), bloque_binary.begin(), bloque_binary.end() );
     }
+
     //Calcula las matrices
     this->calcularMatrices();
     //Calcula el fitness
@@ -46,11 +47,11 @@ float Individuo::calcularFitness() {
 
     //en el vector guardamos las materias que se dan en cada bloque
     std::vector<std::vector<unsigned int> > materias_por_bloque;
-    unsigned int cantidad_bloques = this->matriz_bool.size() * this->matriz_bool[0].size();
+    unsigned int cantidad_bloques = (this->matriz_bool.size()-1) * this->matriz_bool[0].size();
     materias_por_bloque.resize(cantidad_bloques);
     unsigned int paso = this->genotipo.size() / this->variables_fenotipo;
 
-    for (unsigned int i = 0; i < materias_por_bloque.size(); i++) {
+    for (unsigned int i = 0; i < this->variables_fenotipo; i++) {
         std::vector<bool> bloque;
         //Le asignamos el bloque que corresponde a esta variable del fenotipo
         bloque.insert(bloque.end(), this->genotipo.begin() + paso*i, this->genotipo.begin() + paso*(i+1));
@@ -103,7 +104,7 @@ float Individuo::calcularFitness() {
     std::vector<std::vector<unsigned int> > suma_aulas;
     suma_aulas.resize(this->matriz_bool[0].size());
     for (unsigned int i = 0; i < this->matriz_bool[0].size(); i++) {
-        suma_aulas.resize(this->matriz_bool[0][i].size());
+        suma_aulas[i].resize(this->matriz_bool[0][i].size());
         for (unsigned int j = 0; j < this->matriz_bool[0][i].size(); j++) {
             suma_aulas[i][j] = this->matriz_bool[0][i][j];
         }
