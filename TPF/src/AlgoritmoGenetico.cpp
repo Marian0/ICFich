@@ -146,6 +146,7 @@ void AlgoritmoGenetico::reproduccion() {
     for (unsigned int i = 0 ; i < this->tamanio_poblacion; i++ ) {
         this->poblacion[i].calcularMatrices();
     }
+
 }
 
 //Evalua la poblacion, calculando los fitness, y devuelve el mejor
@@ -157,6 +158,8 @@ float AlgoritmoGenetico::evaluar() {
     //Variable que guarda el fitness peor encontrado
     float fitness_min = this->poblacion[0].getFitness();
     unsigned int id_min_fit = 0;
+
+
 
     //Recorro la poblacion y la evaluo
     for (unsigned int i = 1; i < this->tamanio_poblacion; i++) {
@@ -176,6 +179,7 @@ float AlgoritmoGenetico::evaluar() {
 
     this->id_maximo_fitness = id_max_fit;
     this->id_minimo_fitness = id_min_fit;
+
 
     return fitness_max;
 }
@@ -349,7 +353,7 @@ void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
     //Control de probabilidad para el metodo de mutacion 1
     float prob;
     prob = utils::randomDecimal(0.0,1.0);
-    if (prob >= this->probabilidad_mutacion_permutacion) {
+    if (prob < this->probabilidad_mutacion_permutacion) {
         mutacionPermutacion(individuo_a_mutar);
         //aumentamos contador
         this->cantidad_mutaciones_permutacion++;
@@ -357,7 +361,7 @@ void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
 
     //Control de probabilidad para el metodo de mutacion 1
     prob = utils::randomDecimal(0.0,1.0);
-    if (prob >= this->probabilidad_mutacion_movimiento) {
+    if (prob < this->probabilidad_mutacion_movimiento) {
         mutacionMovimiento(individuo_a_mutar);
         //aumentamos contador
 
@@ -515,10 +519,10 @@ void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
             break;
         }
 
+        control_iteraciones--;
         if (control_iteraciones == 0)
             return; //No se encuentra con quien permutar
 
-        control_iteraciones--;
     }
     //Swappeo si la posicion de permutacion es menor que la inicial
     unsigned int temp;

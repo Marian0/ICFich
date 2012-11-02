@@ -34,7 +34,7 @@ std::vector<Clase> leerClases(std::string nombre_archivo) {
 
         //Cometario, no se procesa
         if(!iss.str().empty() && iss.str()[0] == '#'){
-            std::cout<<iss.str()<<std::endl;
+            //std::cout<<iss.str()<<std::endl;
             continue;
         }
 

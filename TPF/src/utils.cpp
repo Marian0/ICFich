@@ -34,7 +34,7 @@ void utils::parseCSV(std::string filename, std::vector<std::vector<float> > & X)
 		//std::cout<<iss.str()<<std::endl;
 		if(!iss.str().empty() && iss.str()[0] == '#'){
 			//comentario, no lo procesa pero si lo imprime
-			std::cout<<iss.str()<<std::endl;
+            std::cout<<iss.str()<<std::endl;
 			iss.str(""); //limpia la string asociada
 			iss.clear(); //limpia el stream
 			continue;
