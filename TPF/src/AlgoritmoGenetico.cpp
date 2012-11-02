@@ -4,7 +4,8 @@
 #include "Individuo.h"
 #include <cstdio>
 
-AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, float escala, unsigned int variables_fenotipo, unsigned int max_gen, float pcruza, float pmutacion_movimiento, float pmutacion_permutacion, unsigned int elitismo, unsigned int brecha_generacional, unsigned int id_funcion_fitness, std::vector<Clase>  Clases, unsigned int metodo_seleccion, unsigned int k_competencia, unsigned int bits_por_materia) {
+AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, float escala, unsigned int variables_fenotipo, unsigned int max_gen, float pcruza, float pmutacion_movimiento, float pmutacion_permutacion, unsigned int elitismo, unsigned int brecha_generacional, unsigned int id_funcion_fitness, std::vector<Clase>  Clases,
+                                     unsigned int aulas_disponibles, unsigned int metodo_seleccion, unsigned int k_competencia, unsigned int bits_por_materia) {
 
     //Copia las propiedades del algoritmo
     this->tamanio_poblacion = tam_pob;
@@ -24,6 +25,7 @@ AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_gen
     this->cantidad_cruzas = 0;
     this->escala = escala;
     this->variables_fenotipo = variables_fenotipo;
+    this->aulas_disponibles = aulas_disponibles;
 
     this->Clases = Clases;
 
@@ -66,7 +68,8 @@ AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_gen
 
     //Crea todos los Individuos
     for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
-        Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness, Clases, this->escala, this->variables_fenotipo);
+        Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness, this->Clases,
+                          this->aulas_disponibles, this->escala, this->variables_fenotipo);
         this->poblacion.push_back(new_ind);
     }
 
@@ -329,8 +332,8 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
 
 
     //Algoritmo de cruza
-    Individuo hijo1(this->cantidad_genes, this->id_funcion_fitness, Clases, escala, variables_fenotipo);
-    Individuo hijo2(this->cantidad_genes, this->id_funcion_fitness, Clases, escala, variables_fenotipo);
+    Individuo hijo1(this->cantidad_genes, this->id_funcion_fitness, Clases, this->aulas_disponibles, escala, variables_fenotipo);
+    Individuo hijo2(this->cantidad_genes, this->id_funcion_fitness, Clases, this->aulas_disponibles, escala, variables_fenotipo);
 
     hijo1.genotipo.clear();
     hijo2.genotipo.clear();
@@ -567,4 +570,8 @@ void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
 
     this->cantidad_mutaciones_permutacion++;
 
+}
+
+std::vector<std::vector<std::vector<int> > > AlgoritmoGenetico::getSolucion() {
+    return this->poblacion[this->id_maximo_fitness].matriz_int;
 }

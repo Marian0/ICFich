@@ -11,6 +11,7 @@
 #include <cmath>
 #include <utility>
 #include "GNUPlot.h"
+#include "Clase.h"
 
 class utils{
 public:
@@ -121,10 +122,19 @@ void static vectorSuma(std::vector<float> &X, std::vector<float> &Y, std::vector
 
 void static vectorResta(std::vector<float> &X, std::vector<float> &Y, std::vector<float> &Z);
 
-std::vector<std::vector<bool> > static sumarMatrices(std::vector<std::vector<bool> > &M1,
+std::vector<std::vector<unsigned int> > static sumarMatrices(std::vector<std::vector<bool> > &M1,
+                                                     std::vector<std::vector<bool> > &M2);
+std::vector<std::vector<unsigned int> > static sumarMatrices(std::vector<std::vector<unsigned int> > &M1,
                                                      std::vector<std::vector<bool> > &M2);
 std::vector<std::vector<bool> > static multiplicarMatrices(std::vector<std::vector<bool> > &M1,
                                                      std::vector<std::vector<bool> > &M2);
+
+//Lee todas las clases y las guarda en un vector
+std::vector<Clase> static leerClases(std::string nombre_archivo);
+
+//escribe la solucion en forma matricial
+void static escribirSolucion(std::vector<std::vector<std::vector<int> > >matriz_int, std::vector<Clase> clases, std::string archivo_salida);
+
 
 
 //graficar historiales

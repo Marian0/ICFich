@@ -11,6 +11,7 @@
 #include <cmath>
 #include <algorithm>
 #include <utility>
+#include "Clase.h"
 
 /*
 Entrada: Path al archivo csv
@@ -437,7 +438,7 @@ std::pair<unsigned int, unsigned int> utils::posicionMatriz(unsigned int cantida
 }
 
 //Suma las dos matrices miembro a miembro. Devuelve la matriz resultado
-std::vector<std::vector<bool> > utils::sumarMatrices(std::vector<std::vector<bool> > &M1,
+std::vector<std::vector<unsigned int> > utils::sumarMatrices(std::vector<std::vector<bool> > &M1,
                                                      std::vector<std::vector<bool> > &M2) {
     unsigned int m1_filas       = M1.size();
     unsigned int m1_columnas    = M1[0].size();
@@ -445,10 +446,28 @@ std::vector<std::vector<bool> > utils::sumarMatrices(std::vector<std::vector<boo
     unsigned int m2_columnas    = M2[0].size();
     assert(m1_filas == m2_filas);
     assert(m1_columnas == m2_columnas);
-    std::vector<std::vector<bool> > ret_val;
+    std::vector<std::vector<unsigned int> > ret_val;
     for (unsigned int i = 0; i < m1_filas; i++) {
         for (unsigned int j = 0; j < m1_columnas; j++) {
             ret_val[i][j] = M1[i][j] + M2[i][j];
+        }
+    }
+    return ret_val;
+}
+
+//Suma las dos matrices miembro a miembro. Devuelve la matriz resultado
+std::vector<std::vector<unsigned int> > utils::sumarMatrices(std::vector<std::vector<unsigned int> > &M1,
+                                                     std::vector<std::vector<bool> > &M2) {
+    unsigned int m1_filas       = M1.size();
+    unsigned int m1_columnas    = M1[0].size();
+    unsigned int m2_filas       = M2.size();
+    unsigned int m2_columnas    = M2[0].size();
+    assert(m1_filas == m2_filas);
+    assert(m1_columnas == m2_columnas);
+    std::vector<std::vector<unsigned int> > ret_val;
+    for (unsigned int i = 0; i < m1_filas; i++) {
+        for (unsigned int j = 0; j < m1_columnas; j++) {
+            ret_val[i][j] = M1[i][j] + (unsigned int) M2[i][j];
         }
     }
     return ret_val;
@@ -489,15 +508,100 @@ std::vector<unsigned int> utils::distanciasEnUnDia(std::vector<std::vector<bool>
         //Encuentra el indice del ultimo true del dia
         while(pos_fin >= 0 and matriz_bool[i][pos_fin] == false)
             pos_fin--;
+
         //calcula la separacion
         unsigned int separacion;
         //si se pasaron de rosca, es que no hay clases en ese dia
-        if(pos_fin < 0 or pos_ini == matriz_bool[i].size())
+        if(pos_fin < 0 or pos_ini >= matriz_bool[i].size())
             separacion = 0;
-        else
-            separacion = abs(pos_fin - pos_ini);
+        else {
+            //Se fija cuantos blancos hay entre el primer true y el ultimo
+            for (unsigned int j = pos_ini; j < pos_fin; j++) {
+                if (matriz_bool[i][j] == false)
+                    separacion++;
+            }
+        }
         //la agrega al vector
         distancias.push_back(separacion);
     }
     return distancias;
 }
+
+//Lee todas las clases y las guarda en un vector
+std::vector<Clase> utils::leerClases(std::string nombre_archivo) {
+    //Leemos el archivo
+    std::ifstream file (nombre_archivo.c_str());
+    //Comprobamos que este abierto
+    assert(file.is_open());
+    //Valor a retornar, vector con todas las clases
+    std::vector<Clase> ret_val;
+    std::string line;
+    //Hasta llegar al final
+    //Lee una linea
+    while (getline(file, line)) {
+        std::stringstream iss;
+        //Pasa la string a streamstring
+        iss<<line;
+
+        //Cometario, no se procesa
+        if(!iss.str().empty() && iss.str()[0] == '#'){
+            //std::cout<<iss.str()<<std::endl;
+            continue;
+        }
+
+        //Separa la linea en 3
+        std::string nom_mat;
+        unsigned int id_mat;
+        unsigned int cant_horas;
+        unsigned int anio;
+
+
+        //std::stringstream ss;
+        for (unsigned int i = 0; i < 4; i++) {
+            std::string s;
+            //Lee un parametro
+            getline(iss,s,',');
+
+            //Segun que tipo de parametro sea...
+            if (i == 0)
+                nom_mat = s;
+            if (i == 1)
+                id_mat = utils::strToInt(s);
+            if (i == 2)
+                cant_horas = utils::strToInt(s);
+            if (i == 3)
+                anio = utils::strToInt(s);
+        }
+        //Construye una clase
+        Clase clase (nom_mat, id_mat, cant_horas, anio);
+        //La agrega al vector
+        ret_val.push_back(clase);
+
+    }
+
+    file.close();
+    return ret_val;
+}
+
+void utils::escribirSolucion(std::vector<std::vector<std::vector<int> > >matriz_int, std::vector<Clase> clases, std::string archivo_salida) {
+    std::ofstream file(archivo_salida.c_str());
+    assert(file.is_open());
+    //por cada aÃ±o
+    for (unsigned int i = 1; i < matriz_int.size(); i++) {
+        file<<"\nAnio "<<i<<"\n";
+        //por cada dia
+        for (unsigned int j = 0; j < matriz_int[i].size(); j++) {
+            //por cada bloque
+            for (unsigned int k = 0; k < matriz_int[i][j].size(); k++) {
+                unsigned id_clase = matriz_int[i][j][k];
+                std::string nombre_clase = clases[id_clase].nombre;
+                file<<nombre_clase<<'\t';
+            }
+            file<<'\n';
+        }
+        file<<'\n';
+    }
+    file<<'\n';
+    file.close();
+}
+

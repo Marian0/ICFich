@@ -64,6 +64,8 @@ class AlgoritmoGenetico {
     std::vector<unsigned int> Bloques3;
     std::vector<unsigned int> Bloques2;
 
+    unsigned int aulas_disponibles;
+
     public:
 
     static const unsigned int SELECCION_RULETA = 1;
@@ -83,6 +85,7 @@ class AlgoritmoGenetico {
                        unsigned int brecha_generacional,
                        unsigned int id_funcion_fitness,
                        std::vector<Clase> Clases,
+                       unsigned int aulas_disponibles,
                        unsigned int metodo_seleccion = SELECCION_COMPETENCIA ,
                        unsigned int k_competencia = 5,
                        unsigned int bits_por_materia = 6
@@ -141,6 +144,8 @@ class AlgoritmoGenetico {
 
     //Mutacion con movimiento
     void mutacionPermutacion(Individuo & individuo_a_mutar);
+
+    std::vector<std::vector<std::vector<int> > > getSolucion();
 
 
 };

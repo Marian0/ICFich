@@ -27,11 +27,13 @@ class Individuo {
     //Matriz de int que representa el bloque que ocupa cada materia en este individuo
     std::vector<std::vector<std::vector<int> > > matriz_int;
 
+    unsigned int aulas_disponibles;
+
     //Constructor vacio
     Individuo();
 
     //Constructor
-    Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id,  std::vector<Clase> clases, float escala = 1.00, unsigned int variables_fenotipo = 1);
+    Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id,  std::vector<Clase> clases, unsigned int aulas_disponibles, float escala = 1.00, unsigned int variables_fenotipo = 1);
 
     //Calcula el fitness actual y lo guarda en la propiedad fitness
     float calcularFitness();
