@@ -118,7 +118,7 @@ void AlgoritmoGenetico::reproduccion() {
         unsigned int id_madre = rand() % npadres;
 
         std::vector<Individuo> hijos;
-        //Realizamos la cruza (Se obtendrán 2 hijos)
+        //Realizamos la cruza (Se obtendrán 2 hijos
         this->cruza(padres[vector_id_poblacion[id_padre]], padres[vector_id_poblacion[id_madre]], hijos );
 
         //Realizamos la mutación de los hijos
@@ -303,6 +303,7 @@ void AlgoritmoGenetico::competencia(std::vector<Individuo> &nuevos_padres, unsig
 
 //Realiza la cruza entre un padre y una madre, y guarda en hijos el resultado
 void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<Individuo> &hijos) {
+
     hijos.clear();
 
     //Tiro la moneda para ver si tengo que cruzar
@@ -330,7 +331,6 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
         posicion_cruza2 = temp;
     }
 
-
     //Algoritmo de cruza
     Individuo hijo1(this->cantidad_genes, this->id_funcion_fitness, Clases, this->aulas_disponibles, escala, variables_fenotipo);
     Individuo hijo2(this->cantidad_genes, this->id_funcion_fitness, Clases, this->aulas_disponibles, escala, variables_fenotipo);
@@ -339,20 +339,24 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
     hijo2.genotipo.clear();
 
     //Cruza hijo 1
-    hijo1.genotipo.insert(hijo1.genotipo.begin(), padre.genotipo.begin(), padre.genotipo.begin() + posicion_cruza1);
+    hijo1.genotipo.insert(hijo1.genotipo.end(), padre.genotipo.begin(), padre.genotipo.begin() + posicion_cruza1);
     hijo1.genotipo.insert(hijo1.genotipo.end(), madre.genotipo.begin() + posicion_cruza1 , madre.genotipo.begin() + posicion_cruza2 );
     hijo1.genotipo.insert(hijo1.genotipo.end(), padre.genotipo.begin() + posicion_cruza2 , padre.genotipo.end() );
     //Cruza hijo 2
-    hijo2.genotipo.insert(hijo2.genotipo.begin(), madre.genotipo.begin(), madre.genotipo.begin() + posicion_cruza1);
+    hijo2.genotipo.insert(hijo2.genotipo.end(), madre.genotipo.begin(), madre.genotipo.begin() + posicion_cruza1);
     hijo2.genotipo.insert(hijo2.genotipo.end(), padre.genotipo.begin() + posicion_cruza1 , padre.genotipo.begin() + posicion_cruza2 );
     hijo2.genotipo.insert(hijo2.genotipo.end(), madre.genotipo.begin() + posicion_cruza2 , madre.genotipo.end() );
 
+
     hijos.push_back(hijo1);
     hijos.push_back(hijo2);
+
+
 }
 
 //Realiza la mutación de un padre en un hijo
 void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
+
     //Control de probabilidad para el metodo de mutacion 1
     float prob;
     prob = utils::randomDecimal(0.0,1.0);
@@ -372,8 +376,6 @@ void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
     }
 
 
-//    unsigned int i_random = rand() % this->cantidad_genes;
-//    individuo_a_mutar.genotipo[i_random] = ! individuo_a_mutar.genotipo[i_random];
 }
 
 
@@ -406,7 +408,6 @@ void AlgoritmoGenetico::imprimirResumen() {
     std::cout<<"\nCantidad de cruzas = "<<this->cantidad_cruzas;
     std::cout<<"\nCantidad de mutaciones por Movimiento = "<<this->cantidad_mutaciones_movimiento;
     std::cout<<"\nCantidad de mutaciones por Permutación = "<<this->cantidad_mutaciones_permutacion;
-    //std::cout<<"\nMejor Fitness = "<<this->getMejorFitness()<< ", con fenotipo = "<<this->getMejorSolucion();
     std::cout<<"\nMejor Fitness = "<<this->getMejorFitness();
     std::cout<<"\nPeor Fitness = "<<this->getPeorFitness();
 
@@ -414,8 +415,9 @@ void AlgoritmoGenetico::imprimirResumen() {
 
 
 void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
+
     //Obtengo una posición al azar del fenotipo
-    unsigned int posicion_random = rand() % (individuo_a_mutar.variables_fenotipo-1);
+    unsigned int posicion_random = rand() % (individuo_a_mutar.variables_fenotipo);
 
     //Obtengo el Genotipo del individuo
     std::vector<bool> genotipo = individuo_a_mutar.genotipo;
@@ -441,9 +443,7 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
         bloques_a_buscar = this->Bloques3;
     }
 
-
     unsigned int control_iteraciones = floor(bloques_a_buscar.size() * 2.5);
-
 
     bool buscar = true;
     while   (buscar) {
@@ -484,18 +484,20 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
     }
 
     this->cantidad_mutaciones_movimiento++;
+
 }
 
 void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
+
     //Obtengo una posición al azar del fenotipo
-    unsigned int posicion_random = rand() % (individuo_a_mutar.variables_fenotipo-1);
+    unsigned int posicion_random = rand() % (individuo_a_mutar.variables_fenotipo);
 
     //Obtengo el Genotipo del individuo
     std::vector<bool> genotipo = individuo_a_mutar.genotipo;
     //Variable para recortar el genotipo del individuo y obtener UN fenotipo
     std::vector<bool> genotipo_bloque;
 
-    genotipo_bloque.insert( genotipo_bloque.begin(),
+    genotipo_bloque.insert( genotipo_bloque.end(),
                            genotipo.begin() + posicion_random * this->bits_por_materia ,
                            genotipo.begin() + (posicion_random + 1) * this->bits_por_materia );
 
@@ -517,7 +519,9 @@ void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
     unsigned int posicion_permutacion;
     while(true) {
         posicion_permutacion = rand() % individuo_a_mutar.variables_fenotipo;
-        if (posicion_permutacion != posicion_random && this->Clases[posicion_permutacion].cantidad_horas == horas && this->Clases[posicion_permutacion].anio == anio ) {
+        if (posicion_permutacion != posicion_random &&
+                this->Clases[posicion_permutacion].cantidad_horas == horas &&
+                this->Clases[posicion_permutacion].anio == anio ) {
             //Encontramos una posicion de la longitud deseada y que no es la misma que la random del inicio
             break;
         }
@@ -535,11 +539,12 @@ void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
         posicion_permutacion = temp;
     }
     std::vector<bool> nuevo_genotipo, permutacion1_binary, permutacion2_binary;
-    //Obtengo los valores del genotipo en la posicion
-    permutacion1_binary.insert(permutacion1_binary.begin(), individuo_a_mutar.genotipo.begin() + posicion_random * this->bits_por_materia, individuo_a_mutar.genotipo.begin() + (posicion_random + 1) * this->bits_por_materia  );
-    permutacion2_binary.insert(permutacion2_binary.begin(), individuo_a_mutar.genotipo.begin() + posicion_permutacion * this->bits_por_materia, individuo_a_mutar.genotipo.begin() + (posicion_permutacion + 1) * this->bits_por_materia  );
 
-    nuevo_genotipo.insert( nuevo_genotipo.begin(),
+    //Obtengo los valores del genotipo en la posicion
+    permutacion1_binary.insert(permutacion1_binary.end(), individuo_a_mutar.genotipo.begin() + posicion_random * this->bits_por_materia, individuo_a_mutar.genotipo.begin() + (posicion_random + 1) * this->bits_por_materia  );
+    permutacion2_binary.insert(permutacion2_binary.end(), individuo_a_mutar.genotipo.begin() + posicion_permutacion * this->bits_por_materia, individuo_a_mutar.genotipo.begin() + (posicion_permutacion + 1) * this->bits_por_materia  );
+
+    nuevo_genotipo.insert( nuevo_genotipo.end(),
                             individuo_a_mutar.genotipo.begin(),
                             individuo_a_mutar.genotipo.begin() + posicion_random * this->bits_por_materia
                           );
@@ -569,6 +574,7 @@ void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
     individuo_a_mutar.calcularMatrices();
 
     this->cantidad_mutaciones_permutacion++;
+
 
 }
 

@@ -133,7 +133,7 @@ std::vector<std::vector<bool> > static multiplicarMatrices(std::vector<std::vect
 std::vector<Clase> static leerClases(std::string nombre_archivo);
 
 //escribe la solucion en forma matricial
-void static escribirSolucion(std::vector<std::vector<std::vector<int> > >matriz_int, std::vector<Clase> clases, std::string archivo_salida);
+void static escribirSolucion(std::vector<std::vector<std::vector<int> > >matriz_int, std::vector<int> respuesta_fenotipo, std::vector<Clase> clases, std::string archivo_salida);
 
 
 

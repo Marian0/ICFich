@@ -157,7 +157,7 @@ float Individuo::calcularFitness() {
 
     //Calculamos el denominador de la funcion de fitness
     float denominador = (cantidad_repeticiones+1) * (sobrepaso_aulas+1) *
-            pow(solapamientos_adyacentes+1,2) * pow(basura+1, 5);
+            pow(solapamientos_adyacentes+1,2) * pow(basura+1, 15);
 
     //confiamos en que nunca el denominador va a ser cero
     nuevo_fitness = 1/denominador;

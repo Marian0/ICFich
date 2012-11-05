@@ -33,6 +33,7 @@ int main() {
       unsigned int    elitismo                = utils::strToInt(config.getValue("elitismo"));
       unsigned int    id_funcion_fitness      = utils::strToInt(config.getValue("id_funcion_fitness"));
       std::string     forma_seleccion         = config.getValue("forma_seleccion");
+      std::string     archivo_problema        = config.getValue("archivo_problema");
       float           error                   = utils::strToFloat(config.getValue("error"));
       unsigned int    brecha_generacional     = utils::strToInt(config.getValue("brecha_generacional"));
       unsigned int    k_competencia           = utils::strToInt(config.getValue("k_competencia"));
@@ -45,7 +46,7 @@ int main() {
     std::cout<<"Problema de Organización de Materias en una Facultad\n";
     std::cout<<"Nellmeldin Fernando - Peyregne Mariano\n";
     std::cout<<"Lectura de las clases.\n";
-    std::vector<Clase> clases = utils::leerClases("clases.txt");
+    std::vector<Clase> clases = utils::leerClases(archivo_problema);
 
     unsigned int metodo_seleccion;
         if(forma_seleccion.compare("ruleta") == 0)
@@ -78,7 +79,7 @@ int main() {
         AG.reproduccion();
 
        float mejor_fitness_actual = AG.evaluar();
-       std::cout<<"Mejor fitness a iteracion "<<w<<" = "<<mejor_fitness_actual<<'\r';
+       std::cout<<"Mejor fitness a iteracion "<<w<<" = "<<mejor_fitness_actual<<'\n';
 
        //Guardo el mejor fitness de la poblacion
        mejor_fitness.push_back(AG.getMejorFitness());
@@ -118,7 +119,8 @@ int main() {
    utils::drawHistory(grafica, plotter, id_funcion_fitness);
 
    std::vector<std::vector<std::vector<int> > > solucion = AG.getSolucion();
-   utils::escribirSolucion(solucion, clases, "salida.txt");
+
+   utils::escribirSolucion(solucion, respuesta_fenotipo, clases, "salida.xls");
 
    getwchar();
    return 0;

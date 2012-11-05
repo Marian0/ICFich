@@ -226,32 +226,7 @@ void utils::drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &pl
     plotter("set xzeroaxis lt -1");
     plotter("set yzeroaxis lt -1");
     plotter("set xrange [0:" + utils::intToStr(generaciones) + "]");
-    switch(id_ejercicio){
-        case 1: {
-            plotter("set yrange [-520:520]");   //ejercicio 1a
-            break;
-        }
-        case 2: {
-            plotter("set yrange [-10:30]");     //ejercicio 1b
-            break;
-        }
-        case 3: {
-            plotter("set yrange [-21:2]");     //ejercicio 1c
-            break;
-        }
-        case 4: {
-            plotter("set yrange [0:0.05]");     //ejercicio 2 con 4 ciudades
-            break;
-        }
-        case 5: {
-            plotter("set yrange [0:0.01]");     //ejercicio 2 con 10 ciudades
-            break;
-        }
-        default: {
-            plotter("set yrange [-100:100]");
-            break;
-        }
-    }
+    plotter("set yrange [-0.1:1.1]");
     plotter("set xlabel \"Generacion\"");
     plotter("set ylabel \"Fitness\"");
     plotter("set title \"Fitness durante N Generaciones\"");
@@ -589,19 +564,40 @@ std::vector<Clase> utils::leerClases(std::string nombre_archivo) {
     return ret_val;
 }
 
-void utils::escribirSolucion(std::vector<std::vector<std::vector<int> > >matriz_int, std::vector<Clase> clases, std::string archivo_salida) {
-    std::ofstream file(archivo_salida.c_str());
+void utils::escribirSolucion(std::vector<std::vector<std::vector<int> > > matriz_int, std::vector<int> respuesta_fenotipo, std::vector<Clase> clases, std::string archivo_salida) {
+    std::ofstream file(archivo_salida.c_str(), std::ofstream::out|std::ofstream::trunc);
+
     assert(file.is_open());
+    file<<"Solucion\n";
+    for (unsigned int i = 0; i < respuesta_fenotipo.size(); i++) {
+        file<<respuesta_fenotipo[i]<<' ';
+    }
+    file<<"\n\n";
+
     //por cada aÃ±o
     for (unsigned int i = 1; i < matriz_int.size(); i++) {
         file<<"\nAnio "<<i<<"\n";
+        file<<"\t8-10\t10-13\t14-16\t16-18\t18-21\n";
         //por cada dia
         for (unsigned int j = 0; j < matriz_int[i].size(); j++) {
+            switch(j) {
+                case 0: file<<"Lunes\t"; break;
+                case 1: file<<"Martes\t"; break;
+                case 2: file<<"Miercoles\t"; break;
+                case 3: file<<"Jueves\t"; break;
+                case 4: file<<"Viernes\t"; break;
+            }
+
             //por cada bloque
             for (unsigned int k = 0; k < matriz_int[i][j].size(); k++) {
-                unsigned id_clase = matriz_int[i][j][k];
-                std::string nombre_clase = clases[id_clase].nombre;
-                file<<nombre_clase<<'\t';
+                int id_clase = matriz_int[i][j][k];
+                if (id_clase != -1) {
+                    std::string nombre_clase = clases[id_clase].nombre;
+                    file<<nombre_clase<<'\t';
+                }
+                else {
+                    file<<" "<<'\t';
+                }
             }
             file<<'\n';
         }
@@ -609,5 +605,6 @@ void utils::escribirSolucion(std::vector<std::vector<std::vector<int> > >matriz_
     }
     file<<'\n';
     file.close();
+
 }
 
