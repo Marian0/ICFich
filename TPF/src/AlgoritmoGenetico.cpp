@@ -414,7 +414,6 @@ void AlgoritmoGenetico::imprimirResumen() {
 
 
 void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
-
     //Obtengo una posición al azar del fenotipo
     unsigned int posicion_random = rand() % (individuo_a_mutar.variables_fenotipo);
 
@@ -443,12 +442,11 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
     }
 
     unsigned int control_iteraciones = floor(bloques_a_buscar.size() * 2.5);
-
     bool buscar = true;
     while   (buscar) {
 
         unsigned int buscando = rand() % bloques_a_buscar.size();
-        std::pair<unsigned int, unsigned int> posicion =  utils::posicionMatriz(5,5,buscando);
+        std::pair<unsigned int, unsigned int> posicion =  utils::posicionMatriz(5,5,bloques_a_buscar[buscando]);
         unsigned int i = posicion.first;
         unsigned int j = posicion.second;
 
@@ -458,8 +456,10 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
             std::vector<bool> nuevo_genotipo;
             std::vector<bool> buscando_binary = utils::int2binary(buscando, false);
 
+
             while(buscando_binary.size() < this->bits_por_materia)
                 buscando_binary.insert(buscando_binary.begin(), 0);
+
 
             nuevo_genotipo.insert( nuevo_genotipo.begin(),
                                    individuo_a_mutar.genotipo.begin(),
@@ -476,19 +476,18 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
                                    individuo_a_mutar.genotipo.begin() + (posicion_random + 1) * this->bits_por_materia,
                                    individuo_a_mutar.genotipo.end()
                                    );
-
             individuo_a_mutar.genotipo = nuevo_genotipo;
 
             individuo_a_mutar.calcularMatrices();
             break;
         }
 
+
         control_iteraciones--;
         if (control_iteraciones == 0)
             break; //Control anti while true infinito
 
     }
-
     this->cantidad_mutaciones_movimiento++;
 
 }
