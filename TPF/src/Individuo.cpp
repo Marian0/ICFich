@@ -154,6 +154,7 @@ float Individuo::calcularFitness() {
             }
         }
     }
+    //std::cout<<cantidad_repeticiones<<' '<<sobrepaso_aulas<<' '<<solapamientos_adyacentes<<' '<<basura<<'\n';
 
     //Calculamos el denominador de la funcion de fitness
     float denominador = (cantidad_repeticiones+1) * (sobrepaso_aulas+1) *
