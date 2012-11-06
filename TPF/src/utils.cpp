@@ -607,4 +607,26 @@ void utils::escribirSolucion(std::vector<std::vector<std::vector<int> > > matriz
     file.close();
 
 }
+//Escribe las graficas de mejor, peor y promedio de fitness
+void utils::escribirGraficas(std::vector<std::vector<float> > &V, std::string archivo){
+    std::ofstream file(archivo.c_str(), std::ofstream::out|std::ofstream::trunc);
+    assert(file.is_open());
+    file<<"Fitness\n";
 
+    file<<"Generacion\tMejor\tPromedio\tPeor\n";
+    unsigned int cant_vectores = V.size();
+    unsigned int cant_generaciones = V[0].size();
+    for (unsigned int i = 0; i < cant_generaciones; i++) {
+        file<<i<<'\t';
+        for (unsigned int j = 0; j < cant_vectores; j++) {
+            if(V[j][i] < 0.000001)
+                file<<0<<'\t';
+            else
+                file<<V[j][i]<<'\t';
+        }
+        file<<'\n';
+    }
+    file<<"\nNota: todos los valores inferiores a 10e-6 se redondearon a 0.\n";
+
+    file.close();
+}

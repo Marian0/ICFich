@@ -100,7 +100,7 @@ int main() {
            break;
         }
         if (w >= 100 and w % 100 == 0) {//guarda un archivo cada 100 generaciones
-            std::string archivo_salida = "salida_tabla_" + utils::intToStr(w) + ".xls";
+            std::string archivo_salida = archivo_problema + "_salida_tabla_gen_" + utils::intToStr(w) + ".xls";
 
             std::vector<bool> respuesta;
             AG.getMejorGenotipo(respuesta);
@@ -111,7 +111,7 @@ int main() {
             std::cout<<"Escribiendo archivo "<<archivo_salida<<".\n";
             utils::escribirSolucion(solucion, respuesta_fenotipo, clases, archivo_salida);
 
-            std::string archivo_resumen = "salida_resumen_" + utils::intToStr(w) + ".txt";
+            std::string archivo_resumen = archivo_salida + "_salida_resumen_gen_" + utils::intToStr(w) + ".txt";
             std::cout<<"Escribiendo archivo "<<archivo_resumen<<".\n";
             AG.imprimirResumen(archivo_resumen);
 
@@ -137,13 +137,20 @@ int main() {
     grafica.push_back(mejor_fitness);
     grafica.push_back(prom_fitness);
     grafica.push_back(peor_fitness);
-    GNUPlot plotter;
 
+    GNUPlot plotter;
     utils::drawHistory(grafica, plotter, id_funcion_fitness);
 
     std::vector<std::vector<std::vector<int> > > solucion = AG.getSolucion();
 
-    utils::escribirSolucion(solucion, respuesta_fenotipo, clases, "salida.xls");
+    std::cout<<"Escribiendo archivo SALIDA.xls.\n";
+    std::string archivo_SALIDA = archivo_problema + "_SALIDA.xls";
+    utils::escribirSolucion(solucion, respuesta_fenotipo, clases, archivo_SALIDA);
+
+    std::cout<<"Escribiendo vectores para graficar en GRAFICA.xls\n";
+    std::string archivo_GRAFICA = archivo_problema + "_GRAFICA.xls";
+    utils::escribirGraficas(grafica, archivo_GRAFICA);
+
 
     getwchar();
     return 0;

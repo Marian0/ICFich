@@ -34,4 +34,5 @@ HEADERS += \
     include/Clase.h
 
 OTHER_FILES += \
-    bin/configuracion.cfg
+    bin/configuracion.cfg \
+    bin/configuracion_1er_real.cfg

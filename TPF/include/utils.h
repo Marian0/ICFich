@@ -135,7 +135,8 @@ std::vector<Clase> static leerClases(std::string nombre_archivo);
 //escribe la solucion en forma matricial
 void static escribirSolucion(std::vector<std::vector<std::vector<int> > >matriz_int, std::vector<int> respuesta_fenotipo, std::vector<Clase> clases, std::string archivo_salida);
 
-
+//Escribe un vector en un archivo
+void static escribirGraficas(std::vector<std::vector<float> > &V, std::string archivo);
 
 //graficar historiales
 void static drawHistory(std::vector<std::vector<float> > &historial, GNUPlot &plotter, unsigned int id_ejercicio);
