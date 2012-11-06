@@ -15,7 +15,6 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
     this->variables_fenotipo = variables_fenotipo;
     this->clases = clases;
     this->aulas_disponibles = aulas_disponibles;
-    this->genotipo.resize(cantidad_genes);
 
     for (unsigned int i = 0; i < variables_fenotipo; i++) {
         unsigned int bloque = rand() % 25;
