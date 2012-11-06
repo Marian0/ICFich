@@ -156,13 +156,12 @@ void AlgoritmoGenetico::reproduccion() {
 float AlgoritmoGenetico::evaluar() {
     //Variable que guarda el fitness mayor encontrado
     float fitness_max = this->poblacion[0].calcularFitness();
+
     unsigned int id_max_fit = 0;
 
     //Variable que guarda el fitness peor encontrado
     float fitness_min = this->poblacion[0].getFitness();
     unsigned int id_min_fit = 0;
-
-
 
     //Recorro la poblacion y la evaluo
     for (unsigned int i = 1; i < this->tamanio_poblacion; i++) {
@@ -447,19 +446,26 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
 
     bool buscar = true;
     while   (buscar) {
+
         unsigned int buscando = rand() % bloques_a_buscar.size();
         std::pair<unsigned int, unsigned int> posicion =  utils::posicionMatriz(5,5,buscando);
         unsigned int i = posicion.first;
         unsigned int j = posicion.second;
 
         if (!matriz_horarios_bool[i][j]) {
+
             //Esta vacío!
             std::vector<bool> nuevo_genotipo;
             std::vector<bool> buscando_binary = utils::int2binary(buscando, false);
+
+            while(buscando_binary.size() < this->bits_por_materia)
+                buscando_binary.insert(buscando_binary.begin(), 0);
+
             nuevo_genotipo.insert( nuevo_genotipo.begin(),
                                    individuo_a_mutar.genotipo.begin(),
                                    individuo_a_mutar.genotipo.begin() + posicion_random * this->bits_por_materia
                                    );
+
 
             nuevo_genotipo.insert( nuevo_genotipo.end(),
                                    buscando_binary.begin(),

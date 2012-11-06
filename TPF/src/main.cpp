@@ -63,7 +63,6 @@ int main() {
                          elitismo, brecha_generacional, id_funcion_fitness, clases, aulas_disponibles,
                          metodo_seleccion, k_competencia, bits_por_clase);
 
-
     std::vector<float> mejor_fitness;
     std::vector<float> prom_fitness;
     std::vector<float> peor_fitness;

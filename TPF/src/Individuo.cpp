@@ -15,7 +15,6 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
     this->variables_fenotipo = variables_fenotipo;
     this->clases = clases;
     this->aulas_disponibles = aulas_disponibles;
-    this->genotipo.resize(cantidad_genes);
 
     for (unsigned int i = 0; i < variables_fenotipo; i++) {
         unsigned int bloque = rand() % 25;
@@ -29,8 +28,10 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
 
     //Calcula las matrices
     this->calcularMatrices();
+
     //Calcula el fitness
     this->calcularFitness();
+
 }
 
 //Devuelve el fitness actual
@@ -51,7 +52,7 @@ float Individuo::calcularFitness() {
     std::vector<std::vector<unsigned int> > materias_por_bloque;
     unsigned int cantidad_bloques = (this->matriz_bool.size()-1) * this->matriz_bool[0].size();
     materias_por_bloque.resize(cantidad_bloques);
-    unsigned int paso = this->genotipo.size() / this->variables_fenotipo;
+    unsigned int paso = floor(this->genotipo.size() / this->variables_fenotipo);
 
     for (unsigned int i = 0; i < this->variables_fenotipo; i++) {
         std::vector<bool> bloque;
@@ -70,15 +71,16 @@ float Individuo::calcularFitness() {
     for (unsigned int i = 0; i < materias_por_bloque.size(); i++) {
         std::map<unsigned int, unsigned int> repetidos;
         for (unsigned int j = 0; j < materias_por_bloque[i].size(); j++) {
-            if (repetidos.find(j) == repetidos.end()) {
-                repetidos[j] = 1;
+            if (repetidos.find(materias_por_bloque[i][j]) == repetidos.end()) {
+                repetidos[materias_por_bloque[i][j]] = 1;
             } else {
-                repetidos[j]++;
+                repetidos[materias_por_bloque[i][j]]++;
             }
         }
+
         std::map<unsigned int, unsigned int>::iterator p = repetidos.begin();
         std::map<unsigned int, unsigned int>::iterator q = repetidos.end();
-        while (p != q) {
+        while (p != q) {          
             if (p->second > 1)
                 basura++;
             p++;
@@ -156,11 +158,14 @@ float Individuo::calcularFitness() {
             }
         }
     }
+
     //std::cout<<cantidad_repeticiones<<' '<<sobrepaso_aulas<<' '<<solapamientos_adyacentes<<' '<<basura<<'\n';
+
 
     //Calculamos el denominador de la funcion de fitness
     float denominador = (cantidad_repeticiones+1) * (sobrepaso_aulas+1) *
-            pow(solapamientos_adyacentes+1,2) * pow(basura+1, 15);
+            pow(solapamientos_adyacentes+1,2) * pow(basura+1, 5);
+
 
     //confiamos en que nunca el denominador va a ser cero
     nuevo_fitness = 1/denominador;
@@ -198,7 +203,7 @@ void Individuo::calcularMatrizBool() {
     }
 
     unsigned int cantidad_clases = this->variables_fenotipo;
-    //calcula cuantos bits tiene cada clase
+    //calcula cuantos bits tiene cada clase  
     unsigned int paso = this->genotipo.size() / cantidad_clases;
 
     for (unsigned int i = 0; i < cantidad_clases; i++) {
