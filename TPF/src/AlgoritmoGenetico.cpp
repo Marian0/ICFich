@@ -410,6 +410,13 @@ void AlgoritmoGenetico::imprimirResumen() {
     std::cout<<"\nMejor Fitness = "<<this->getMejorFitness();
     std::cout<<"\nPeor Fitness = "<<this->getPeorFitness();
 
+    std::vector<unsigned int> valores_mejor_fitness = this->poblacion[id_maximo_fitness].getValoresFitness();
+    std::cout<<"\n\tParametros del mejor fitness:";
+    std::cout<<"\n\tCantidad de repeticiones = "<<valores_mejor_fitness[0];
+    std::cout<<"\n\tSobrepaso de aulas = "<<valores_mejor_fitness[1];
+    std::cout<<"\n\tSolapamiento de Anios Adyacentes = "<<valores_mejor_fitness[2];
+    std::cout<<"\n\tDos materias del mismo anio en un mismo bloque = "<<valores_mejor_fitness[3];
+
 }
 
 

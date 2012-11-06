@@ -4,6 +4,11 @@
 #include "Clase.h"
 class Individuo {
     public:
+
+    unsigned int cantidad_repeticiones;
+    unsigned int sobrepaso_aulas;
+    unsigned int solapamientos_adyacentes;
+    unsigned int basura;
     //Vector con los valores de la cadena de bits
     std::vector<bool> genotipo;
 
@@ -50,5 +55,8 @@ class Individuo {
     void calcularMatrizInt();
     //Calcula la matriz bool
     void calcularMatrizBool();
+
+    //Devuelve todos los valores que sirvieron para calcular el fitness
+    std::vector<unsigned int> getValoresFitness();
 };
 #endif

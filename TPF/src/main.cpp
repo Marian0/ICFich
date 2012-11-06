@@ -104,6 +104,7 @@ int main() {
    std::vector<int> respuesta_fenotipo;
 
    AG.getMejorGenotipo(respuesta);
+
    utils::vectorBinary2Int(respuesta, respuesta_fenotipo, bits_por_clase);
 
    std::cout<<"\nSolucion = "; utils::printVector(respuesta_fenotipo);

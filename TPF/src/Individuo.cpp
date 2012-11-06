@@ -16,6 +16,11 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
     this->clases = clases;
     this->aulas_disponibles = aulas_disponibles;
 
+    this->cantidad_repeticiones = 0;
+    this->sobrepaso_aulas = 0;
+    this->solapamientos_adyacentes = 0;
+    this->basura = 0;
+
     for (unsigned int i = 0; i < variables_fenotipo; i++) {
         unsigned int bloque = rand() % 25;
         std::vector<bool> bloque_binary = utils::int2binary(bloque, false);
@@ -46,7 +51,7 @@ float Individuo::calcularFitness() {
     //Validamos que sea un individuo valido.
     //Contamos en basura la cantidad de "2x1"=dos materias del mismo año en el mismo bloque
     //Si basura=0, quiere decir que el individuo es valido y esta todo bien
-    unsigned int basura = 0;
+    this->basura = 0;
 
     //en el vector guardamos las materias que se dan en cada bloque
     std::vector<std::vector<unsigned int> > materias_por_bloque;
@@ -82,7 +87,7 @@ float Individuo::calcularFitness() {
         std::map<unsigned int, unsigned int>::iterator q = repetidos.end();
         while (p != q) {          
             if (p->second > 1)
-                basura++;
+                this->basura++;
             p++;
         }
     }
@@ -90,7 +95,7 @@ float Individuo::calcularFitness() {
 
     //------------
     //Contamos la cantidad de solapamientos entre años adyacentes
-    unsigned int solapamientos_adyacentes = 0;
+    this->solapamientos_adyacentes = 0;
 
     for (unsigned int i = 0; i < this->matriz_bool.size() - 1; i++) {
         std::vector<std::vector<bool> > matriz_producto =
@@ -98,7 +103,7 @@ float Individuo::calcularFitness() {
         for (unsigned int j = 0; j < matriz_producto.size(); j++) {
             for (unsigned int k = 0; k < matriz_producto[j].size(); k++)
                 if(matriz_producto[j][k] == true)
-                    solapamientos_adyacentes++;
+                    this->solapamientos_adyacentes++;
         }
     }
 
@@ -118,18 +123,18 @@ float Individuo::calcularFitness() {
         suma_aulas = utils::sumarMatrices(suma_aulas, this->matriz_bool[i]);
     }
 
-    unsigned int sobrepaso_aulas = 0;
+    this->sobrepaso_aulas = 0;
 
     for (unsigned int i = 0; i < suma_aulas.size(); i++) {
         for (unsigned int j = 0; j < suma_aulas[i].size(); j++) {
             if (suma_aulas[i][j] > this->aulas_disponibles)
-                sobrepaso_aulas++;
+                this->sobrepaso_aulas++;
         }
     }
 
     //-------------
     //Contamos la cantidad de veces que se repite una materia en el mismo día
-    unsigned int cantidad_repeticiones = 0;
+    this->cantidad_repeticiones = 0;
     //Para cada año
     for (unsigned int i = 0; i < this->matriz_int.size(); i++) {
         //Para cada día
@@ -153,18 +158,18 @@ float Individuo::calcularFitness() {
 
             while (p != q) {
                 if (p->second > 1) //aparece la materia mas de una vez en el dia, no deseable
-                    cantidad_repeticiones++;
+                    this->cantidad_repeticiones++;
                 p++;
             }
         }
     }
 
-    //std::cout<<cantidad_repeticiones<<' '<<sobrepaso_aulas<<' '<<solapamientos_adyacentes<<' '<<basura<<'\n';
+    //std::cout<<this->cantidad_repeticiones<<' '<<this->sobrepaso_aulas<<' '<<this->solapamientos_adyacentes<<' '<<this->basura<<'\n';
 
 
     //Calculamos el denominador de la funcion de fitness
-    float denominador = (cantidad_repeticiones+1) * (sobrepaso_aulas+1) *
-            pow(solapamientos_adyacentes+1,2) * pow(basura+1, 5);
+    float denominador = (this->cantidad_repeticiones+1) * (this->sobrepaso_aulas+1) *
+            pow(this->solapamientos_adyacentes+1,2) * pow(this->basura+1, 5);
 
 
     //confiamos en que nunca el denominador va a ser cero
@@ -263,4 +268,14 @@ void Individuo::calcularMatrizInt() {
         //Ocupa el bloque
         this->matriz_int[anio_clase][pos.first][pos.second] = i;
     }
+}
+
+//Devuelve todos los valores que sirvieron para calcular el fitness
+std::vector<unsigned int> Individuo::getValoresFitness(){
+    std::vector<unsigned int> ret_val;
+    ret_val.push_back(this->cantidad_repeticiones);
+    ret_val.push_back(this->sobrepaso_aulas);
+    ret_val.push_back(this->solapamientos_adyacentes);
+    ret_val.push_back(this->basura);
+    return ret_val;
 }
