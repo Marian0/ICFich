@@ -15,14 +15,18 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
     this->variables_fenotipo = variables_fenotipo;
     this->clases = clases;
     this->aulas_disponibles = aulas_disponibles;
-
+    this->genotipo.resize(cantidad_genes);
+    unsigned int idx = 0;
     for (unsigned int i = 0; i < variables_fenotipo; i++) {
         unsigned int bloque = rand() % 25;
         std::vector<bool> bloque_binary = utils::int2binary(bloque, false);
         while (bloque_binary.size() < 5 ) {
-            bloque_binary.insert(bloque_binary.begin(),0);
+            bloque_binary.insert(bloque_binary.begin(), 0);
         }
-        this->genotipo.insert(this->genotipo.end(), bloque_binary.begin(), bloque_binary.end() );
+        for (unsigned int j = 0; j < bloque_binary.size(); j++, idx++)
+            this->genotipo[idx] = bloque_binary[j];
+        //this->genotipo.insert(this->genotipo.end(), bloque_binary.begin(), bloque_binary.end() );
+
     }
 
     //Calcula las matrices
