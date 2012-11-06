@@ -132,6 +132,8 @@ class AlgoritmoGenetico {
 
     //Muestra un resumen de todas las iteraciones del algoritmo
     void imprimirResumen();
+    //Imprime un resumen a un archivo
+    void imprimirResumen(std::string nombre_archivo);
 
     //Funcion que sirve para ordenar individuos de mayor a menor
     static bool ordenarIndividuos(Individuo a, Individuo b) {

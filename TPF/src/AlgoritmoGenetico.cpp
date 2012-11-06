@@ -411,12 +411,40 @@ void AlgoritmoGenetico::imprimirResumen() {
     std::cout<<"\nPeor Fitness = "<<this->getPeorFitness();
 
     std::vector<unsigned int> valores_mejor_fitness = this->poblacion[id_maximo_fitness].getValoresFitness();
-    std::cout<<"\n\tParametros del mejor fitness:";
+    std::cout<<"\nParametros del mejor fitness:";
     std::cout<<"\n\tCantidad de repeticiones = "<<valores_mejor_fitness[0];
     std::cout<<"\n\tSobrepaso de aulas = "<<valores_mejor_fitness[1];
     std::cout<<"\n\tSolapamiento de Anios Adyacentes = "<<valores_mejor_fitness[2];
     std::cout<<"\n\tDos materias del mismo anio en un mismo bloque = "<<valores_mejor_fitness[3];
 
+}
+
+void AlgoritmoGenetico::imprimirResumen(std::string nombre_archivo) {
+    std::ofstream file(nombre_archivo.c_str(), std::ofstream::out|std::ofstream::trunc);
+    assert(file.is_open());
+    file<<"Generaciones = "<<this->generacion_actual;
+    file<<"\nTamanio Poblacion = "<<this->tamanio_poblacion;
+    file<<"\nElitismo = "<<this->n_elitismo;
+    file<<"\nBrecha Generacional = "<<this->n_brecha_generacional;
+    file<<"\nMetodo seleccion = "<<this->metodo_seleccion;
+    file<<"\nProbabilidades:";
+    file<<"\n\tCruza = "<<this->probabilidad_cruza;
+    file<<"\n\tMutacion por movimiento = "<<this->probabilidad_mutacion_movimiento;
+    file<<"\n\tMutacion por permutacion = "<<this->probabilidad_mutacion_permutacion;
+    file<<"\nCantidad de operaciones:";
+    file<<"\n\tCruzas = "<<this->cantidad_cruzas;
+    file<<"\n\tMutaciones por Movimiento = "<<this->cantidad_mutaciones_movimiento;
+    file<<"\n\tMutaciones por Permutación = "<<this->cantidad_mutaciones_permutacion;
+    file<<"\nMejor Fitness = "<<this->getMejorFitness();
+    file<<"\nPeor Fitness = "<<this->getPeorFitness();
+
+    std::vector<unsigned int> valores_mejor_fitness = this->poblacion[id_maximo_fitness].getValoresFitness();
+    file<<"\nParametros del mejor fitness:";
+    file<<"\n\tCantidad de repeticiones = "<<valores_mejor_fitness[0];
+    file<<"\n\tSobrepaso de aulas = "<<valores_mejor_fitness[1];
+    file<<"\n\tSolapamiento de Anios Adyacentes = "<<valores_mejor_fitness[2];
+    file<<"\n\tDos materias del mismo anio en un mismo bloque = "<<valores_mejor_fitness[3];
+    file.close();
 }
 
 

@@ -22,24 +22,27 @@ int main() {
     srand( (unsigned) std::time(NULL));
 
     //Leemos los valores de configuracion
-      float           probabilidad_cruza      = utils::strToFloat(config.getValue("cruza"));
-      float           probabilidad_mutacion_permutacion   = utils::strToFloat(config.getValue("mutacion_permutacion"));
-      float           probabilidad_mutacion_movimiento   = utils::strToFloat(config.getValue("mutacion_movimiento"));
-      unsigned int    tamanio_poblacion       = utils::strToInt(config.getValue("tamanio_poblacion"));
-      unsigned int    variables_fenotipo      = utils::strToInt(config.getValue("variables_fenotipo"));
-      unsigned int    cantidad_generaciones   = utils::strToInt(config.getValue("cantidad_generaciones"));
-      unsigned int    cantidad_genes          = utils::strToInt(config.getValue("cantidad_genes"));
-      float           escala                  = utils::strToFloat(config.getValue("escala"));
-      unsigned int    elitismo                = utils::strToInt(config.getValue("elitismo"));
-      unsigned int    id_funcion_fitness      = utils::strToInt(config.getValue("id_funcion_fitness"));
-      std::string     forma_seleccion         = config.getValue("forma_seleccion");
-      std::string     archivo_problema        = config.getValue("archivo_problema");
-      float           error                   = utils::strToFloat(config.getValue("error"));
-      unsigned int    brecha_generacional     = utils::strToInt(config.getValue("brecha_generacional"));
-      unsigned int    k_competencia           = utils::strToInt(config.getValue("k_competencia"));
-      float           fitness_deseado         = utils::strToFloat(config.getValue("fitness_deseado"));
-      unsigned int    bits_por_clase          = utils::strToInt(config.getValue("bits_por_clase"));
-      unsigned int    aulas_disponibles       = utils::strToInt(config.getValue("aulas_disponibles"));
+    float           probabilidad_cruza      = utils::strToFloat(config.getValue("cruza"));
+    float           probabilidad_mutacion_permutacion   = utils::strToFloat(config.getValue("mutacion_permutacion"));
+    float           probabilidad_mutacion_movimiento   = utils::strToFloat(config.getValue("mutacion_movimiento"));
+    unsigned int    tamanio_poblacion       = utils::strToInt(config.getValue("tamanio_poblacion"));
+    unsigned int    variables_fenotipo      = utils::strToInt(config.getValue("variables_fenotipo"));
+    unsigned int    cantidad_generaciones   = utils::strToInt(config.getValue("cantidad_generaciones"));
+    unsigned int    cantidad_genes          = utils::strToInt(config.getValue("cantidad_genes"));
+    float           escala                  = utils::strToFloat(config.getValue("escala"));
+    unsigned int    elitismo                = utils::strToInt(config.getValue("elitismo"));
+    unsigned int    id_funcion_fitness      = utils::strToInt(config.getValue("id_funcion_fitness"));
+    std::string     forma_seleccion         = config.getValue("forma_seleccion");
+    std::string     archivo_problema        = config.getValue("archivo_problema");
+    float           error                   = utils::strToFloat(config.getValue("error"));
+    unsigned int    brecha_generacional     = utils::strToInt(config.getValue("brecha_generacional"));
+    unsigned int    k_competencia           = utils::strToInt(config.getValue("k_competencia"));
+    float           fitness_deseado         = utils::strToFloat(config.getValue("fitness_deseado"));
+    unsigned int    bits_por_clase          = utils::strToInt(config.getValue("bits_por_clase"));
+    unsigned int    aulas_disponibles       = utils::strToInt(config.getValue("aulas_disponibles"));
+
+    //Variables para contar tiempo
+    clock_t t_ini, t_fin;
 
 
     std::cout<<"Bienvenidos al Trabajo Final - Inteligencia Computacional - 2012\n";
@@ -57,6 +60,9 @@ int main() {
             metodo_seleccion = AlgoritmoGenetico::SELECCION_COMPETENCIA;
         else
             std::cout<<"Metodo de seleccion no definido\n";
+
+    //Inicializamos el contador
+    t_ini = clock();
 
     AlgoritmoGenetico AG(tamanio_poblacion, cantidad_genes, escala, variables_fenotipo,
                          cantidad_generaciones, probabilidad_cruza, probabilidad_mutacion_movimiento, probabilidad_mutacion_permutacion,
@@ -77,52 +83,69 @@ int main() {
     for (; w < cantidad_generaciones; w++) {
         AG.reproduccion();
 
-       float mejor_fitness_actual = AG.evaluar();
-       std::cout<<"Mejor fitness a iteracion "<<w<<" = "<<mejor_fitness_actual<<'\n';
+        float mejor_fitness_actual = AG.evaluar();
+        std::cout<<"Mejor fitness a iteracion "<<w<<" = "<<mejor_fitness_actual<<'\n';
 
-       //Guardo el mejor fitness de la poblacion
-       mejor_fitness.push_back(AG.getMejorFitness());
-       //Calculo y guardo el fitness promedio de la poblacion
-       std::vector<float> vector_tmp_fitness;
-       AG.getFitness(vector_tmp_fitness);
-       prom_fitness.push_back(utils::promedio(vector_tmp_fitness));
-       //Guardo el Peor fitness de la poblacion
-       peor_fitness.push_back(AG.getPeorFitness());
+        //Guardo el mejor fitness de la poblacion
+        mejor_fitness.push_back(AG.getMejorFitness());
+        //Calculo y guardo el fitness promedio de la poblacion
+        std::vector<float> vector_tmp_fitness;
+        AG.getFitness(vector_tmp_fitness);
+        prom_fitness.push_back(utils::promedio(vector_tmp_fitness));
+        //Guardo el Peor fitness de la poblacion
+        peor_fitness.push_back(AG.getPeorFitness());
 
-
-       //Criterio de finalización
-       if (mejor_fitness_actual > fitness_deseado) {
+        //Criterio de finalización
+        if (mejor_fitness_actual > fitness_deseado) {
            break;
-       }
+        }
+        if (w >= 100 and w % 100 == 0) {//guarda un archivo cada 100 generaciones
+            std::string archivo_salida = "salida_tabla_" + utils::intToStr(w) + ".xls";
+
+            std::vector<bool> respuesta;
+            AG.getMejorGenotipo(respuesta);
+            std::vector<int> respuesta_fenotipo;
+            utils::vectorBinary2Int(respuesta, respuesta_fenotipo, bits_por_clase);
+            std::vector<std::vector<std::vector<int> > > solucion = AG.getSolucion();
+
+            std::cout<<"Escribiendo archivo "<<archivo_salida<<".\n";
+            utils::escribirSolucion(solucion, respuesta_fenotipo, clases, archivo_salida);
+
+            std::string archivo_resumen = "salida_resumen_" + utils::intToStr(w) + ".txt";
+            std::cout<<"Escribiendo archivo "<<archivo_resumen<<".\n";
+            AG.imprimirResumen(archivo_resumen);
+
+        }
     }
+    t_fin = clock();
+    std::cout<<"Tiempo del Metodo = "<<(double)(t_fin - t_ini) / CLOCKS_PER_SEC<<'\n';
 
+    std::cout<<"\nSe termino luego de "<<w<<" generaciones.\nEl fitness logrado es de "<<mejor_fitness.back()<<'\n';
 
-   std::cout<<"\nSe termino luego de "<<w<<" generaciones.\nEl fitness logrado es de "<<mejor_fitness.back()<<'\n';
+    AG.imprimirResumen();
+    std::vector<bool> respuesta;
+    std::vector<int> respuesta_fenotipo;
 
-   AG.imprimirResumen();
-   std::vector<bool> respuesta;
-   std::vector<int> respuesta_fenotipo;
+    AG.getMejorGenotipo(respuesta);
 
-   AG.getMejorGenotipo(respuesta);
+    utils::vectorBinary2Int(respuesta, respuesta_fenotipo, bits_por_clase);
 
-   utils::vectorBinary2Int(respuesta, respuesta_fenotipo, bits_por_clase);
+    std::cout<<"\nSolucion = "; utils::printVector(respuesta_fenotipo);
 
-   std::cout<<"\nSolucion = "; utils::printVector(respuesta_fenotipo);
+    //Vector de vector para graficacion
+    std::vector<std::vector<float> > grafica;
+    grafica.push_back(mejor_fitness);
+    grafica.push_back(prom_fitness);
+    grafica.push_back(peor_fitness);
+    GNUPlot plotter;
 
-   //Vector de vector para graficacion
-   std::vector<std::vector<float> > grafica;
-   grafica.push_back(mejor_fitness);
-   grafica.push_back(prom_fitness);
-   grafica.push_back(peor_fitness);
-   GNUPlot plotter;
+    utils::drawHistory(grafica, plotter, id_funcion_fitness);
 
-   utils::drawHistory(grafica, plotter, id_funcion_fitness);
+    std::vector<std::vector<std::vector<int> > > solucion = AG.getSolucion();
 
-   std::vector<std::vector<std::vector<int> > > solucion = AG.getSolucion();
+    utils::escribirSolucion(solucion, respuesta_fenotipo, clases, "salida.xls");
 
-   utils::escribirSolucion(solucion, respuesta_fenotipo, clases, "salida.xls");
-
-   getwchar();
-   return 0;
+    getwchar();
+    return 0;
 
 }
