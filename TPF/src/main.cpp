@@ -53,13 +53,22 @@ int main() {
     //Variables para contar tiempo
     clock_t t_ini, t_fin;
 
+    //Creamos la fecha actual para el nombre de archivo
+    // current date/time based on current system
+    time_t now = time(0);
+    tm *ltm = localtime(&now);
+
+    std::stringstream fecha_actual;
+    fecha_actual<<ltm->tm_mday<<"-"<<1 + ltm->tm_mon<<"_"<<ltm->tm_hour << ":"<<ltm->tm_min;
+    std::string fecha;
+    fecha_actual>>fecha;
 
     std::cout<<"Bienvenidos al Trabajo Final - Inteligencia Computacional - 2012\n";
     std::cout<<"Problema de Organización de Materias en una Facultad\n";
     std::cout<<"Nellmeldin Fernando - Peyregne Mariano\n";
     std::cout<<"Lectura de las clases.\n";
     std::vector<Clase> clases = utils::leerClases(archivo_problema);
-    archivo_problema = archivo_problema + "_poblacion_"+utils::intToStr(tamanio_poblacion);
+    archivo_problema = archivo_problema + "__" + fecha + "_";
 
     unsigned int metodo_seleccion;
         if(forma_seleccion.compare("ruleta") == 0)
@@ -139,12 +148,12 @@ int main() {
         }*/
     }
     t_fin = clock();
-    std::cout<<"\n\nTiempo del Metodo = "<<(double)(t_fin - t_ini) / CLOCKS_PER_SEC<<"\n\n\n";
+    std::cout<<"\n\nTiempo del Metodo = "<<(double)(t_fin - t_ini) / CLOCKS_PER_SEC<<"\n";
 
     std::cout<<"\nSe termino luego de "<<w<<" generaciones.\nEl fitness logrado es de "<<mejor_fitness.back()<<'\n';
 
     AG.imprimirResumen();
-    std::string archivo_resumen = archivo_problema + "_resumen_gen_" + utils::intToStr(w) + ".txt";
+    std::string archivo_resumen = archivo_problema + "_resumen.txt";
     std::cout<<"Escribiendo archivo "<<archivo_resumen<<".\n";
     AG.imprimirResumen(archivo_resumen);
     std::vector<bool> respuesta;
@@ -167,12 +176,14 @@ int main() {
 
     std::vector<std::vector<std::vector<int> > > solucion = AG.getSolucion();
 
-    std::cout<<"Escribiendo archivo SALIDA.xls.\n";
-    std::string archivo_SALIDA = archivo_problema + "_SALIDA.xls";
+
+    std::string archivo_SALIDA = archivo_problema + "_salida.xls";
+    std::cout<<"Escribiendo vectores para graficar en "<<archivo_SALIDA<<"\n";
     utils::escribirSolucion(solucion, respuesta_fenotipo, clases, archivo_SALIDA);
 
-    std::cout<<"Escribiendo vectores para graficar en GRAFICA.xls\n";
-    std::string archivo_GRAFICA = archivo_problema + "_GRAFICA.xls";
+
+    std::string archivo_GRAFICA = archivo_problema + "_grafica.xls";
+    std::cout<<"Escribiendo vectores para graficar en "<<archivo_GRAFICA<<"\n";
     utils::escribirGraficas(grafica, archivo_GRAFICA);
 
     getwchar();

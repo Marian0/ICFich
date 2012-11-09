@@ -441,6 +441,21 @@ void AlgoritmoGenetico::imprimirResumen() {
     std::cout<<"\n\tSobrepaso de aulas = "<<valores_mejor_fitness[1];
     std::cout<<"\n\tSolapamiento de Anios Adyacentes = "<<valores_mejor_fitness[2];
     std::cout<<"\n\tDos materias del mismo anio en un mismo bloque = "<<valores_mejor_fitness[3];
+    std::cout<<"\nParametros del calculo de fitness:\n";
+    if(this->modo_fitness == Individuo::FITNESS_PRODUCTO) {
+        std::cout<<"\nForma de calculo del fitness = Producto";
+        std::cout<<"\n\tPotencia Cantidad de Repeticiones = "<<this->pot_cantidad_repeticiones;
+        std::cout<<"\n\tPotencia Sobrepaso de Aulas = "<<this->pot_sobrepaso_aulas;
+        std::cout<<"\n\tPotencia Solapamientos adyacentes = "<<this->pot_solapamientos_adyacentes;
+        std::cout<<"\n\tPotencia Superposicion = "<<this->pot_superposicion;
+    } else if (this->modo_fitness == Individuo::FITNESS_SUMA) {
+        std::cout<<"\nForma de calculo del fitness = Suma";
+        std::cout<<"\n\tPeso Cantidad de Repeticiones = "<<this->mult_cantidad_repeticiones;
+        std::cout<<"\n\tPeso Sobrepaso de Aulas = "<<this->mult_sobrepaso_aulas;
+        std::cout<<"\n\tPeso Solapamientos Adyacentes = "<<this->mult_solapamientos_adyacentes;
+        std::cout<<"\n\tPeso Superposicion = "<<this->mult_superposicion;
+
+    }
     std::cout<<"\n";
 
 }
@@ -470,7 +485,24 @@ void AlgoritmoGenetico::imprimirResumen(std::string nombre_archivo) {
     file<<"\n\tSobrepaso de aulas = "<<valores_mejor_fitness[1];
     file<<"\n\tSolapamiento de Anios Adyacentes = "<<valores_mejor_fitness[2];
     file<<"\n\tDos materias del mismo anio en un mismo bloque = "<<valores_mejor_fitness[3];
+    file<<"\nParametros del calculo de fitness:\n";
+    if(this->modo_fitness == Individuo::FITNESS_PRODUCTO) {
+        file<<"\nForma de calculo del fitness = Producto";
+        file<<"\n\tPotencia Cantidad de Repeticiones = "<<this->pot_cantidad_repeticiones;
+        file<<"\n\tPotencia Sobrepaso de Aulas = "<<this->pot_sobrepaso_aulas;
+        file<<"\n\tPotencia Solapamientos adyacentes = "<<this->pot_solapamientos_adyacentes;
+        file<<"\n\tPotencia Superposicion = "<<this->pot_superposicion;
+    } else if (this->modo_fitness == Individuo::FITNESS_SUMA) {
+        file<<"\nForma de calculo del fitness = Suma";
+        file<<"\n\tPeso Cantidad de Repeticiones = "<<this->mult_cantidad_repeticiones;
+        file<<"\n\tPeso Sobrepaso de Aulas = "<<this->mult_sobrepaso_aulas;
+        file<<"\n\tPeso Solapamientos Adyacentes = "<<this->mult_solapamientos_adyacentes;
+        file<<"\n\tPeso Superposicion = "<<this->mult_superposicion;
+
+    }
+
     file<<"\n";
+
     file.close();
 }
 
