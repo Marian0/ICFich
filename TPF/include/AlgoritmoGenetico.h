@@ -66,6 +66,17 @@ class AlgoritmoGenetico {
 
     unsigned int aulas_disponibles;
 
+    float pot_cantidad_repeticiones;
+    float pot_sobrepaso_aulas;
+    float pot_solapamientos_adyacentes;
+    float pot_superposicion;
+
+    float mult_cantidad_repeticiones;
+    float mult_sobrepaso_aulas;
+    float mult_solapamientos_adyacentes;
+    float mult_superposicion;
+
+    unsigned int modo_fitness;
     public:
 
     static const unsigned int SELECCION_RULETA = 1;
@@ -88,7 +99,16 @@ class AlgoritmoGenetico {
                        unsigned int aulas_disponibles,
                        unsigned int metodo_seleccion = SELECCION_COMPETENCIA ,
                        unsigned int k_competencia = 5,
-                       unsigned int bits_por_materia = 6
+                       unsigned int bits_por_materia = 6,
+                       unsigned int modo_fitness = Individuo::FITNESS_PRODUCTO,
+                       float pot_repeticiones = 1,
+                       float pot_aulas = 1,
+                       float pot_solapamiento = 2,
+                       float pot_superposicion = 5,
+                       float mult_cantidad_repeticiones = 0.1,
+                       float mult_sobrepaso_aulas = 0.1,
+                       float mult_solapamientos_adyacentes = 0.3,
+                       float mult_superposicion = 0.5
                       );
 
     //Crea la nueva generacion

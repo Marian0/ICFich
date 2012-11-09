@@ -5,7 +5,10 @@
 #include <cstdio>
 
 AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, float escala, unsigned int variables_fenotipo, unsigned int max_gen, float pcruza, float pmutacion_movimiento, float pmutacion_permutacion, unsigned int elitismo, unsigned int brecha_generacional, unsigned int id_funcion_fitness, std::vector<Clase>  Clases,
-                                     unsigned int aulas_disponibles, unsigned int metodo_seleccion, unsigned int k_competencia, unsigned int bits_por_materia) {
+                                     unsigned int aulas_disponibles, unsigned int metodo_seleccion, unsigned int k_competencia, unsigned int bits_por_materia,
+                                     unsigned int modo_fitness,
+                                     float pot_repeticiones, float pot_aulas, float pot_solapamiento, float pot_superposicion,
+                                     float mult_repeticiones, float mult_aulas, float mult_solapamiento, float mult_superposicion) {
 
     //Copia las propiedades del algoritmo
     this->tamanio_poblacion = tam_pob;
@@ -31,6 +34,16 @@ AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_gen
 
     this->bits_por_materia = bits_por_materia;
 
+    this->modo_fitness = modo_fitness;
+    this->pot_cantidad_repeticiones = pot_repeticiones;
+    this->pot_sobrepaso_aulas = pot_aulas;
+    this->pot_solapamientos_adyacentes = pot_solapamiento;
+    this->pot_superposicion = pot_superposicion;
+
+    this->mult_cantidad_repeticiones = mult_repeticiones;
+    this->mult_sobrepaso_aulas = mult_aulas;
+    this->mult_solapamientos_adyacentes = mult_solapamiento;
+    this->mult_superposicion = mult_superposicion;
 
     // A MODIFICAR
     // A MODIFICAR
@@ -69,7 +82,12 @@ AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_gen
     //Crea todos los Individuos
     for (unsigned int i = 0; i < this->tamanio_poblacion; i++) {
         Individuo new_ind(this->cantidad_genes, this->id_funcion_fitness, this->Clases,
-                          this->aulas_disponibles, this->escala, this->variables_fenotipo);
+                          this->aulas_disponibles, this->escala, this->variables_fenotipo,
+                          this->modo_fitness,
+                          this->pot_cantidad_repeticiones, this->pot_sobrepaso_aulas,
+                          this->pot_solapamientos_adyacentes, this->pot_superposicion,
+                          this->mult_cantidad_repeticiones, this->mult_sobrepaso_aulas,
+                          this->mult_solapamientos_adyacentes, this->mult_superposicion);
         this->poblacion.push_back(new_ind);
     }
 
@@ -331,8 +349,21 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
     }
 
     //Algoritmo de cruza
-    Individuo hijo1(this->cantidad_genes, this->id_funcion_fitness, Clases, this->aulas_disponibles, escala, variables_fenotipo);
-    Individuo hijo2(this->cantidad_genes, this->id_funcion_fitness, Clases, this->aulas_disponibles, escala, variables_fenotipo);
+    Individuo hijo1(  this->cantidad_genes, this->id_funcion_fitness, this->Clases,
+                      this->aulas_disponibles, this->escala, this->variables_fenotipo,
+                      this->modo_fitness,
+                      this->pot_cantidad_repeticiones, this->pot_sobrepaso_aulas,
+                      this->pot_solapamientos_adyacentes, this->pot_superposicion,
+                      this->mult_cantidad_repeticiones, this->mult_sobrepaso_aulas,
+                      this->mult_solapamientos_adyacentes, this->mult_superposicion);
+
+    Individuo hijo2(  this->cantidad_genes, this->id_funcion_fitness, this->Clases,
+                      this->aulas_disponibles, this->escala, this->variables_fenotipo,
+                      this->modo_fitness,
+                      this->pot_cantidad_repeticiones, this->pot_sobrepaso_aulas,
+                      this->pot_solapamientos_adyacentes, this->pot_superposicion,
+                      this->mult_cantidad_repeticiones, this->mult_sobrepaso_aulas,
+                      this->mult_solapamientos_adyacentes, this->mult_superposicion);
 
     hijo1.genotipo.clear();
     hijo2.genotipo.clear();
@@ -346,11 +377,8 @@ void AlgoritmoGenetico::cruza(Individuo & padre, Individuo & madre, std::vector<
     hijo2.genotipo.insert(hijo2.genotipo.end(), padre.genotipo.begin() + posicion_cruza1 , padre.genotipo.begin() + posicion_cruza2 );
     hijo2.genotipo.insert(hijo2.genotipo.end(), madre.genotipo.begin() + posicion_cruza2 , madre.genotipo.end() );
 
-
     hijos.push_back(hijo1);
     hijos.push_back(hijo2);
-
-
 }
 
 //Realiza la mutación de un padre en un hijo
@@ -370,11 +398,8 @@ void AlgoritmoGenetico::mutacion(Individuo &individuo_a_mutar) {
     if (prob < this->probabilidad_mutacion_movimiento) {
         mutacionMovimiento(individuo_a_mutar);
         //aumentamos contador
-
         this->cantidad_mutaciones_movimiento++;
     }
-
-
 }
 
 
@@ -416,6 +441,7 @@ void AlgoritmoGenetico::imprimirResumen() {
     std::cout<<"\n\tSobrepaso de aulas = "<<valores_mejor_fitness[1];
     std::cout<<"\n\tSolapamiento de Anios Adyacentes = "<<valores_mejor_fitness[2];
     std::cout<<"\n\tDos materias del mismo anio en un mismo bloque = "<<valores_mejor_fitness[3];
+    std::cout<<"\n";
 
 }
 
@@ -444,6 +470,7 @@ void AlgoritmoGenetico::imprimirResumen(std::string nombre_archivo) {
     file<<"\n\tSobrepaso de aulas = "<<valores_mejor_fitness[1];
     file<<"\n\tSolapamiento de Anios Adyacentes = "<<valores_mejor_fitness[2];
     file<<"\n\tDos materias del mismo anio en un mismo bloque = "<<valores_mejor_fitness[3];
+    file<<"\n";
     file.close();
 }
 

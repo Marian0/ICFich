@@ -8,7 +8,19 @@ class Individuo {
     unsigned int cantidad_repeticiones;
     unsigned int sobrepaso_aulas;
     unsigned int solapamientos_adyacentes;
-    unsigned int basura;
+    unsigned int superposicion;
+
+    float pot_cantidad_repeticiones;
+    float pot_sobrepaso_aulas;
+    float pot_solapamientos_adyacentes;
+    float pot_superposicion;
+
+    float mult_cantidad_repeticiones;
+    float mult_sobrepaso_aulas;
+    float mult_solapamientos_adyacentes;
+    float mult_superposicion;
+
+    unsigned int modo_fitness;
     //Vector con los valores de la cadena de bits
     std::vector<bool> genotipo;
 
@@ -33,12 +45,19 @@ class Individuo {
     std::vector<std::vector<std::vector<int> > > matriz_int;
 
     unsigned int aulas_disponibles;
+    static const unsigned int FITNESS_PRODUCTO = 1;
+    static const unsigned int FITNESS_SUMA = 2;
+
 
     //Constructor vacio
     Individuo();
 
     //Constructor
-    Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id,  std::vector<Clase> clases, unsigned int aulas_disponibles, float escala = 1.00, unsigned int variables_fenotipo = 1);
+    Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id, std::vector<Clase> clases,
+                         unsigned int aulas_disponibles, float escala, unsigned int variables_fenotipo,
+                         unsigned int modo_fitness,
+                         float pot_repeticiones = 1, float pot_aulas = 1, float pot_solapamiento = 2, float pot_superposicion = 5,
+                         float mult_repeticiones = 0.1, float mult_aulas = 0.1, float mult_solapamiento = 0.3, float mult_superposicion = 0.5);
 
     //Calcula el fitness actual y lo guarda en la propiedad fitness
     float calcularFitness();

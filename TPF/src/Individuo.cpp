@@ -9,7 +9,11 @@ Individuo::Individuo() { }
 
 //Constructor
 Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_id, std::vector<Clase> clases,
-                     unsigned int aulas_disponibles, float escala, unsigned int variables_fenotipo) {
+                     unsigned int aulas_disponibles, float escala, unsigned int variables_fenotipo,
+                     unsigned int modo_fitness,
+                     float pot_repeticiones, float pot_aulas, float pot_solapamiento, float pot_superposicion,
+                     float mult_repeticiones, float mult_aulas, float mult_solapamiento, float mult_superposicion) {
+
     this->funcion_fitness_id = funcion_fitness_id;
     this->escala = escala;
     this->variables_fenotipo = variables_fenotipo;
@@ -19,7 +23,19 @@ Individuo::Individuo(unsigned int cantidad_genes, unsigned int funcion_fitness_i
     this->cantidad_repeticiones = 0;
     this->sobrepaso_aulas = 0;
     this->solapamientos_adyacentes = 0;
-    this->basura = 0;
+    this->superposicion = 0;
+
+    this->pot_cantidad_repeticiones = pot_repeticiones;
+    this->pot_sobrepaso_aulas = pot_aulas;
+    this->pot_solapamientos_adyacentes = pot_solapamiento;
+    this->pot_superposicion = pot_superposicion;
+
+    this->mult_cantidad_repeticiones = mult_repeticiones;
+    this->mult_sobrepaso_aulas = mult_aulas;
+    this->mult_solapamientos_adyacentes = mult_solapamiento;
+    this->mult_superposicion = mult_superposicion;
+
+    this->modo_fitness = modo_fitness;
 
     for (unsigned int i = 0; i < variables_fenotipo; i++) {
         unsigned int bloque = rand() % 25;
@@ -49,9 +65,9 @@ float Individuo::calcularFitness() {
     float nuevo_fitness = 0.0;
 
     //Validamos que sea un individuo valido.
-    //Contamos en basura la cantidad de "2x1"=dos materias del mismo año en el mismo bloque
-    //Si basura=0, quiere decir que el individuo es valido y esta todo bien
-    this->basura = 0;
+    //Contamos en superposicion la cantidad de "2x1"=dos materias del mismo año en el mismo bloque
+    //Si superposicion=0, quiere decir que el individuo es valido y esta todo bien
+    this->superposicion = 0;
 
     //en el vector guardamos las materias que se dan en cada bloque
     std::vector<std::vector<unsigned int> > materias_por_bloque;
@@ -87,7 +103,7 @@ float Individuo::calcularFitness() {
         std::map<unsigned int, unsigned int>::iterator q = repetidos.end();
         while (p != q) {          
             if (p->second > 1)
-                this->basura++;
+                this->superposicion++;
             p++;
         }
     }
@@ -164,16 +180,25 @@ float Individuo::calcularFitness() {
         }
     }
 
-    //std::cout<<this->cantidad_repeticiones<<' '<<this->sobrepaso_aulas<<' '<<this->solapamientos_adyacentes<<' '<<this->basura<<'\n';
+    //std::cout<<this->cantidad_repeticiones<<' '<<this->sobrepaso_aulas<<' '<<this->solapamientos_adyacentes<<' '<<this->superposicion<<'\n';
 
-
-    //Calculamos el denominador de la funcion de fitness
-    float denominador = (this->cantidad_repeticiones+1) * (this->sobrepaso_aulas+1) *
-            pow(this->solapamientos_adyacentes+1,2) * pow(this->basura+1, 5);
-
-
-    //confiamos en que nunca el denominador va a ser cero
-    nuevo_fitness = 1/denominador;
+    //Calculamos el fitness segun uno u otro metodo
+    if (this->modo_fitness == Individuo::FITNESS_PRODUCTO) {
+        //Calculamos el costo de la funcion de fitness como producto exponenciado
+        float costo_prod =  pow(this->cantidad_repeticiones+1,      this->pot_cantidad_repeticiones) *
+                            pow(this->sobrepaso_aulas+1,            this->pot_sobrepaso_aulas) *
+                            pow(this->solapamientos_adyacentes+1,   this->pot_solapamientos_adyacentes) *
+                            pow(this->superposicion+1,              this->pot_superposicion);
+        nuevo_fitness = 1/costo_prod;
+    }
+    else if (this->modo_fitness == Individuo::FITNESS_SUMA) {
+        //Calculamos el costo de la funcion de fitness como suma pesada
+        float costo_suma =  this->mult_cantidad_repeticiones    /   (this->cantidad_repeticiones+1) +
+                            this->mult_sobrepaso_aulas          /   (this->sobrepaso_aulas+1) +
+                            this->mult_solapamientos_adyacentes /   (this->solapamientos_adyacentes+1) +
+                            this->mult_superposicion            /   (this->superposicion+1);
+        nuevo_fitness = costo_suma;
+    }
 
     this->fitness = nuevo_fitness;
     return nuevo_fitness;
@@ -276,6 +301,6 @@ std::vector<unsigned int> Individuo::getValoresFitness(){
     ret_val.push_back(this->cantidad_repeticiones);
     ret_val.push_back(this->sobrepaso_aulas);
     ret_val.push_back(this->solapamientos_adyacentes);
-    ret_val.push_back(this->basura);
+    ret_val.push_back(this->superposicion);
     return ret_val;
 }

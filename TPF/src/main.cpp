@@ -35,12 +35,20 @@ int main() {
     unsigned int    id_funcion_fitness      = utils::strToInt(config.getValue("id_funcion_fitness"));
     std::string     forma_seleccion         = config.getValue("forma_seleccion");
     std::string     archivo_problema        = config.getValue("archivo_problema");
-    float           error                   = utils::strToFloat(config.getValue("error"));
     unsigned int    brecha_generacional     = utils::strToInt(config.getValue("brecha_generacional"));
     unsigned int    k_competencia           = utils::strToInt(config.getValue("k_competencia"));
     float           fitness_deseado         = utils::strToFloat(config.getValue("fitness_deseado"));
     unsigned int    bits_por_clase          = utils::strToInt(config.getValue("bits_por_clase"));
     unsigned int    aulas_disponibles       = utils::strToInt(config.getValue("aulas_disponibles"));
+    std::string     modo_fitness            = config.getValue("modo_fitness");
+    float           pot_cantidad_repeticiones         = utils::strToFloat(config.getValue("pot_cantidad_repeticiones"));
+    float           pot_sobrepaso_aulas               = utils::strToFloat(config.getValue("pot_sobrepaso_aulas"));
+    float           pot_solapamientos_adyacentes      = utils::strToFloat(config.getValue("pot_solapamientos_adyacentes"));
+    float           pot_superposicion                 = utils::strToFloat(config.getValue("pot_superposicion"));
+    float           mult_cantidad_repeticiones        = utils::strToFloat(config.getValue("mult_cantidad_repeticiones"));
+    float           mult_sobrepaso_aulas              = utils::strToFloat(config.getValue("mult_sobrepaso_aulas"));
+    float           mult_solapamientos_adyacentes     = utils::strToFloat(config.getValue("mult_solapamientos_adyacentes"));
+    float           mult_superposicion                = utils::strToFloat(config.getValue("mult_superposicion"));
 
     //Variables para contar tiempo
     clock_t t_ini, t_fin;
@@ -63,13 +71,24 @@ int main() {
         else
             std::cout<<"Metodo de seleccion no definido\n";
 
+    unsigned int metodo_fitness;
+    if(modo_fitness.compare("producto") == 0)
+        metodo_fitness = Individuo::FITNESS_PRODUCTO;
+    else if(modo_fitness.compare("suma") == 0)
+        metodo_fitness = Individuo::FITNESS_SUMA;
+    else
+        std::cout<<"Modo de fitness no definido\n";
+
+
     //Inicializamos el contador
     t_ini = clock();
 
     AlgoritmoGenetico AG(tamanio_poblacion, cantidad_genes, escala, variables_fenotipo,
                          cantidad_generaciones, probabilidad_cruza, probabilidad_mutacion_movimiento, probabilidad_mutacion_permutacion,
                          elitismo, brecha_generacional, id_funcion_fitness, clases, aulas_disponibles,
-                         metodo_seleccion, k_competencia, bits_por_clase);
+                         metodo_seleccion, k_competencia, bits_por_clase, metodo_fitness,
+                         pot_cantidad_repeticiones, pot_sobrepaso_aulas, pot_solapamientos_adyacentes, pot_superposicion,
+                         mult_cantidad_repeticiones, mult_sobrepaso_aulas, mult_solapamientos_adyacentes, mult_superposicion);
 
     std::vector<float> mejor_fitness;
     std::vector<float> prom_fitness;
@@ -101,6 +120,7 @@ int main() {
         if (mejor_fitness_actual >= fitness_deseado) {
            break;
         }
+        /*
         if (w >= 100 and w % 100 == 0) {//guarda un archivo cada 100 generaciones
             std::string archivo_salida = archivo_problema + "_tabla_gen_" + utils::intToStr(w) + ".xls";
 
@@ -116,8 +136,7 @@ int main() {
             std::string archivo_resumen = archivo_problema + "_resumen_gen_" + utils::intToStr(w) + ".txt";
             std::cout<<"Escribiendo archivo "<<archivo_resumen<<".\n";
             AG.imprimirResumen(archivo_resumen);
-
-        }
+        }*/
     }
     t_fin = clock();
     std::cout<<"\n\nTiempo del Metodo = "<<(double)(t_fin - t_ini) / CLOCKS_PER_SEC<<"\n\n\n";
@@ -125,6 +144,9 @@ int main() {
     std::cout<<"\nSe termino luego de "<<w<<" generaciones.\nEl fitness logrado es de "<<mejor_fitness.back()<<'\n';
 
     AG.imprimirResumen();
+    std::string archivo_resumen = archivo_problema + "_resumen_gen_" + utils::intToStr(w) + ".txt";
+    std::cout<<"Escribiendo archivo "<<archivo_resumen<<".\n";
+    AG.imprimirResumen(archivo_resumen);
     std::vector<bool> respuesta;
     std::vector<int> respuesta_fenotipo;
 
