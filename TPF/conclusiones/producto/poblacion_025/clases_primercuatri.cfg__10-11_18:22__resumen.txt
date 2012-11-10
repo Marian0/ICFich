@@ -1,0 +1,27 @@
+Generaciones = 300
+Tamanio Poblacion = 24
+Elitismo = 1
+Brecha Generacional = 3
+Metodo seleccion = 2
+Probabilidades:
+	Cruza = 0.8
+	Mutacion por movimiento = 0.1
+	Mutacion por permutacion = 0.1
+Cantidad de operaciones:
+	Cruzas = 2356
+	Mutaciones por Movimiento = 1226
+	Mutaciones por Permutación = 1134
+Mejor Fitness = 0.0204082
+Peor Fitness = 0.000637755
+Parametros del mejor fitness:
+	Cantidad de repeticiones = 0
+	Sobrepaso de aulas = 0
+	Solapamiento de Anios Adyacentes = 6
+	Dos materias del mismo anio en un mismo bloque = 0
+Parametros del calculo de fitness:
+
+Forma de calculo del fitness = Producto
+	Potencia Cantidad de Repeticiones = 1
+	Potencia Sobrepaso de Aulas = 1
+	Potencia Solapamientos adyacentes = 2
+	Potencia Superposicion = 5

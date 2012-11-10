@@ -195,8 +195,8 @@ float Individuo::calcularFitness() {
         //Calculamos el costo de la funcion de fitness como suma pesada
         float costo_suma =  this->mult_cantidad_repeticiones    /   (this->cantidad_repeticiones+1) +
                             this->mult_sobrepaso_aulas          /   (this->sobrepaso_aulas+1) +
-                            this->mult_solapamientos_adyacentes /   (this->solapamientos_adyacentes+1);
-                            //this->mult_superposicion            /   (this->superposicion+1);
+                            this->mult_solapamientos_adyacentes /   (this->solapamientos_adyacentes+1) +
+                            this->mult_superposicion            /   (this->superposicion+1);
         nuevo_fitness = costo_suma;
     }
 
