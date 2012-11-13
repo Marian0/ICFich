@@ -168,6 +168,7 @@ class AlgoritmoGenetico {
     void mutacionPermutacion(Individuo & individuo_a_mutar);
 
     std::vector<std::vector<std::vector<int> > > getSolucion();
+    unsigned int getDiversidad();
 
 
 };

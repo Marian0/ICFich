@@ -1,0 +1,29 @@
+Problema de Timetabling
++ Restricciones posibles
++ Restricciones elegidas
++ Explicación del Problema simplificado
+
+Algoritmo Genetico
++ Fenotipo/Genotipo
++ Operadores
+	* Cruza
+	* Mutacion Permutacion
+	* Mutacion Movimiento
++ Fitness:
+	* Suma
+	* Producto
+
+Resultados
++ Tablas obtenidas con el algoritmo
+	* Fitness malo
+	* Fitness regular
+	* Fitness perfecto
++ Graficos (comparando suma y producto)
+	* Distinta Poblacion
+	* Distinta Cruza
+	* Distinta Mutacion Permutacion
+	* Distinta Mutacion Movimiento
+	* Variación Aulas
++ Tabla obtenida con Problema realista
+
+Conclusiones

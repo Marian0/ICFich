@@ -115,6 +115,7 @@ int main() {
 
         float mejor_fitness_actual = AG.evaluar();
         std::cout<<"Mejor fitness a iteracion "<<w<<" = "<<mejor_fitness_actual<<'\n';
+        std::cout<<"Diversidad = "<<AG.getDiversidad()<<'\n';
 
         //Guardo el mejor fitness de la poblacion
         mejor_fitness.push_back(AG.getMejorFitness());

@@ -3,6 +3,7 @@
 #include "AlgoritmoGenetico.h"
 #include "Individuo.h"
 #include <cstdio>
+#include <map>
 
 AlgoritmoGenetico::AlgoritmoGenetico(unsigned int tam_pob, unsigned int cant_genes, float escala, unsigned int variables_fenotipo, unsigned int max_gen, float pcruza, float pmutacion_movimiento, float pmutacion_permutacion, unsigned int elitismo, unsigned int brecha_generacional, unsigned int id_funcion_fitness, std::vector<Clase>  Clases,
                                      unsigned int aulas_disponibles, unsigned int metodo_seleccion, unsigned int k_competencia, unsigned int bits_por_materia,
@@ -679,4 +680,19 @@ void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
 
 std::vector<std::vector<std::vector<int> > > AlgoritmoGenetico::getSolucion() {
     return this->poblacion[this->id_maximo_fitness].matriz_int;
+}
+
+unsigned int AlgoritmoGenetico::getDiversidad() {
+    unsigned int ret_val = 0;
+    std::map<float, unsigned int> contador;
+    for (unsigned int i = 0; i < this->poblacion.size(); i++) {
+        float fitness = this->poblacion[i].getFitness();
+        if (contador.find(fitness) == contador.end()) {
+            contador[fitness] = 1;
+        } else {
+            contador[fitness]++;
+        }
+    }
+    ret_val = contador.size();
+    return ret_val;
 }
