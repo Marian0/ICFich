@@ -29,7 +29,7 @@ timetabling problem, restricciones, algoritmo genético, optimización
 De la definición de todas estas limitaciones, vemos que encontrar una distribución de clases durante la semana se torna una tarea casi imposible para cualquier ser humano. 
 
 En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. 
-Especializamos el trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También se resumieron las clases de cada materia a 3: una de teoría y dos de práctica (a las que los alumnos deben acudir a ambas). Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
+Especializamos el trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También se resumieron las clases de cada materia a 3: una de teoría y dos de práctica (a las que los alumnos deben acudir a ambas). En total hay 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
 
 \begin{table}[htbp]
 \caption{Asignaturas modeladas como clases}
@@ -60,15 +60,21 @@ Por el lado de las restricciones, elegimos las siguientes a satisfacer:
 \item \textit{Superposición en un mismo año:} No es posible que se dicten dos clases del mismo año en el mismo momento, ya que imposibilita a los estudiantes a hacerse presente en ambas clases.
 \end{itemize}
 
-Con respecto a la distribución de horarios, se divide cada día, de lunes a viernes, en 5 módulos o franjas horarias. A cada módulo se le asigna un ID único, que servirá para identificarlo en el algoritmo genético. En la Fig. I se aprecian los módulos y el ID asignado a cada uno. El uso de estos identificadores se explicará en la próxima sección.
+Con respecto a la distribución de horarios, se divide cada día, de lunes a viernes, en 5 módulos o franjas horarias. A cada módulo se le asigna un ID único, que servirá para identificarlo en el algoritmo genético. En la Fig. 1 se aprecian los módulos y el ID asignado a cada uno. El uso de estos identificadores se explicará en la próxima sección.
 \begin{figure}[tbhp]
-\centerline{\includegraphics{tabla_horarios.png}}
+\centerline{\includegraphics[width=0.5\textwidth]{tabla_horarios.png}}
 \caption{Módulos definidos para la semana}
 \label{fig1}
 \end{figure}
 
 \section{Algoritmo genético}
-Para la solución del problema, se utilizó un 
+Para la solución del problema, se utilizó un AG en el que se utilizó un fenotipo como se muestra en la Fig. 2.
+\begin{figure}[tbhp]
+\centerline{\includegraphics[width=0.5\textwidth]{fenotipo.png}}
+\caption{Representación fenotípica}
+\label{fig1}
+\end{figure}
+De acuerdo a los ID definidos para cada clase en la Tabla I, se le asigna una posición específica en el fenotipo a cada clase. Así, la clase con identificar igual a 1, será la primera en el fenotipo. Lo mismo se aplica a ID = 2, que estará ubicada segunda, y así con el resto de las clases.
 
 \section{Resultados}
 \section{Conclusiones}

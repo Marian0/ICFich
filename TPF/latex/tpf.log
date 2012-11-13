@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.27)  13 NOV 2012 10:57
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.27)  13 NOV 2012 11:11
 entering extended mode
  %&-line parsing enabled.
 **tpf.tex
@@ -182,26 +182,34 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <6> on input line 37.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 37.
-[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+<tabla_horarios.png, id=1, 796.9775pt x 164.615pt>
+File: tabla_horarios.png Graphic file (type png)
+ <use tabla_horarios.png>
+<fenotipo.png, id=2, 639.38875pt x 52.195pt>
+File: fenotipo.png Graphic file (type png)
+ <use fenotipo.png> [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
-]
+ <./tabla_horarios.png (PNG copy)>]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 86.
- [2]
+(Font)              <7> on input line 97.
+
+[2 <./fenotipo.png (PNG copy)>] [3]
 No file tpf.bbl.
 
 
-[3] (./tpf.aux)
+[4
+
+] (./tpf.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 2172 strings out of 495061
- 30192 string characters out of 1182621
- 98946 words of memory out of 3000000
- 5365 multiletter control sequences out of 15000+50000
+ 2187 strings out of 495061
+ 30456 string characters out of 1182621
+ 99954 words of memory out of 3000000
+ 5377 multiletter control sequences out of 15000+50000
  44046 words of font info for 82 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  26i,8n,27p,881b,304s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -216,9 +224,9 @@ xmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive
 /urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmbi8a.p
 fb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf
 -texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on tpf.pdf (3 pages, 140062 bytes).
+Output written on tpf.pdf (4 pages, 161723 bytes).
 PDF statistics:
- 61 PDF objects out of 1000 (max. 8388607)
+ 66 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
