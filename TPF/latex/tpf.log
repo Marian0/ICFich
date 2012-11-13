@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.27)  13 NOV 2012 11:11
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.27)  13 NOV 2012 12:29
 entering extended mode
  %&-line parsing enabled.
 **tpf.tex
@@ -187,18 +187,29 @@ File: tabla_horarios.png Graphic file (type png)
  <use tabla_horarios.png>
 <fenotipo.png, id=2, 639.38875pt x 52.195pt>
 File: fenotipo.png Graphic file (type png)
- <use fenotipo.png> [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+ <use fenotipo.png>
+Underfull \vbox (badness 2088) has occurred while \output is active []
+
+ [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
  <./tabla_horarios.png (PNG copy)>]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 97.
+(Font)              <7> on input line 85.
 
-[2 <./fenotipo.png (PNG copy)>] [3]
+<mutacion_movimiento.png, id=11, 588.1975pt x 353.32pt>
+File: mutacion_movimiento.png Graphic file (type png)
+
+<use mutacion_movimiento.png>
+<mutacion_permutacion.png, id=12, 660.4675pt x 399.4925pt>
+File: mutacion_permutacion.png Graphic file (type png)
+
+<use mutacion_permutacion.png> [2 <./fenotipo.png (PNG copy)> <./mutacion_movim
+iento.png (PNG copy)> <./mutacion_permutacion.png (PNG copy)>] [3] [4]
 No file tpf.bbl.
 
 
-[4
+[5
 
 ] (./tpf.aux)
 
@@ -206,10 +217,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 2187 strings out of 495061
- 30456 string characters out of 1182621
- 99954 words of memory out of 3000000
- 5377 multiletter control sequences out of 15000+50000
+ 2200 strings out of 495061
+ 30747 string characters out of 1182621
+ 99978 words of memory out of 3000000
+ 5388 multiletter control sequences out of 15000+50000
  44046 words of font info for 82 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
  26i,8n,27p,881b,304s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -224,9 +235,9 @@ xmf-texlive/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-texlive
 /urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmbi8a.p
 fb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf
 -texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on tpf.pdf (4 pages, 161723 bytes).
+Output written on tpf.pdf (5 pages, 246663 bytes).
 PDF statistics:
- 66 PDF objects out of 1000 (max. 8388607)
+ 71 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -29,7 +29,7 @@ timetabling problem, restricciones, algoritmo genético, optimización
 De la definición de todas estas limitaciones, vemos que encontrar una distribución de clases durante la semana se torna una tarea casi imposible para cualquier ser humano. 
 
 En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. 
-Especializamos el trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También se resumieron las clases de cada materia a 3: una de teoría y dos de práctica (a las que los alumnos deben acudir a ambas). En total hay 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
+Especializamos el trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También se resumieron las clases de cada materia a 3: una de teoría de dos horas, y dos de práctica de tres horas cada una (a las que los alumnos deben acudir a ambas). En total hay 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
 
 \begin{table}[htbp]
 \caption{Asignaturas modeladas como clases}
@@ -38,12 +38,12 @@ Especializamos el trabajo en nuestra propia carrera: Ingeniería en Informática. 
 \hline
 Asignatura     & Clase    & ID   \\
 \hline
-Cálculo II 	& Cálculo II (Teoría) 		& 1 \\
-Cálculo II 	& Cálculo II (Práctica 1) 	& 2 \\
-Cálculo II 	& Cálculo II (Práctica 2) 	& 3 \\
-Física I 	& Física I (Teoría) 		& 4 \\
-Física I 	& Física I (Práctica 1) 	& 5 \\
-Física I 	& Física I (Práctica 2) 	& 6 \\
+Cálculo II 	& Cálculo II (Teoría, 2 horas) 		& 1 \\
+Cálculo II 	& Cálculo II (Práctica 1, 3 horas) 	& 2 \\
+Cálculo II 	& Cálculo II (Práctica 2, 3 horas) 	& 3 \\
+Física I 	& Física I (Teoría, 2 horas) 		& 4 \\
+Física I 	& Física I (Práctica 1, 3 horas) 	& 5 \\
+Física I 	& Física I (Práctica 2, 3 horas) 	& 6 \\
 \hline
 \end{tabular}
 \end{center}
@@ -69,12 +69,59 @@ Con respecto a la distribución de horarios, se divide cada día, de lunes a viern
 
 \section{Algoritmo genético}
 Para la solución del problema, se utilizó un AG en el que se utilizó un fenotipo como se muestra en la Fig. 2.
-\begin{figure}[tbhp]
+De acuerdo a los ID definidos para cada clase en la Tabla I, se le asigna una posición específica en el fenotipo a cada una. Así, la clase con identificador igual a 1, será la primera en el fenotipo. Lo mismo se aplica a ID = 2, que estará ubicada segunda, y lo mismo con el resto. En cada posición del fenotipo, se almacena un número que referencia en qué bloque está situada. Siguiendo con el ejemplo de la Fig. 2, se aprecia que la clase 1 se dictará en el módulo 12, que al consultar la Fig. 1 vemos que corresponde a los miércoles a las 14 horas.
+A partir de la representación fenotípica, se codifica en un genotipo binario de 300 bits de extensión, ya que se toman 5 bits para cada elemento del fenotipo (que está en el rango 0-24).
+\begin{figure}[tbh!p]
 \centerline{\includegraphics[width=0.5\textwidth]{fenotipo.png}}
 \caption{Representación fenotípica}
-\label{fig1}
+\label{fig2}
 \end{figure}
-De acuerdo a los ID definidos para cada clase en la Tabla I, se le asigna una posición específica en el fenotipo a cada clase. Así, la clase con identificar igual a 1, será la primera en el fenotipo. Lo mismo se aplica a ID = 2, que estará ubicada segunda, y así con el resto de las clases.
+
+\subsection{Inicialización}
+Se parte de una población inicial aleatoria. Para generarla, se toman las clases de a una y se le asigna un bloque aleatorio en el rango 0-24. De esta forma, se comenzará con muchos individuos con una evaluación de fitness pobre, ya que no se espera que cumplan ninguna restricción al inicio, pero todos serán válidos en el sentido de que no se asignarán bloques fuera del rango 0-24. Esta propiedad se mantendrá durante todo el algoritmo.
+
+\subsection{Selección de individuos para la siguiente generación}
+La población siempre se mantiene en el mismo tamaño. En cada generación, se deben elegir a los individuos que formarán parte de la generación siguiente. Se utilizó el método de selección por ventanas. A los individuos elegidos se les aplicará, si corresponde, las cruzas y mutaciones que se describen en la próxima sección.
+Además, a través de elitismo, siempre se pasa el mejor individuo (según su fitness) a la próxima generación. Por último, se elige un término de brecha generacional del 10\% del tamaño de la población. Por lo tanto, sin importar el fitness, se elige aleatoriamente cierta cantidad de individuos que serán integrantes del próximo conjunto. De esta manera, nos aseguramos que siempre haya diversidad en el conjunto de búsqueda.
+
+\subsection{Operadores genéticos}
+Se definieron dos operadores de mutación y uno de cruza. Estos trabajan en representación genotípica, pero cuidan de realizarse en posiciones que se corresponden con el fenotipo, de manera de no generar individuos inválidos luego de la operación.
+Cada uno de estos operadores tiene una probabilidad de aplicarse definida al inicio, por lo que puede pasar que ambas mutaciones se apliquen y la cruza no, o viceversa o cualquier otra combinación.
+
+\subsubsection{Cruza}
+Se utiliza una cruza de dos puntos. Se cuenta con dos padres y se generan aleatoriamente dos posiciones en el genotipo de ambos. Luego se intercambia el contenido genético entre éstos. Las posiciones elegidas se corresponden con los límites de cada elemento del fenotipo, de manera de no generar individuos con bloques de horarios inválidos.
+
+\subsubsection{Mutación por movimiento}
+Se genera una posición en el fenotipo al azar, que identificará a un bloque donde está asignada cierta asignatura. A continuación se buscará un módulo que se encuentre libre y que sea del mismo tamaño (2 o 3 horas según corresponda). Si se encuentra un espacio libre (después de un número limitado de iteraciones), se moverá la clase al nuevo bloque. En la Fig. 3 se ve un ejemeplo.
+\begin{figure}[tbh!p]
+\centerline{\includegraphics[width=0.5\textwidth]{mutacion_movimiento.png}}
+\caption{Mutación por movimiento}
+\label{fig3}
+\end{figure}
+
+\subsubsection{Mutación por permutación}
+Se toma una posición aleatoria del fenotipo. A partir de ésta, y dependiendo de si es de 2 o 3 horas, se genera una nueva posición aleatoria del mismo horario. Para continuar, se intercambian las posiciones de ambas, de manera de que donde se ubicaba la primera, ahora se ubique la segunda y viceversa. En la Fig. 4 mostramos un ejemplo ilustrativo.
+\begin{figure}[tbh!p]
+\centerline{\includegraphics[width=0.5\textwidth]{mutacion_permutacion.png}}
+\caption{Mutación por permutación}
+\label{fig4}
+\end{figure}
+
+\subsection{Función de fitness}
+La función de fitness que evalúa la calidad de la solución representada por cada individuo, debe tener en cuenta qué tanto cumple con las restricciones definidas. Para ello, el fitness está formado por 4 términos, uno por cada requisito a cumplir. Se probaron dos tipos de funciones de fitness, una aditiva y otra multiplicativa. Primero se expondrán cada uno de los términos y luego la relación entre éstos.
+
+\subsubsection{Sobrepaso de Aulas}
+Cuenta la cantidad de veces que se supera la capacidad de aulas definida. Si se cuenta con 4 aulas, contará para cada bloque horario, la cantidad de clases que se dictan simultáneamente. Si se sobrepasa el límite de 4, se sumará 1 en este contador.
+
+\subsubsection{Repeticiones de Asignaturas}
+Cuenta las veces que se da más de una vez cierta asignatura en el mismo día. Si el individuo establece, por ejemplo, que la teoría y la práctica 1 se dan en el mismo día, sumará 1 en este contador.
+
+\subsubsection{Solapamiento de años adyacentes}
+Se cuentan la cantidad de oportunidades en las que clase de años adyacentes se dictan en el mismo módulo. Por ejemplo, este contador sumará 1 cada vez que el individuo represente que un curso de segundo año se solape con cualquier clase de primer o tercer año.
+
+\subsubsection{Superposición de clases}
+Se aumentará el contador de esta restricción cuando dos clases del mismo año se asignen al mismo bloque horario, ya que significará que un alumno debería estar al mismo tiempo en dos clases distintas.
+
 
 \section{Resultados}
 \section{Conclusiones}
