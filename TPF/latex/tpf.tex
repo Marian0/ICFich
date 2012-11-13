@@ -2,6 +2,7 @@
 \usepackage[latin1]{inputenc}   % caracteres especiales (acentos, eñes)
 \usepackage[spanish]{babel}     % varias definiciones para el español
 \usepackage{graphicx}           % inserción de graficos
+\usepackage[none]{hyphenat}
 
 \begin{document}
 
@@ -10,8 +11,6 @@
 \author{Fernando Nellmeldin y
         Mariano Peyregne \\
 \textit{Universidad Nacional del Litoral, Facultad de Ingeniería y Ciencias Hídricas}}
-
-\markboth{XX CONGRESO ARGENTINO DE LA FICH: COD-PAIS\_NRO}{}
 
 \maketitle
 
@@ -25,10 +24,11 @@ timetabling problem, restricciones, algoritmo genético, optimización
 \end{keywords}
 
 \section{Introducción}
-\PARstart{L}{a} distribución de los horarios en que se dictan las asignaturas de la facultad se debe actualizar todos los años e implica un trabajo iterativo hasta que se cumplan todas las restricciones, o al menos se minimicen la cantidad de conflictos. Entre los requisitos a cumplir se encuentran los inherentes a los planes de las carreras, tales como que no se asignen materias del mismo año al mismo horario, o incluso de años consecutivos, ya que muchos alumnos asisten a asignaturas de distintos años por problemas de correlatividades. Asimismo, otras limitaciones surgen por la disponibilidad de aulas (y sus correspondientes equipamientos y límite de alumnos) y los docentes asignados a cada clase. Sobre este último, con frecuencia surge que cada profesor impone una restricción del tipo: ''sólo de mañana'' o ''los lunes y martes únicamente''. 
+\PARstart{L}{a} distribución de los horarios en que se dictan las asignaturas de la facultad se debe actualizar todos los años e implica un trabajo iterativo hasta que se cumplan todas las restricciones, o al menos se minimicen la cantidad de conflictos. Entre los requisitos a cumplir se encuentran los inherentes a los planes de las carreras, tales como que no se asignen materias del mismo año al mismo horario, o incluso de años consecutivos, ya que muchos alumnos asisten a asignaturas de distintos años por problemas de correlatividades. Asimismo, otras limitaciones surgen por la disponibilidad de aulas (y sus correspondientes equipamientos y límite de alumnos) y los docentes asignados a cada clase. Sobre este último, con frecuencia surge que cada profesor impone una restricción del tipo: ``sólo de mañana'' o ``los lunes y martes únicamente''. 
 De la definición de todas estas limitaciones, vemos que encontrar una distribución de clases durante la semana se torna una tarea casi imposible para cualquier ser humano. 
 
 En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. 
+
 Especializamos el trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También se resumieron las clases de cada materia a 3: una de teoría de dos horas, y dos de práctica de tres horas cada una (a las que los alumnos deben acudir a ambas). En total hay 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
 
 \begin{table}[htbp]
@@ -108,10 +108,10 @@ Se toma una posición aleatoria del fenotipo. A partir de ésta, y dependiendo de 
 \end{figure}
 
 \subsection{Función de fitness}
-La función de fitness que evalúa la calidad de la solución representada por cada individuo, debe tener en cuenta qué tanto cumple con las restricciones definidas. Para ello, el fitness está formado por 4 términos, uno por cada requisito a cumplir. Se probaron dos tipos de funciones de fitness, una aditiva y otra multiplicativa. Primero se expondrán cada uno de los términos y luego la relación entre éstos.
+La función de fitness que evalúa la calidad de la solución representada por cada individuo, debe tener en cuenta qué tanto cumple con las restricciones definidas. Para ello, el fitness está formado por 4 términos, uno por cada requisito a satisfacer. Se probaron dos tipos de funciones de fitness, una aditiva y otra multiplicativa. Primero se expondrán cada uno de los términos y luego la relación entre éstos.
 
 \subsubsection{Sobrepaso de Aulas}
-Cuenta la cantidad de veces que se supera la capacidad de aulas definida. Si se cuenta con 4 aulas, contará para cada bloque horario, la cantidad de clases que se dictan simultáneamente. Si se sobrepasa el límite de 4, se sumará 1 en este contador.
+Cuenta la cantidad de veces que se supera la capacidad de aulas definida. Si se cuenta con 4 aulas, contará para cada bloque horario, la cantidad de clases que se dictan simultáneamente. Si se sobrepasa el límite de 4, se sumará 1 en este contador. 
 
 \subsubsection{Repeticiones de Asignaturas}
 Cuenta las veces que se da más de una vez cierta asignatura en el mismo día. Si el individuo establece, por ejemplo, que la teoría y la práctica 1 se dan en el mismo día, sumará 1 en este contador.
@@ -122,177 +122,81 @@ Se cuentan la cantidad de oportunidades en las que clase de años adyacentes se d
 \subsubsection{Superposición de clases}
 Se aumentará el contador de esta restricción cuando dos clases del mismo año se asignen al mismo bloque horario, ya que significará que un alumno debería estar al mismo tiempo en dos clases distintas.
 
-
-\section{Resultados}
-\section{Conclusiones}
-\subsection{Trabajos futuros}
-\section{Referencias}
-
-
-La extensión de cada trabajo no podrá exceder \textit{estrictamente} las 4 páginas y se recomienda que tampoco posea menos de 3 páginas. Por favor, no cambie la tipografía, ni los espacios entre el texto, ni otras medidas definidas en los estilos para ajustarse a esta norma. En esta oportunidad se solicita a los autores que para la revisión inicial presente el trabajo completo (3 o 4 páginas) en el formato final pero sin los datos de autor y por separado un archivo de texto con el título, los datos de los autores, el resumen y las palabras clave.
-
-La estructura general que se espera para este artículo abarca generalmente secciones como: introducción, materiales, métodos, resultados, discusión, conclusiones, trabajos futuros, agradecimientos y referencias. Estos títulos pueden combinarse de a dos en una misma sección y los títulos trabajos futuros y agradecimientos son totalmente optativos. Es común que la sección de métodos lleve otro título más relacionado con el aporte original del artículo, pero las restantes secciones se presentan con los títulos antes listados. En la sección de discusión no debe faltar un análisis crítico de los métodos y resultados obtenidos. Si existieran demostraciones u otros desarrollos matemáticos extensos, se recomienda agruparlos en apéndices antes de las referencias bibliográficas.
-
-A continuación se darán más detalles acerca de las secciones del documento y los formatos para insertar los distintos tipos de objetos, como ecuaciones, figuras, etc.
-
-\section{Formato para los objetos insertados}
-
-Observe que el título de cada sección ya incluye la numeración automática y el espacio hacia el último párrafo de la 
-sección anterior. Por lo tanto, para iniciar una nueva sección se recomienda comenzar copiando y pegando el título desde otra sección en este mismo documento. De forma similar, también se puede observar que el formato para los párrafos ya incluye una pequeña indentación automática en la primera línea y no existe un espacio extra para la 
-separación entre párrafos.
-
-\subsection{Las ecuaciones}
-Las ecuaciones menores o definiciones de variables pueden insertarse directamente en la línea del párrafo, por ejemplo, considérese que se desea definir una historia ${\rm {\bf h}}_i^n = w_{i - 1} ,w_{i - 2}, \ldots,w_{i - n + 1} $ asociada un símbolo $w_i $. Observe que una manera sencilla de asegurar la uniformidad en el estilo de las ecuaciones es insertar siempre una ecuación aún cuando se podría escribir directamente como texto y aplicar formato en cursiva o negrita.
-
-Para insertar ecuaciones más complejas se recomienda utilizar un formato de párrafo aparte, con el estilo correspondiente:
-
+Una vez definido los términos de la función de fitness, procedemos a enunciar su forma.
+Primero presentamos la función costo aditiva en la Ecuación \ref{eq1}:
 \begin{equation}
-\hat {P}_I (w_i \vert {\rm {\bf h}}_i^k ) = \sum\limits_{j=0}^{k-1} 
-{\lambda _j \hat {P}(w_i \vert {\rm {\bf h}}_i^j )} 
+fitness = \frac{a_1}{p+1} + \frac{a_2}{q+1} + \frac{a_3}{r+1} + \frac{a_4}{s+1}
 \label{eq1}
 \end{equation}
-
-En este estilo de ecuación se ha fijado dos tabulaciones, la primera centra la ecuación en la columna y la segunda justifica a la derecha el número de la ecuación. Para hacer referencia a esta ecuación desde el texto se menciona, por ejemplo, en (\ref{eq1}) se puede ver la estimación de la probabilidad de una historia a partir de la simple combinación lineal de historias de orden inferior.
-
-\subsection{Las figuras}
-
-Cuando inserte figuras no las deje como objetos flotantes sobre el texto y no incluya dentro de ellas al epígrafe. El epígrafe se coloca abajo de las figuras y posee un estilo propio que básicamente consiste en fuente de 8 pt con párrafo justificado cuando se trate de más de una línea y centrado para una única línea de texto (ver Fig. 1). Si en la figura utiliza ejes cartesianos, recuerde siempre indicar en la misma a que corresponde cada eje (etiquetas). Para hacer referencia a una figura se debe utilizar la forma abreviada Fig. seguida del número de la figura, salvo cuando esté al comienzo del párrafo, caso en que se deberá utilizar la palabra completa.
-
-En la Fig. 2 se puede ver otro tipo de figura donde se destacan cuatro curvas. No incluya colores en las gráficas, preferentemente utilice distintos tipos de líneas. Los gráficos vectorizados brindan una mejor calidad electrónica y de impresión. Por lo tanto, inserte todas las gráficas con algún formato vectorizado (Corel, Visio, XFig, PostScript, Metarchivo mejorado, etc) o bien, si se tratase de una fotografía o imagen más compleja utilice formatos raster sin 
-compresión (por ejemplo BMP) o con compresión sin pérdida de información (se pueden configurar los formatos JPG, PNG, TIF, GIF, etc).
-
-En general, se recomienda que las figuras estén al principio o al pie de una columna. Se debe cuidar que el tamaño del texto dentro de las figuras no sea menor a 7 pt.
-
-\subsection{Las tablas}
-
-Es preferible que las tablas se diseñen a partir del mismo editor de textos pero también pueden consistir en una gráfica en algún formato vectorizado. El epígrafe de las tablas es marcadamente diferente del de las figuras: se coloca por arriba de la tabla, con fuente de tamaño 8 pt en versales y párrafo centrado.
-
-%\begin{figure}[tbhp]
-%\centerline{\includegraphics{sgram}}
-%\caption{Red para una gramática estándar. }
-%\label{fig1}
-%\end{figure}
-
-%\begin{figure}[tbhp]
-%\centerline{\includegraphics[scale=0.75]{gammas}}
-%\caption{Influencia de las constantes de penalización $\gamma$.}
-%\label{fig2}
-%\end{figure}
-
-Al igual que en las figuras, es preferible que las tablas se encuentren al principio o al pie de una columna. El tamaño del texto dentro de las tablas no debería ser inferior a 7 pt ni mayor a 10 pt.
-
-Un ejemplo de este estilo puede verse a continuación en la Tabla I.
+donde los $a_i$ representan el peso o importancia que se le da a cada término del fitness y se definen según la Tabla \ref{tab2}. Por otra parte, $p,q,r$ y $s$ representan los contadores, datos que se enuncian en la Tabla \ref{tab3}.
 
 \begin{table}[htbp]
-\caption{Resultados finales y reducción relativa de los errores (promedios sobre 10 
-particiones de entrenamiento y prueba).}
+\caption{Valores de los parámetros del fitness suma}
 \begin{center}
 \begin{tabular}{l|c|c|c|c}
 \hline
-Errores de     & SER    & WER  & WAER & Reducción \\
-reconocimiento & {\%}   & {\%} & {\%} & {\%}WER   \\
+Parámetro     & Valor   \\
 \hline
-Referencia& 38.30& 7.54& 8.53&    -- \\
-HMM-PASS  & 30.55& 5.36& 6.67& 28.91 \\
-T-PASS    & 25.50& 4.76& 5.70& 36.87 \\
+$a_1$ & 0.05 \\
+$a_2$ & 0.05 \\
+$a_3$ & 0.35 \\
+$a_4$ & 0.55 \\
 \hline
 \end{tabular}
 \end{center}
-\label{tab1}
+\label{tab2}
 \end{table}
 
-\subsection{Las citas bibliográficas}
+\begin{table}[htbp]
+\caption{Nomenclatura de los valores del fitness}
+\begin{center}
+\begin{tabular}{l|c|c|c|c}
+\hline
+Contador     & Nombre    \\
+\hline
+$p$ & Repeticiones de asignaturas en un mismo día \\
+$q$ & Sobrepaso de aulas \\
+$r$ & Solapamiento de años adyacentes \\
+$s$ & Superposición de clases \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab3}
+\end{table}
 
-Las citas bibliográficas se realizan entre corchetes, por ejemplo [1]. Cuando se hacen citas múltiples utilice la coma para dos citas [2], [3] o bien la notación de rangos de citas [2]-[5]. No utilice términos particulares antes de la cita, como en la ``referencia [2]'' o en ``Ref. [4]''. El estilo general para las referencias bibliográficas se muestra con varios ejemplos en la sección correspondiente al final de este documento. Observe estrictamente el estilo propuesto: la utilización de tipografía, las mayúsculas, la forma de nombrar a los autores, los datos requeridos para libros, revistas y congresos, etc.
+A continuación, enunciamos la forma del fitness producto en la Ecuación \ref{eq2}
+\begin{equation}
+fitness = \frac{1}{(p+1)^{b_1}} \frac{1}{(q+1)^{b_2}} \frac{1}{(r+1)^{b_3}} \frac{1}{(s+1)^{b_4}}
+\label{eq2}
+\end{equation}
 
-La sección de referencias posee un estilo particular para el párrafo y la numeración. Éstas se deben presentar preferentemente por orden de aparición en el texto pero también se aceptarán por orden alfabético del apellido del primer autor.
+donde $p, q, r$ y $s$ son como en \ref{eq1} y los $b_i$ representan la importancia de cada término y cuyos valores se muestran en la Tabla \ref{tab4}.
 
-\subsection{Otras recomendaciones generales}
+\begin{table}[htbp]
+\caption{Valores de los parámetros del fitness producto}
+\begin{center}
+\begin{tabular}{l|c|c|c|c}
+\hline
+Parámetro     & Valor   \\
+\hline
+$b_1$ & 1 \\
+$b_2$ & 1 \\
+$b_3$ & 2 \\
+$b_4$ & 5 \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab4}
+\end{table}
 
-Defina adecuadamente cada uno de los acrónimos la primera vez que aparece en el texto (salvo en el resumen), por ejemplo, relación de grandes masas (RGM). Luego utilice siempre el acrónimo en lugar del término completo.
+Como vemos, en ambos casos se le da mayor importancia al término de superposición, ya que éste es la mayor de las restricciones que debemos satisfacer, sin ella, la tabla de horarios obtenida sería de poca utilidad para cualquier alumno. El segundo término en importancia es el solapamiento entre asignaturas de años adyacentes, ya que es una de las condiciones más deseables de una tabla horaria. El resto de las restricciones tienen valores bajos, ya que no son tan importantes o se cumplen por defecto al satisfacer las importantes.
 
-Recuerde definir cada uno de los símbolos que aparecen en las ecuaciones y aclarar la notación cuando se utilizan operadores matemáticos especiales o poco comunes.
-
-Observe la utilización de mayúsculas, como regla general se coloca mayúscula en la primer letra de la primer palabra de cada frase y los nombres propios, tanto en los títulos como en el texto en general.
-
-\section{Formato electrónico de envío}
-
-Hasta la fecha indicada en el sitio web del congreso se recibirán: el artículo completo de 4 páginas en formato PDF y el título, resumen, palabras clave y datos de los autores en formato de texto ASCII puro.
-
-Dado que el proceso de revisión se realizará por el sistema de doble ciego, solicitamos que \textit{no} se incluyan los nombres y datos de autores en el artículo completo enviado para la revisión. En lugar de estos datos deje simplemente las leyendas bajo el título tal como figuran en este ejemplo. Estos datos deberán incluirse en el archivo de texto y en la versión final de documento completo (ya revisado, aprobado y listo para imprimir).
-
-A continuación se detalla como generar cada uno de estos archivos.
-
-\subsection{Artículo completo para la revisión}
-
-El formato en que se reciben los artículos completos es PDF hasta la versión 1.4. Para los usuarios de \LaTeX\ se recomienda utilizar directamente el programa pdflatex. Si no contara con este programa en alguna distribución de \LaTeX, también es posible utilizar la secuencia latex, dvips y ps2pdf.
-
-Para los usuarios de Word que no conozcan un método para convertir sus documentos a PDF, le damos a continuación una serie de instrucciones que le facilitarán esta tarea.
-
-En primer lugar deberá descargar e instalar los siguientes programas 
-gratuitos (en este mismo orden):
-
-\begin{enumerate}
-\item Impresora PostScript\footnote{http://www.adobe.com/products/printerdrivers/main.html}:
-se instala como una impresora y le permitirá imprimir el documento en formato PS. Durante la instalación elija FILE como puerto para la impresora.
-
-\item Intérprete PostScript\footnote{http://www.cs.wisc.edu/~ghost/doc/AFPL/get704.htm}:
-recomendamos en este caso el intérprete GhostScript, que se ecuentra disponible gratuitamente para diferentes sistemas operativos.
-
-\item Visualizador PostScript\footnote{http://www.cs.wisc.edu/~ghost/gsview/}:
-GSView utiliza al intérprete anterior para previsualizar archivos PS y para convertirlos en PDF.
-\end{enumerate}
-
-Para la conversión PDF se utiliza el formato intermedio PS. En primer logar se imprime el documento en la impresora PostScript. El archivo quedará con extensión .prn y es necesario cambiarla manualmente a .ps. Una vez obtenido el archivo PS se debe abrir con GSView y seleccionar la opción para ``convertir... '' del menú de archivos. Mediante 
-la opción pdfwrite y utilizando la máxima resolución disponible, podrá convertir finalmente todas las páginas de su PS a PDF.
-
-\subsection{Resumen y datos de autores en texto ASCII}
-
-En un archivo de texto estándar (.txt) y sin caracteres ni formatos especiales se deben incluir los siguientes datos en castellano y en inglés:
-
-- Título del trabajo
-
-- Nombre completo del 1er autor
-
-- Institución a la que pertenece el 1er autor
-
-- Datos del 1er autor (dirección, TE/FAX, email, etc)
-
-- Nombre completo y datos de los coautores
-
-- Resumen (el mismo del artículo completo)
-
-- Palabras clave
-
-\subsection{Versión final del artículo}
-
-Una vez aprobado para la publicación e implementadas las correcciones sugeridas por los revisores, se deberá enviar el artículo final en formato PDF. Este archivo deberá tener como nombre el mismo código entregado durante la revisión (COD-PAIS\_NRO) y .pdf como extensión.
-
-La versión final deberá incluir, debajo del título, los nombres de los autores y la información de la institución a la que pertenecen (tal como se indica en este ejemplo).
+\section{Resultados}
+La elección de una u otra función de fitness es arbitraria. En ambas se tienen resultados similares. Es de destacar que la función productoria tiene ``peor'' fitness, debido a que los valores están exponenciados. Sin embargo, al comparar la calidad de la solución en término de los contadores $p,q,r$ y $s$, apreciamos lo antedicho: que se logran resultados similares.
 
 \section{Conclusiones}
+\subsection{Trabajos futuros}
 
-En las conclusiones debería presentarse una revisión de los puntos clave del artículo con especial énfasis en el análisis y discusión de los resultados que se realizó en las secciones anteriores y en las aplicaciones o ampliaciones de éstos. No debería reproducirse el resumen en esta sección.
-
-\section{Apéndices}
-
-En algunas situaciones conviene incluir una sección de apéndices con sus correspondientes subsecciones.
-
-\subsection{Demostraciones}
-
-Cuando la extensión y complejidad de las demostraciones lo justifique en pos de no distraer al lector presentando en el texto solamente los resultados finales.
-
-\subsection{Algoritmos}
-
-Cuando sus extensiones lo justifiquen y no sean parte central del trabajo.
-
-\subsection{Detalles técnicos}
-
-Tablas con datos técnicos o mediciones accesorias que se utilizaron en el trabajo.
-
-\section*{Agradecimientos}
-
-Si los hubiere, a quienes corresponda.
 
 \nocite{*}
 \bibliographystyle{tpf}

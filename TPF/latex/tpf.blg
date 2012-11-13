@@ -1,0 +1,53 @@
+This is BibTeX, Version 0.99c (TeX Live 2009/Debian)
+The top-level auxiliary file: tpf.aux
+The style file: tpf.bst
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Database file #1: tpf.bib
+-- tpf.bst version 0.10
+-- http://www.ctan.org/tex-archive/macros/latex/contrib/supported/IEEEtran/
+Warning--empty journal in Datta2006
+Warning--empty journal in Martinez2006
+
+Done.
+You've used 7 entries,
+            3957 wiz_defined-function locations,
+            832 strings with 8082 characters,
+and the built_in function-call counts, 3595 in all, are:
+= -- 266
+> -- 83
+< -- 18
++ -- 44
+- -- 16
+* -- 158
+:= -- 597
+add.period$ -- 14
+call.type$ -- 7
+change.case$ -- 5
+chr.to.int$ -- 42
+cite$ -- 9
+duplicate$ -- 280
+empty$ -- 324
+format.name$ -- 21
+if$ -- 800
+int.to.chr$ -- 0
+int.to.str$ -- 7
+missing$ -- 48
+newline$ -- 41
+num.names$ -- 7
+pop$ -- 131
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 280
+stack$ -- 0
+substring$ -- 103
+swap$ -- 187
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 4
+type$ -- 0
+warning$ -- 2
+while$ -- 13
+width$ -- 8
+write$ -- 75
+(There were 2 warnings)
