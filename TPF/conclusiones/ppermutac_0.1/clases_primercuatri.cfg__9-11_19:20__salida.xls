@@ -1,0 +1,49 @@
+Solucion
+16 2 18 24 19 8 0 13 11 15 12 6 3 10 12 0 7 9 4 14 5 17 1 23 13 6 15 2 19 10 16 22 8 24 3 20 11 12 14 7 23 18 5 17 21 0 4 16 9 10 6 1 18 2 22 8 19 3 5 13 
+
+
+Anio 1
+	8-10	10-13	14-16	16-18	18-21
+Lunes	Quimica General (Teoria)	 	Matematica Basica (Practica1)	 	 	
+Martes	 	Comunicacion Tecnica I (Practica2)	 	Fundamentos de Programacion (Practica2)	 	
+Miercoles	 	Quimica General (Practica2)	Comunicacion Tecnica I (Practica1)	Quimica General (Practica1)	 	
+Jueves	Comunicacion Tecnica I (Teoria)	Matematica Basica (Teoria)	 	Matematica Basica (Practica2)	Fundamentos de Programacion (Practica1)	
+Viernes	 	 	 	 	Fundamentos de Programacion (Teoria)	
+
+
+Anio 2
+	8-10	10-13	14-16	16-18	18-21
+Lunes	Calculo II (Teoria)	Ingenieria de Software I (Practica1)	 	Fisica I (Teoria)	Teoria de la Computacion (Teoria)	
+Martes	Teoria de la Computacion (Practica2)	 	Calculo II (Practica1)	 	Calculo II (Practica2)	
+Miercoles	Fisica I (Practica1)	 	Fisica I (Practica2)	 	Teoria de la Computacion (Practica1)	
+Jueves	 	 	Ingenieria de Software I (Teoria)	 	 	
+Viernes	 	 	 	Ingenieria de Software I (Practica2)	 	
+
+
+Anio 3
+	8-10	10-13	14-16	16-18	18-21
+Lunes	 	 	Tecnologias de la Programacion (Teoria)	Computacion Grafica (Practica1)	 	
+Martes	 	Electronica Digital (Practica1)	 	Estadistica (Practica2)	 	
+Miercoles	Tecnologias de la Programacion (Practica2)	 	 	Electronica Digital (Teoria)	 	
+Jueves	Electronica Digital (Practica2)	Estadistica (Teoria)	 	 	Tecnologias de la Programacion (Practica1)	
+Viernes	Computacion Grafica (Practica2)	 	Estadistica (Practica1)	 	Computacion Grafica (Teoria)	
+
+
+Anio 4
+	8-10	10-13	14-16	16-18	18-21
+Lunes	Mecanica del Continuo (Teoria)	 	 	 	Mecanica del Continuo (Practica1)	
+Martes	 	 	Administracion de Proyectos de Software (Teoria)	 	 	
+Miercoles	 	Sistemas Operativos (Teoria)	Sistemas Operativos (Practica1)	 	Sistemas Operativos (Practica2)	
+Jueves	 	Mecanica del Continuo (Practica2)	Procesamiento Digital de Senales (Practica1)	Administracion de Proyectos de Software (Practica2)	 	
+Viernes	 	Procesamiento Digital de Senales (Practica2)	 	Administracion de Proyectos de Software (Practica1)	 	
+
+
+Anio 5
+	8-10	10-13	14-16	16-18	18-21
+Lunes	 	Redes y Comunicacion de Datos II (Teoria)	Redes y Comunicacion de Datos II (Practica2)	Proyecto Final de Carrera (Teoria)	 	
+Martes	Proyecto Final de Carrera (Practica1)	Procesamiento Digital de Imagenes (Practica2)	 	Economia y Costos (Practica1)	Procesamiento Digital de Imagenes (Teoria)	
+Miercoles	Procesamiento Digital de Imagenes (Practica1)	 	 	Proyecto Final de Carrera (Practica2)	 	
+Jueves	 	 	 	Redes y Comunicacion de Datos II (Practica1)	Economia y Costos (Practica2)	
+Viernes	 	 	Economia y Costos (Teoria)	 	 	
+
+
