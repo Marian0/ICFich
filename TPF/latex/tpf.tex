@@ -6,7 +6,7 @@
 
 \begin{document}
 
-\title{Organización de Asignaturas en una Facultad mediante Algoritmos Genéticos}
+\title{Organización de asignaturas en una facultad mediante algoritmos genéticos}
 
 \author{Fernando Nellmeldin y
         Mariano Peyregne \\
@@ -28,9 +28,7 @@ timetabling problem, restricciones, algoritmo genético, optimización
 \PARstart{L}{a} distribución de los horarios en que se dictan las asignaturas de la facultad se debe actualizar todos los años e implica un trabajo iterativo hasta que se cumplan todas las restricciones, o al menos se minimicen la cantidad de conflictos. Entre los requisitos a cumplir se encuentran los inherentes a los planes de las carreras, tales como que no se asignen materias del mismo año al mismo horario, o incluso de años consecutivos, ya que muchos alumnos asisten a asignaturas de distintos años por problemas de correlatividades. Asimismo, otras limitaciones surgen por la disponibilidad de aulas (y sus correspondientes equipamientos y límite de alumnos) y los docentes asignados a cada clase. Sobre este último, con frecuencia surge que cada profesor impone una restricción del tipo: ``sólo de mañana'' o ``los lunes y martes únicamente''. 
 De la definición de todas estas limitaciones, vemos que encontrar una distribución de clases durante la semana se torna una tarea casi imposible para cualquier ser humano. 
 
-En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. 
-
-Especializamos el trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También se resumieron las clases de cada materia a 3: una de teoría de dos horas, y dos de práctica de tres horas cada una (a las que los alumnos deben acudir a ambas). En total hay 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
+En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. Debido a la variedad, artículos anteriores como el de Colorni y otros \cite{Datta2006} tomaron casos particulares para su estudio. Nosotros especializamos este trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También, imitando a Perez de la Cruz y Ramírez Rodríguez \cite{Perez2011}, se resumieron las clases de cada materia a 3: una de teoría de dos horas, y dos de práctica de tres horas cada una (a las que los alumnos deben acudir a ambas). En total hay 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
 
 \begin{table}[htbp]
 \caption{Asignaturas modeladas como clases}
@@ -61,7 +59,7 @@ Por el lado de las restricciones, elegimos las siguientes a satisfacer:
 \item \textit{Superposición en un mismo año:} No es posible que se dicten dos clases del mismo año en el mismo momento, ya que imposibilita a los estudiantes a hacerse presente en ambas clases.
 \end{itemize}
 
-Con respecto a la distribución de horarios, se divide cada día, de lunes a viernes, en 5 módulos o franjas horarias. A cada módulo se le asigna un ID único, que servirá para identificarlo en el algoritmo genético. En la Fig. 1 se aprecian los módulos y el ID asignado a cada uno. El uso de estos identificadores se explicará en la próxima sección.
+Con respecto a la distribución de horarios, siguiendo el enfoque de Enzhe y Ki-Seok \cite{Enzhe2002} y Martínez y otros \cite{Martinez2006}, se divide cada día, de lunes a viernes, en 5 módulos o franjas horarias. A cada módulo se le asigna un ID único, que servirá para identificarlo en el algoritmo genético. En la Fig. 1 se aprecian los módulos y el ID asignado a cada uno. El uso de estos identificadores se explicará en la próxima sección.
 \begin{figure}[tbhp]
 \centerline{\includegraphics[width=0.5\textwidth]{tabla_horarios.png}}
 \caption{Módulos definidos para la semana}
@@ -69,8 +67,8 @@ Con respecto a la distribución de horarios, se divide cada día, de lunes a viern
 \end{figure}
 
 \section{Algoritmo genético}
-Para la solución del problema, se utilizó un AG en el que se utilizó un fenotipo como se muestra en la Fig. 2.
-De acuerdo a los ID definidos para cada clase en la Tabla I, se le asigna una posición específica en el fenotipo a cada una. Así, la clase con identificador igual a 1, será la primera en el fenotipo. Lo mismo se aplica a ID = 2, que estará ubicada segunda, y lo mismo con el resto. En cada posición del fenotipo, se almacena un número que referencia en qué bloque está situada. Siguiendo con el ejemplo de la Fig. 2, se aprecia que la clase 1 se dictará en el módulo 12, que al consultar la Fig. 1 vemos que corresponde a los miércoles a las 14 horas.
+Para la solución del problema, se utilizó un AG \cite{Goldberg1989}, \cite{Roeva2012} en el que se utilizó un fenotipo como se muestra en la Fig. \ref{fig2}.
+De acuerdo a los ID definidos para cada clase en la Tabla \ref{tab1}, se le asigna una posición específica en el fenotipo a cada una. Así, la clase con identificador igual a 1, será la primera en el fenotipo. Lo mismo se aplica a $ID = 2$, que estará ubicada segunda, y lo mismo con el resto. En cada posición del fenotipo, se almacena un número que referencia en qué bloque está situada. Siguiendo con el ejemplo de la Fig. \ref{fig2}, se aprecia que la clase 1 se dictará en el módulo 12, que al consultar la Fig. \ref{fig1} vemos que corresponde a los miércoles a las 14 horas.
 A partir de la representación fenotípica, se codifica en un genotipo binario de 300 bits de extensión, ya que se toman 5 bits para cada elemento del fenotipo (que está en el rango 0-24).
 \begin{figure}[tbh!p]
 \centerline{\includegraphics[width=0.5\textwidth]{fenotipo.png}}
@@ -193,7 +191,7 @@ $b_4$ & 5 \\
 Como vemos, en ambos casos se le da mayor importancia al término de superposición, ya que éste es la mayor de las restricciones que debemos satisfacer, sin ella, la tabla de horarios obtenida sería de poca utilidad para cualquier alumno. El segundo término en importancia es el solapamiento entre asignaturas de años adyacentes, ya que es una de las condiciones más deseables de una tabla horaria. El resto de las restricciones tienen valores bajos, ya que no son tan importantes o se cumplen por defecto al satisfacer las importantes.
 
 \section{Resultados}
-La elección de una u otra función de fitness es arbitraria. En ambas se tienen resultados similares. Es de destacar que la función productoria tiene ``peor'' fitness, debido a que los valores están exponenciados. Sin embargo, al comparar la calidad de la solución en término de los contadores $p,q,r$ y $s$, apreciamos lo antedicho: que se logran resultados similares.
+La elección de una u otra función de fitness es arbitraria. En ambas se obtienen resultados similares. Es de destacar que la función productoria tiene ``peor'' fitness, debido a que los valores están exponenciados. Sin embargo, al comparar la calidad de la solución en término de los contadores $p,q,r$ y $s$, apreciamos lo antedicho: que se logran resultados similares.
 
 Para probar el desempeño del algoritmo, se ejecutó para diversos conjuntos de configuraciones. Se estimaron los parámetros del algoritmo que daban mejores resultados, los cuales se resumen en la Tabla \ref{tab5}.
 \begin{table}[htbp]
@@ -219,7 +217,7 @@ probabilidad mutacion permutacion & 0.2-0.25 \\
 En la Fig. \ref{fig5} mostramos un resultado donde se alcanza fitness perfecto, ya que se satisfacen todas las restricciones. En la Fig. \ref{fig6} vemos la tabla horaria que es obtenida en esta ejecución.
 
 \begin{figure}[tbh!p]
-\centerline{\includegraphics[width=0.5\textwidth]{grafico_1.png}}
+\centerline{\includegraphics[width=0.4\textwidth]{grafico_1.png}}
 \caption{Resultado con fitness perfecto}
 \label{fig5}
 \end{figure}
@@ -230,7 +228,7 @@ En la Fig. \ref{fig5} mostramos un resultado donde se alcanza fitness perfecto, 
 \label{fig6}
 \end{figure}
 
-Para contrastar, en las Fig. \ref{fig7} y Fig. \ref{fig8} se muestra el resultado para un fitness regular. Los resultados que corresponden a este fitness se muestran en la Tabla \ref{tab6}. Se puede apreciar en la Fig. \ref{fig7} que los parámetros utilizados no son los óptimos según la Tabla \ref{tab5}.
+Para contrastar, en las Fig. \ref{fig7} y Fig. \ref{fig8} se muestra el resultado para un fitness regular. Los resultados que corresponden a este fitness se muestran en la Tabla \ref{tab6}, donde se sombrearon los solapamientos. Se puede apreciar en la Fig. \ref{fig7} que los parámetros utilizados no son los óptimos según la Tabla \ref{tab5}.
 
 \begin{table}[htbp]
 \caption{Resultados obtenidos en los contadores del fitness regular}
@@ -250,7 +248,7 @@ Superposición de clases & 0\\
 \end{table}
 
 \begin{figure}[tbh!p]
-\centerline{\includegraphics[width=0.5\textwidth]{grafico_3.png}}
+\centerline{\includegraphics[width=0.4\textwidth]{grafico_3.png}}
 \caption{Resultado con fitness regular}
 \label{fig7}
 \end{figure}
@@ -261,17 +259,17 @@ Superposición de clases & 0\\
 \label{fig8}
 \end{figure}
 
-Es de destacar que todos estos resultados fueron obtenidos para la simplificación de las clases que se enunciaba al principio, por lo que estas soluciones son sólo del caso simplificado. En la Fig. \ref{fig9} mostramos el resultado obtenido para el caso real, en el que ya no hay necesariamente 3 clases por asignatura, si no que hay más (principalmente en los primeros 2 años) o menos (en los años avanzados). Aquí se obtuvo $fitness = 0.75$ y hubo $12$ solapamientos.
+Es de destacar que todos estos resultados fueron obtenidos para la simplificación de las clases que se enunciaba al principio, por lo que estas soluciones son sólo del caso simplificado. En la Fig. \ref{fig9} mostramos el resultado obtenido para el caso real, en el que ya no hay necesariamente 3 clases por asignatura, si no que hay más (principalmente en los primeros 2 años) o menos (en los años avanzados). Además se debe aclarar que se dicta más de una comisión por materia, por lo que los alumnos pueden elegir a cuál asistir. 
 \begin{figure}[tbh!p]
-\centerline{\includegraphics[width=0.5\textwidth]{horarios_resultado_real.png}}
-\caption{Tabla horaria obtenida para el caso real}
+\centerline{\includegraphics[width=0.5\textwidth]{horario_superposicion.png}} % cambiaaaaaaaaaaaaaaa
+\caption{Tabla horaria obtenida para el caso real, con 12 solapamientos}
 \label{fig9}
 \end{figure}
 
 \section{Conclusiones}
-Si bien en el presente trabajo se realizaron muchas simplificaciones de cara a reducir la complejidad del problema, la inclusión de más restricciones no presenta, ``en la práctica'', una mayor complejidad. Si bien las soluciones obtenidas 
-\subsection{Trabajos futuros}
-
+Si bien en el presente trabajo se realizaron muchas simplificaciones de cara a reducir la complejidad, la inclusión de más requisitos no presenta, ``en la práctica'', una mayor dificultad. A pesar de que las soluciones obtenidas no son utilizables debido a las restricciones no consideradas, concluímos que el uso de un algoritmo genético para encarar el TTP fue la elección correcta.
+Uno de los problemas que encontramos durante el desarrollo del trabajo, es que la diversidad de cada generación es pequeña debido a que la función de fitness (la cual se basa en las restricciones planteadas) tiene un limitado conjunto de valores posibles. Esto provoca que fenotipos muy distintos tengan exactamente el mismo fitness, y este fenómeno se repita para toda la población.
+Como trabajo futuro, se plantea la inclusión de más restricciones a la función de aptitud, tales como requerimientos propios de los profesores o relacionadas a la disponibilidad y equipamiento de las aulas. En un análisis prelimiar, concluímos que no habría mayor dificultad, siguiendo el enfoque actual, en implementar estas extensiones. 
 
 \nocite{*}
 \bibliographystyle{tpf}

@@ -18,6 +18,25 @@
 \fi
 #2}}
 
+\bibitem{Datta2006}
+D.~Datta, D.~K., y C.~Fonseca, ``Solving class timetabling problem of {IIT}
+  kampur using multi-objective evolutionary algorithm,'' 2006.
+
+\bibitem{Perez2011}
+C.~Pérez de~la Cruz y J.~Ramírez~Rodriguez, ``Un algoritmo genético para un
+  problema de horarios con restricciones especiales,'' \emph{Revista de
+  Matemática: Teoría y Aplicaciones}, no.~18, pp. 215--229, 2011.
+
+\bibitem{Enzhe2002}
+Y.~Enzhe y S.~Ki-Seok, ``A genetic algorithm for a university weekly courses
+  timetabling problem,'' \emph{International Transactions in Operational
+  Research}, no.~9, pp. 703--717, 2002.
+
+\bibitem{Martinez2006}
+F.~Martínez~Ruiz, E.~García~Sánchez, J.~Muñoz~Arteaga, y C.~Castañeda~Ramírez,
+  ``Timetabling académico usando algoritmos genéticos y programación celular,''
+  2006.
+
 \bibitem{Goldberg1989}
 D.~E. Goldberg, \emph{Genetic Algorithms in Search, Optimization, and Machine
   Learning}.\hskip 1em plus 0.5em minus 0.4em\relax Addison-Wesley
@@ -31,24 +50,5 @@ O.~Roeva, \emph{Real-World Applications of Genetic Algorithms}.\hskip 1em plus
 A.~Colorni, M.~Dorigo, y V.~Maniezzo, ``A genetic algorithm to solve the
   timetabling problem,'' \emph{Computational Optimization and Applications},
   1993.
-
-\bibitem{Enzhe2002}
-Y.~Enzhe y S.~Ki-Seok, ``A genetic algorithm for a university weekly courses
-  timetabling problem,'' \emph{International Transactions in Operational
-  Research}, no.~9, pp. 703--717, 2002.
-
-\bibitem{Datta2006}
-D.~Datta, D.~K., y C.~Fonseca, ``Solving class timetabling problem of {IIT}
-  kampur using multi-objective evolutionary algorithm,'' 2006.
-
-\bibitem{Martinez2006}
-F.~Martinez~Ruiz, E.~García~Sánchez, J.~Muñoz~Arteaga, y C.~Castañeda~Ramírez,
-  ``Timetabling académico usando algoritmos genéticos y programación celular,''
-  2006.
-
-\bibitem{Perez2011}
-C.~Pérez de~la Cruz y J.~Ramírez~Rodriguez, ``Un algoritmo genético para un
-  problema de horarios con restricciones especiales,'' \emph{Revista de
-  Matemática: Teoría y Aplicaciones}, no.~18, pp. 215--229, 2011.
 
 \end{thebibliography}
