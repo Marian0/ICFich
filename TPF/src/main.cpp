@@ -14,8 +14,8 @@
 
 
 //Variable global
-Config config("configuracion.cfg"); //lectura de la configuracion basica
-//Config config("configuracion_1er_real.cfg"); //lectura de la configuracion de caso real
+//Config config("configuracion.cfg"); //lectura de la configuracion basica
+Config config("configuracion_1er_real.cfg"); //lectura de la configuracion de caso real
 
 
 int main() {
