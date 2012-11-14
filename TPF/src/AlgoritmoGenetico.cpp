@@ -105,8 +105,9 @@ void AlgoritmoGenetico::reproduccion() {
     this->generacion_actual++;
 
     if(this->generacion_actual > this->generaciones_maximo) {
-        std::cout<<"Maximo de generaciones alcanzadas\n";
-        return;
+        std::cout<<"AAAAAAAAAAAAAAAAAAMaximo de generaciones alcanzadas\n";
+//        return;
+        getwchar();
     }
 
     std::vector<Individuo> nueva_poblacion;

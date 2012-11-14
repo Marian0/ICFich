@@ -111,6 +111,10 @@ int main() {
 
     unsigned int w = 0;
     for (; w < cantidad_generaciones; w++) {
+        if (cantidad_generaciones -2 == w ) {
+            std::cout<<"hora de debug!!!";
+                getwchar();
+        }
         AG.reproduccion();
 
         float mejor_fitness_actual = AG.evaluar();
