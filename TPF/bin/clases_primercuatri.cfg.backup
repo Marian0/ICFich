@@ -8,15 +8,15 @@ Fundamentos de Programacion (Practica2), 2, 2, 1
 Quimica General (Teoria), 3, 2, 1
 Quimica General (Practica1), 3, 2, 1 
 Quimica General (Practica2), 3, 2, 1
-Comunicacion Tecnica I (Teoria), 4, 3, 1
-Comunicacion Tecnica I (Practica1), 4, 3, 1
-Comunicacion Tecnica I (Practica2), 4, 3, 1
-Fisica I (Teoria), 5, 2, 2
-Fisica I (Practica1), 5, 3, 2
-Fisica I (Practica2), 5, 3, 2
-Calculo II (Teoria), 6, 2, 2
-Calculo II (Practica1), 6, 3, 2
-Calculo II (Practica2), 6, 3, 2
+Comunicacion Tecnica I (Teoria), 4, 2, 1
+Comunicacion Tecnica I (Practica1), 4, 2, 1
+Comunicacion Tecnica I (Practica2), 4, 2, 1
+Fisica I (Teoria), 5, 3, 2
+Fisica I (Practica1), 5, 2, 2
+Fisica I (Practica2), 5, 2, 2
+Calculo II (Teoria), 6, 3, 2
+Calculo II (Practica1), 6, 2, 2
+Calculo II (Practica2), 6, 2, 2
 Teoria de la Computacion (Teoria), 7, 3, 2
 Teoria de la Computacion (Practica1), 7, 2, 2
 Teoria de la Computacion (Practica2), 7, 2, 2
@@ -26,12 +26,12 @@ Ingenieria de Software I (Practica2), 8, 2, 2
 Electronica Digital (Teoria), 9, 2, 3
 Electronica Digital (Practica1), 9, 2, 3
 Electronica Digital (Practica2), 9, 2, 3
-Tecnologias de la Programacion (Teoria), 10, 2, 3
-Tecnologias de la Programacion (Practica1), 10, 3, 3
-Tecnologias de la Programacion (Practica2), 10, 3, 3
+Tecnologias de la Programacion (Teoria), 10, 3, 3
+Tecnologias de la Programacion (Practica1), 10, 2, 3
+Tecnologias de la Programacion (Practica2), 10, 2, 3
 Estadistica (Teoria), 11, 2, 3
-Estadistica (Practica1), 11, 3, 3
-Estadistica (Practica2), 11, 3, 3
+Estadistica (Practica1), 11, 2, 3
+Estadistica (Practica2), 11, 2, 3
 Computacion Grafica (Teoria), 12, 3, 3
 Computacion Grafica (Practica1), 12, 2, 3
 Computacion Grafica (Practica2), 12, 2, 3
@@ -42,20 +42,20 @@ Administracion de Proyectos de Software (Teoria), 14, 2, 4
 Administracion de Proyectos de Software (Practica1), 14, 2, 4
 Administracion de Proyectos de Software (Practica2), 14, 2, 4
 Procesamiento Digital de Senales (Teoria), 15, 3, 4
-Procesamiento Digital de Senales (Practica1), 15, 3, 4
-Procesamiento Digital de Senales (Practica2), 15, 3, 4
+Procesamiento Digital de Senales (Practica1), 15, 2, 4
+Procesamiento Digital de Senales (Practica2), 15, 2, 4
 Mecanica del Continuo (Teoria), 16, 2, 4
-Mecanica del Continuo (Practica1), 16, 3, 4
-Mecanica del Continuo (Practica2), 16, 3, 4
+Mecanica del Continuo (Practica1), 16, 2, 4
+Mecanica del Continuo (Practica2), 16, 2, 4
 Procesamiento Digital de Imagenes (Teoria), 17, 3, 5
 Procesamiento Digital de Imagenes (Practica1), 17, 2, 5
 Procesamiento Digital de Imagenes (Practica2), 17, 2, 5
 Redes y Comunicacion de Datos II (Teoria), 18, 2, 5
-Redes y Comunicacion de Datos II (Practica1), 18, 3, 5
-Redes y Comunicacion de Datos II (Practica2), 18, 3, 5
+Redes y Comunicacion de Datos II (Practica1), 18, 2, 5
+Redes y Comunicacion de Datos II (Practica2), 18, 2, 5
 Economia y Costos (Teoria), 19, 2, 5
-Economia y Costos (Practica1), 19, 3, 5
-Economia y Costos (Practica2), 19, 3, 5
+Economia y Costos (Practica1), 19, 2, 5
+Economia y Costos (Practica2), 19, 2, 5
 Proyecto Final de Carrera (Teoria), 20, 2, 5
 Proyecto Final de Carrera (Practica1), 20, 2, 5
 Proyecto Final de Carrera (Practica2), 20, 2, 5

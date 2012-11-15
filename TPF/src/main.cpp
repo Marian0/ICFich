@@ -14,8 +14,8 @@
 
 
 //Variable global
-//Config config("configuracion.cfg"); //lectura de la configuracion basica
-Config config("configuracion_1er_real.cfg"); //lectura de la configuracion de caso real
+Config config("configuracion.cfg"); //lectura de la configuracion basica
+//Config config("configuracion_1er_real.cfg"); //lectura de la configuracion de caso real
 
 
 int main() {
@@ -111,10 +111,10 @@ int main() {
 
     unsigned int w = 0;
     for (; w < cantidad_generaciones; w++) {
-        if (cantidad_generaciones -2 == w ) {
-            std::cout<<"hora de debug!!!";
-                getwchar();
-        }
+//        if (cantidad_generaciones -2 == w ) {
+//            std::cout<<"hora de debug!!!";
+//                getwchar();
+//        }
         AG.reproduccion();
 
         float mejor_fitness_actual = AG.evaluar();
@@ -134,7 +134,7 @@ int main() {
         if (mejor_fitness_actual >= fitness_deseado) {
            break;
         }
-
+        /*
         if (w >= 100 and w % 100 == 0) {//guarda un archivo cada 100 generaciones
             std::string archivo_salida = archivo_problema + "_tabla_gen_" + utils::intToStr(w) + ".xls";
 
@@ -150,7 +150,7 @@ int main() {
             std::string archivo_resumen = archivo_problema + "_resumen_gen_" + utils::intToStr(w) + ".txt";
             std::cout<<"Escribiendo archivo "<<archivo_resumen<<".\n";
             AG.imprimirResumen(archivo_resumen);
-        }
+        }*/
     }
     t_fin = clock();
     std::cout<<"\n\nTiempo del Metodo = "<<(double)(t_fin - t_ini) / CLOCKS_PER_SEC<<"\n";

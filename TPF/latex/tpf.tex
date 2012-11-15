@@ -26,11 +26,9 @@ timetabling problem, restricciones, algoritmo genético, optimización
 \end{keywords}
 
 \section{Introducción}
-\PARstart{L}{a} distribución de los horarios en que se dictan las asignaturas de la facultad se debe actualizar todos los años e implica un trabajo iterativo hasta que se cumplan todas las restricciones, o al menos se minimicen la cantidad de conflictos. Entre los requisitos a cumplir se encuentran los inherentes a los planes de las carreras, tales como que no se asignen materias del mismo año al mismo horario, o incluso de años consecutivos, ya que muchos alumnos asisten a asignaturas de distintos años por problemas de correlatividades. Asimismo, otras limitaciones surgen por la disponibilidad de aulas (y sus correspondientes equipamientos y límite de alumnos) y los docentes asignados a cada clase. Sobre este último, con frecuencia surge que cada profesor impone una restricción del tipo: ``sólo de mañana'' o ``los lunes y martes únicamente''. 
+\PARstart{L}{a} distribución de los horarios en que se dictan las asignaturas de la facultad se debe actualizar todos los años e implica un trabajo iterativo hasta que se cumplan todas las restricciones, o al menos se minimicen la cantidad de conflictos. Entre los requisitos a cumplir se encuentran los inherentes a los planes de las carreras, tales como que no se asignen materias del mismo año al mismo horario, o incluso de años consecutivos, ya que muchos alumnos asisten a asignaturas de distintos años por problemas de correlatividades. Asimismo, otras limitaciones surgen por la disponibilidad de aulas (y sus correspondientes equipamientos y límite de alumnos) y los docentes asignados a cada clase. Sobre este último, con frecuencia surge que cada profesor impone una restricción del tipo: ``sólo de mañana'' o ``los lunes y martes únicamente''. De la definición de todas estas limitaciones, vemos que encontrar una distribución de clases durante la semana se torna una tarea casi imposible para cualquier ser humano. 
 
-De la definición de todas estas limitaciones, vemos que encontrar una distribución de clases durante la semana se torna una tarea casi imposible para cualquier ser humano. 
-
-En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. Debido a la variedad, artículos anteriores como el de Colorni y otros \cite{Datta2006}, tomaron casos particulares para su estudio. Nosotros especializamos este trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También, imitando a Perez de la Cruz y Ramírez Rodríguez \cite{Perez2011}, se resumieron las clases de cada materia a 3: una de teoría de dos horas, y dos de práctica de tres horas cada una (a las que los alumnos deben acudir a ambas). En total existen 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
+En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. Debido a la variedad, artículos anteriores como el de Colorni y otros \cite{Datta2006}, tomaron casos particulares para su estudio. Nosotros especializamos este trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También, imitando a Perez de la Cruz y Ramírez Rodríguez \cite{Perez2011}, se resumieron las clases de cada materia a 3: una de teoría y dos de práctica, que pueden ser de dos o tres horas cada una (a las que los alumnos deben acudir a ambas). En total existen 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
 
 \begin{table}[htbp]
 \caption{Asignaturas modeladas como clases}
@@ -42,9 +40,9 @@ Asignatura     & Clase    & ID   \\
 Cálculo II 	& Cálculo II (Teoría, 2 horas) 		& 1 \\
 Cálculo II 	& Cálculo II (Práctica 1, 3 horas) 	& 2 \\
 Cálculo II 	& Cálculo II (Práctica 2, 3 horas) 	& 3 \\
-Física I 	& Física I (Teoría, 2 horas) 		& 4 \\
-Física I 	& Física I (Práctica 1, 3 horas) 	& 5 \\
-Física I 	& Física I (Práctica 2, 3 horas) 	& 6 \\
+Física I 	& Física I (Teoría, 3 horas) 		& 4 \\
+Física I 	& Física I (Práctica 1, 2 horas) 	& 5 \\
+Física I 	& Física I (Práctica 2, 2 horas) 	& 6 \\
 \hline
 \end{tabular}
 \end{center}
@@ -61,7 +59,7 @@ Por el lado de las restricciones, elegimos las siguientes a satisfacer:
 \item \textit{Superposición en un mismo año:} No es posible que se dicten dos clases del mismo año en el mismo momento, ya que imposibilita a los estudiantes a hacerse presente en ambas clases.
 \end{itemize}
 
-Con respecto a la distribución de horarios, siguiendo el enfoque de Enzhe y Ki-Seok \cite{Enzhe2002} y Martínez y otros \cite{Martinez2006}, se divide cada día, de lunes a viernes, en 5 módulos o franjas horarias. A cada módulo se le asigna un ID único, que servirá para identificarlo en el algoritmo genético. En la Fig. 1 se aprecian los módulos y el ID asignado a cada uno. El uso de estos identificadores se explicará en la próxima sección.
+Con respecto a la distribución de horarios, siguiendo el enfoque de Enzhe y Ki-Seok \cite{Enzhe2002} y Martínez y otros \cite{Martinez2006}, se divide cada día, de lunes a viernes, en 5 módulos o franjas horarias. A cada módulo se le asigna un ID único, que servirá para identificarlo en el algoritmo genético. En la Fig. \ref{fig1} se aprecian los módulos y el ID asignado a cada uno. El uso de estos identificadores se explicará en la próxima sección.
 \begin{figure}[tbhp]
 \centerline{\includegraphics[width=0.5\textwidth]{tabla_horarios.png}}
 \caption{Módulos definidos para la semana}
@@ -69,11 +67,9 @@ Con respecto a la distribución de horarios, siguiendo el enfoque de Enzhe y Ki-S
 \end{figure}
 
 \section{Algoritmo genético}
-Para la solución del problema, se utilizó un AG \cite{Goldberg1989}, \cite{Roeva2012} en el que se definió un fenotipo como se muestra en la Fig. \ref{fig2}.
+Para la solución del problema, se utilizó un AG \cite{Goldberg1989}, \cite{Roeva2012} en el que se definió un fenotipo como se muestra en la Fig. \ref{fig2}. De acuerdo a los ID definidos para cada clase en la Tabla \ref{tab1}, se le asigna una posición específica en el fenotipo a cada una. Así, la clase con identificador igual a 1, será la primera en el fenotipo. Lo mismo se aplica a $ID = 2$, que estará ubicada segunda, y lo mismo con el resto. En cada posición del fenotipo, se almacena un número que referencia en qué bloque está situada. Siguiendo con el ejemplo de la Fig. \ref{fig2}, se aprecia que la clase 1 se dictará en el módulo 12, que al consultar la Fig. \ref{fig1} vemos que corresponde a los miércoles a las 14 horas.
 
-De acuerdo a los ID definidos para cada clase en la Tabla \ref{tab1}, se le asigna una posición específica en el fenotipo a cada una. Así, la clase con identificador igual a 1, será la primera en el fenotipo. Lo mismo se aplica a $ID = 2$, que estará ubicada segunda, y lo mismo con el resto. En cada posición del fenotipo, se almacena un número que referencia en qué bloque está situada. Siguiendo con el ejemplo de la Fig. \ref{fig2}, se aprecia que la clase 1 se dictará en el módulo 12, que al consultar la Fig. \ref{fig1} vemos que corresponde a los miércoles a las 14 horas.
-
-A partir de la representación fenotípica, se codifica en un genotipo binario de 300 bits de extensión, ya que se toman 5 bits para cada elemento del fenotipo (que está en el rango 0-24).
+A partir de la representación fenotípica, se codifica en un genotipo binario de 300 bits de extensión, ya que se toman 5 bits para cada elemento del fenotipo (que está en el rango $0-24$).
 \begin{figure}[tbh!p]
 \centerline{\includegraphics[width=0.5\textwidth]{fenotipo.png}}
 \caption{Representación fenotípica}
@@ -81,23 +77,19 @@ A partir de la representación fenotípica, se codifica en un genotipo binario de 
 \end{figure}
 
 \subsection{Inicialización}
-Se parte de una población inicial aleatoria. Para generarla, se toman las clases de a una y se le asigna un bloque aleatorio en el rango 0-24. De esta forma, se comenzará con muchos individuos con una evaluación de fitness pobre, ya que no se espera que cumplan ninguna restricción al inicio, pero todos serán válidos en el sentido de que no se asignarán bloques fuera del rango 0-24. Esta propiedad se mantendrá durante todo el algoritmo.
+Se parte de una población inicial aleatoria. Para generarla, se toman las clases de a una y se le asigna un bloque aleatorio en el rango $0-24$. De esta forma, se comenzará con muchos individuos con una evaluación de fitness pobre, ya que no se espera que cumplan ninguna restricción al inicio, pero todos serán válidos en el sentido de que no se asignarán bloques fuera del rango $0-24$. Esta propiedad se mantendrá durante todo el algoritmo.
 
 \subsection{Selección de individuos para la siguiente generación}
-La población siempre se mantiene en el mismo tamaño. En cada generación, se deben elegir a los individuos que formarán parte de la generación siguiente. Se utilizó el método de selección por ventanas. A los individuos elegidos se les aplicará, si corresponde, las cruzas y mutaciones que se describen en la próxima sección.
-
-Además, a través de elitismo, siempre se pasa el mejor individuo (según su fitness) a la próxima generación. Por último, se elige un término de brecha generacional del 10\% del tamaño de la población. Por lo tanto, sin importar el fitness, se elige aleatoriamente cierta cantidad de individuos que serán integrantes del próximo conjunto. De esta manera, nos aseguramos que siempre haya cierta diversidad en el conjunto de búsqueda.
+La población siempre se mantiene en el mismo tamaño. En cada generación, se deben elegir a los individuos que formarán parte de la generación siguiente. Se utilizó el método de selección por ventanas. A los individuos elegidos se les aplicará, si corresponde, las cruzas y mutaciones que se describen en la próxima sección. Además, a través de elitismo, siempre se pasa el mejor individuo (según su fitness) a la próxima generación. Por último, se elige un término de brecha generacional del $10\%$ del tamaño de la población. Por lo tanto, sin importar el fitness, se elige aleatoriamente cierta cantidad de individuos que serán integrantes del próximo conjunto. De esta manera, nos aseguramos que siempre haya cierta diversidad en el conjunto de búsqueda.
 
 \subsection{Operadores genéticos}
-Se definieron dos operadores de mutación y uno de cruza. Estos operadores se aplican en representación genotípica, pero cuidan de realizarse en posiciones que se corresponden con el fenotipo, de manera de no generar individuos inválidos.
-
-Cada uno de estos operadores tiene una probabilidad de aplicarse definida al inicio, por lo que puede suceder que se realicen ambas mutaciones y no la cruza, viceversa o cualquier otra combinación.
+Se definieron dos operadores de mutación y uno de cruza. Estos operadores se aplican en representación genotípica, pero cuidan de realizarse en posiciones que se corresponden con el fenotipo, de manera de no generar individuos inválidos. Cada uno de estos operadores tiene una probabilidad de aplicarse definida al inicio, por lo que puede suceder que se realicen ambas mutaciones y no la cruza, viceversa o cualquier otra combinación.
 
 \subsubsection{Cruza}
 Se utiliza una cruza de dos puntos. Se cuenta con dos padres y se generan aleatoriamente dos posiciones en el genotipo de ambos. Luego se intercambia el contenido genético entre éstos. Las posiciones elegidas se corresponden con los límites de cada elemento del fenotipo, de manera de no generar individuos con bloques de horarios inválidos.
 
 \subsubsection{Mutación por movimiento}
-Se genera una posición en el fenotipo al azar, que identificará a un bloque donde está asignada cierta asignatura. A continuación se buscará un módulo que se encuentre libre y que sea del mismo tamaño (2 o 3 horas según corresponda). Si se encuentra un espacio libre (antes de un número limitado de iteraciones), se moverá la clase al nuevo bloque. En la Fig. 3 se ve un ejemplo.
+Se genera una posición en el fenotipo al azar, que identificará a un bloque donde está asignada cierta asignatura. A continuación se buscará un módulo que se encuentre libre y que sea del mismo tamaño (2 o 3 horas según corresponda). Si se encuentra un espacio libre (antes de un número limitado de iteraciones), se moverá la clase al nuevo bloque. En la Fig. \ref{fig3} se ve un ejemplo.
 \begin{figure}[tbh!p]
 \centerline{\includegraphics[width=0.4\textwidth]{mutacion_movimiento.png}}
 \caption{Mutación por movimiento}
@@ -105,7 +97,7 @@ Se genera una posición en el fenotipo al azar, que identificará a un bloque dond
 \end{figure}
 
 \subsubsection{Mutación por permutación}
-Se toma una posición aleatoria del fenotipo. A partir de ésta, y dependiendo de si es de 2 o 3 horas, se genera una nueva posición aleatoria del mismo horario. Para continuar, se intercambian las posiciones de ambas, de manera de que donde se ubicaba la primera, ahora se ubique la segunda y viceversa. En la Fig. 4 mostramos un ejemplo ilustrativo.
+Se toma una posición aleatoria del fenotipo. A partir de ésta, y dependiendo de si es de 2 o 3 horas, se genera una nueva posición aleatoria del mismo horario. Para continuar, se intercambian las posiciones de ambas, de manera de que donde se ubicaba la primera, ahora se ubique la segunda y viceversa. En la Fig. \ref{fig4} mostramos un ejemplo ilustrativo.
 \begin{figure}[tbh!p]
 \centerline{\includegraphics[width=0.4\textwidth]{mutacion_permutacion.png}}
 \caption{Mutación por permutación}
@@ -119,7 +111,7 @@ La función de fitness que evalúa la calidad de la solución representada por cada
 Cuenta la cantidad de veces que se supera la capacidad de aulas definida. Si se dispone de 4 aulas, contará para cada bloque horario, la cantidad de clases que se dictan simultáneamente. Si se sobrepasa el límite de 4, se sumará 1 en este contador. 
 
 \subsubsection{Repeticiones de Asignaturas}
-Cuenta las veces que se da más de una vez cierta asignatura en el mismo día. Si el individuo establece, por ejemplo, que la teoría y la práctica 1 se dan en el mismo día, sumará 1 en este contador.
+Cuenta las veces que se da más de una vez cierta asignatura en el mismo día. Si el individuo establece, por ejemplo, que la teoría y la práctica de la asignatura 4 se dan en el mismo día, sumará 1 en este contador.
 
 \subsubsection{Solapamiento de años adyacentes}
 Se suman la cantidad de oportunidades en las que clase de años adyacentes se dictan en el mismo módulo. Por ejemplo, este contador sumará 1 cada vez que el individuo represente que un curso de segundo año se solape con cualquier clase de primer o tercer año.
