@@ -130,7 +130,7 @@ int main() {
         if (mejor_fitness_actual >= fitness_deseado) {
            break;
         }
-        /*
+
         if (w >= 100 and w % 100 == 0) {//guarda un archivo cada 100 generaciones
             std::string archivo_salida = archivo_problema + "_tabla_gen_" + utils::intToStr(w) + ".xls";
 
@@ -146,7 +146,7 @@ int main() {
             std::string archivo_resumen = archivo_problema + "_resumen_gen_" + utils::intToStr(w) + ".txt";
             std::cout<<"Escribiendo archivo "<<archivo_resumen<<".\n";
             AG.imprimirResumen(archivo_resumen);
-        }*/
+        }
     }
     t_fin = clock();
     std::cout<<"\n\nTiempo del Metodo = "<<(double)(t_fin - t_ini) / CLOCKS_PER_SEC<<"\n";

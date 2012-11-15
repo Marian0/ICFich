@@ -182,6 +182,8 @@ float Individuo::calcularFitness() {
 
     //std::cout<<this->cantidad_repeticiones<<' '<<this->sobrepaso_aulas<<' '<<this->solapamientos_adyacentes<<' '<<this->superposicion<<'\n';
 
+
+
     //Calculamos el fitness segun uno u otro metodo
     if (this->modo_fitness == Individuo::FITNESS_PRODUCTO) {
         //Calculamos el costo de la funcion de fitness como producto exponenciado
@@ -201,6 +203,15 @@ float Individuo::calcularFitness() {
     }
 
     this->fitness = nuevo_fitness;
+    /*
+    if (this->superposicion < 5) {
+        std::vector<int> respuesta_fenotipo;
+        utils::vectorBinary2Int(this->genotipo, respuesta_fenotipo, 5);
+        utils::printVector(respuesta_fenotipo;
+        std::cout<<this->cantidad_repeticiones<<' '<<this->sobrepaso_aulas<<' '<<this->solapamientos_adyacentes<<' '<<this->superposicion<<'\n';
+        std::cout<<this->fitness<<'\n';
+        //getwchar();
+    }*/
     return nuevo_fitness;
 }
 

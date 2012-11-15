@@ -16,7 +16,7 @@
 \maketitle
 
 \begin{abstract}
-El problema de acomodar los horarios de una facultad, llamado TimeTabling Problem en inglés, es una difícil tarea que se debe realizar en cualquier facultad o universidad. Se tienen un conjunto de recursos limitados tales como la cantidad de profesores, alumnos o aulas, y se los debe asignar a cada una de las asignaturas que se cursan en la institución de manera de minimizar el impacto negativo tanto en los alumnos como en los docentes. Se quieren evitar situaciones tales como que se cursen simultáneamente materias del mismo año o de años adyacentes, ya que con frecuencia hay estudiantes que pueden asistir a asignaturas de distintos años.
+El problema de acomodar los horarios de una facultad, llamado Timetabling Problem en inglés, es una difícil tarea que se debe realizar en cualquier institución educativa. Se tienen un conjunto de recursos limitados tales como la cantidad de profesores, alumnos o aulas, y se los debe asignar a cada una de las asignaturas que se cursan en la institución de manera de minimizar el impacto negativo tanto en los alumnos como en los docentes. Se quieren evitar situaciones tales como que se cursen simultáneamente materias del mismo año o de años adyacentes, ya que con frecuencia hay estudiantes que pueden asistir a asignaturas de distintos años.
 En este paper abordamos el Timetabling Problem utilizando un Algoritmo Genético y modelando las restricciones en una simple función de fitness. Si bien no consideramos todas los requisitos que participan en este problema, encontramos resultados satisfactorios con respecto al programa semanal obtenido. Primero presentamos el modelado del problema, luego los operadores definidos para el algoritmo genético y el fitness. Por último se presentan los resultados obtenidos y algunos ejemplos.
 \end{abstract}
 
@@ -28,7 +28,7 @@ timetabling problem, restricciones, algoritmo genético, optimización
 \PARstart{L}{a} distribución de los horarios en que se dictan las asignaturas de la facultad se debe actualizar todos los años e implica un trabajo iterativo hasta que se cumplan todas las restricciones, o al menos se minimicen la cantidad de conflictos. Entre los requisitos a cumplir se encuentran los inherentes a los planes de las carreras, tales como que no se asignen materias del mismo año al mismo horario, o incluso de años consecutivos, ya que muchos alumnos asisten a asignaturas de distintos años por problemas de correlatividades. Asimismo, otras limitaciones surgen por la disponibilidad de aulas (y sus correspondientes equipamientos y límite de alumnos) y los docentes asignados a cada clase. Sobre este último, con frecuencia surge que cada profesor impone una restricción del tipo: ``sólo de mañana'' o ``los lunes y martes únicamente''. 
 De la definición de todas estas limitaciones, vemos que encontrar una distribución de clases durante la semana se torna una tarea casi imposible para cualquier ser humano. 
 
-En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. Debido a la variedad, artículos anteriores como el de Colorni y otros \cite{Datta2006} tomaron casos particulares para su estudio. Nosotros especializamos este trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También, imitando a Perez de la Cruz y Ramírez Rodríguez \cite{Perez2011}, se resumieron las clases de cada materia a 3: una de teoría de dos horas, y dos de práctica de tres horas cada una (a las que los alumnos deben acudir a ambas). En total hay 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
+En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. Debido a la variedad, artículos anteriores como el de Colorni y otros \cite{Datta2006}, tomaron casos particulares para su estudio. Nosotros especializamos este trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También, imitando a Perez de la Cruz y Ramírez Rodríguez \cite{Perez2011}, se resumieron las clases de cada materia a 3: una de teoría de dos horas, y dos de práctica de tres horas cada una (a las que los alumnos deben acudir a ambas). En total existen 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
 
 \begin{table}[htbp]
 \caption{Asignaturas modeladas como clases}
@@ -49,7 +49,7 @@ Física I 	& Física I (Práctica 2, 3 horas) 	& 6 \\
 \label{tab1}
 \end{table}
 
-No se tuvo en consideración la distribución de los profesores ni sus restricciones añadidas, por lo que se asume que cada docente tiene a su cargo una sóla clase y puede darla en cualquier franja horaria. En nuestra institución, como en muchas, se dicta más de una carrera. En lugar de modelar la distribución de clases y aulas para todas las carreras, se tomó un camino alternativo: se limitarán las aulas ocupadas por el cursado de estudio, de manera que sólo se puede ocupar determinado número de aulas en simultáneo.
+No se tuvo en consideración la distribución de los profesores ni sus restricciones añadidas, por lo que se asume que cada docente tiene a su cargo una sóla clase y puede darla en cualquier franja horaria. En nuestra institución, como en muchas, se dicta más de una carrera. En lugar de modelar la distribución de clases y aulas para todas las carreras, se tomó un camino alternativo: se limitarán las habitaciones ocupadas por el cursado de estudio, de manera que sólo se puede ocupar determinado número de salas en simultáneo.
 
 Por el lado de las restricciones, elegimos las siguientes a satisfacer:
 \begin{itemize}
@@ -67,7 +67,7 @@ Con respecto a la distribución de horarios, siguiendo el enfoque de Enzhe y Ki-S
 \end{figure}
 
 \section{Algoritmo genético}
-Para la solución del problema, se utilizó un AG \cite{Goldberg1989}, \cite{Roeva2012} en el que se utilizó un fenotipo como se muestra en la Fig. \ref{fig2}.
+Para la solución del problema, se utilizó un AG \cite{Goldberg1989}, \cite{Roeva2012} en el que se definió un fenotipo como se muestra en la Fig. \ref{fig2}.
 De acuerdo a los ID definidos para cada clase en la Tabla \ref{tab1}, se le asigna una posición específica en el fenotipo a cada una. Así, la clase con identificador igual a 1, será la primera en el fenotipo. Lo mismo se aplica a $ID = 2$, que estará ubicada segunda, y lo mismo con el resto. En cada posición del fenotipo, se almacena un número que referencia en qué bloque está situada. Siguiendo con el ejemplo de la Fig. \ref{fig2}, se aprecia que la clase 1 se dictará en el módulo 12, que al consultar la Fig. \ref{fig1} vemos que corresponde a los miércoles a las 14 horas.
 A partir de la representación fenotípica, se codifica en un genotipo binario de 300 bits de extensión, ya que se toman 5 bits para cada elemento del fenotipo (que está en el rango 0-24).
 \begin{figure}[tbh!p]
@@ -81,19 +81,19 @@ Se parte de una población inicial aleatoria. Para generarla, se toman las clases
 
 \subsection{Selección de individuos para la siguiente generación}
 La población siempre se mantiene en el mismo tamaño. En cada generación, se deben elegir a los individuos que formarán parte de la generación siguiente. Se utilizó el método de selección por ventanas. A los individuos elegidos se les aplicará, si corresponde, las cruzas y mutaciones que se describen en la próxima sección.
-Además, a través de elitismo, siempre se pasa el mejor individuo (según su fitness) a la próxima generación. Por último, se elige un término de brecha generacional del 10\% del tamaño de la población. Por lo tanto, sin importar el fitness, se elige aleatoriamente cierta cantidad de individuos que serán integrantes del próximo conjunto. De esta manera, nos aseguramos que siempre haya diversidad en el conjunto de búsqueda.
+Además, a través de elitismo, siempre se pasa el mejor individuo (según su fitness) a la próxima generación. Por último, se elige un término de brecha generacional del 10\% del tamaño de la población. Por lo tanto, sin importar el fitness, se elige aleatoriamente cierta cantidad de individuos que serán integrantes del próximo conjunto. De esta manera, nos aseguramos que siempre haya cierta diversidad en el conjunto de búsqueda.
 
 \subsection{Operadores genéticos}
-Se definieron dos operadores de mutación y uno de cruza. Estos trabajan en representación genotípica, pero cuidan de realizarse en posiciones que se corresponden con el fenotipo, de manera de no generar individuos inválidos luego de la operación.
-Cada uno de estos operadores tiene una probabilidad de aplicarse definida al inicio, por lo que puede pasar que ambas mutaciones se apliquen y la cruza no, o viceversa o cualquier otra combinación.
+Se definieron dos operadores de mutación y uno de cruza. Estos operadores se aplican en representación genotípica, pero cuidan de realizarse en posiciones que se corresponden con el fenotipo, de manera de no generar individuos inválidos.
+Cada uno de estos operadores tiene una probabilidad de aplicarse definida al inicio, por lo que puede suceder que se realicen ambas mutaciones y no la cruza, viceversa o cualquier otra combinación.
 
 \subsubsection{Cruza}
 Se utiliza una cruza de dos puntos. Se cuenta con dos padres y se generan aleatoriamente dos posiciones en el genotipo de ambos. Luego se intercambia el contenido genético entre éstos. Las posiciones elegidas se corresponden con los límites de cada elemento del fenotipo, de manera de no generar individuos con bloques de horarios inválidos.
 
 \subsubsection{Mutación por movimiento}
-Se genera una posición en el fenotipo al azar, que identificará a un bloque donde está asignada cierta asignatura. A continuación se buscará un módulo que se encuentre libre y que sea del mismo tamaño (2 o 3 horas según corresponda). Si se encuentra un espacio libre (después de un número limitado de iteraciones), se moverá la clase al nuevo bloque. En la Fig. 3 se ve un ejemeplo.
+Se genera una posición en el fenotipo al azar, que identificará a un bloque donde está asignada cierta asignatura. A continuación se buscará un módulo que se encuentre libre y que sea del mismo tamaño (2 o 3 horas según corresponda). Si se encuentra un espacio libre (antes de un número limitado de iteraciones), se moverá la clase al nuevo bloque. En la Fig. 3 se ve un ejemplo.
 \begin{figure}[tbh!p]
-\centerline{\includegraphics[width=0.5\textwidth]{mutacion_movimiento.png}}
+\centerline{\includegraphics[width=0.4\textwidth]{mutacion_movimiento.png}}
 \caption{Mutación por movimiento}
 \label{fig3}
 \end{figure}
@@ -101,7 +101,7 @@ Se genera una posición en el fenotipo al azar, que identificará a un bloque dond
 \subsubsection{Mutación por permutación}
 Se toma una posición aleatoria del fenotipo. A partir de ésta, y dependiendo de si es de 2 o 3 horas, se genera una nueva posición aleatoria del mismo horario. Para continuar, se intercambian las posiciones de ambas, de manera de que donde se ubicaba la primera, ahora se ubique la segunda y viceversa. En la Fig. 4 mostramos un ejemplo ilustrativo.
 \begin{figure}[tbh!p]
-\centerline{\includegraphics[width=0.5\textwidth]{mutacion_permutacion.png}}
+\centerline{\includegraphics[width=0.4\textwidth]{mutacion_permutacion.png}}
 \caption{Mutación por permutación}
 \label{fig4}
 \end{figure}
@@ -110,13 +110,13 @@ Se toma una posición aleatoria del fenotipo. A partir de ésta, y dependiendo de 
 La función de fitness que evalúa la calidad de la solución representada por cada individuo, debe tener en cuenta qué tanto cumple con las restricciones definidas. Para ello, el fitness está formado por 4 términos, uno por cada requisito a satisfacer. Se probaron dos tipos de funciones de fitness, una aditiva y otra multiplicativa. Primero se expondrán cada uno de los términos y luego la relación entre éstos.
 
 \subsubsection{Sobrepaso de Aulas}
-Cuenta la cantidad de veces que se supera la capacidad de aulas definida. Si se cuenta con 4 aulas, contará para cada bloque horario, la cantidad de clases que se dictan simultáneamente. Si se sobrepasa el límite de 4, se sumará 1 en este contador. 
+Cuenta la cantidad de veces que se supera la capacidad de aulas definida. Si se dispone de 4 aulas, contará para cada bloque horario, la cantidad de clases que se dictan simultáneamente. Si se sobrepasa el límite de 4, se sumará 1 en este contador. 
 
 \subsubsection{Repeticiones de Asignaturas}
 Cuenta las veces que se da más de una vez cierta asignatura en el mismo día. Si el individuo establece, por ejemplo, que la teoría y la práctica 1 se dan en el mismo día, sumará 1 en este contador.
 
 \subsubsection{Solapamiento de años adyacentes}
-Se cuentan la cantidad de oportunidades en las que clase de años adyacentes se dictan en el mismo módulo. Por ejemplo, este contador sumará 1 cada vez que el individuo represente que un curso de segundo año se solape con cualquier clase de primer o tercer año.
+Se suman la cantidad de oportunidades en las que clase de años adyacentes se dictan en el mismo módulo. Por ejemplo, este contador sumará 1 cada vez que el individuo represente que un curso de segundo año se solape con cualquier clase de primer o tercer año.
 
 \subsubsection{Superposición de clases}
 Se aumentará el contador de esta restricción cuando dos clases del mismo año se asignen al mismo bloque horario, ya que significará que un alumno debería estar al mismo tiempo en dos clases distintas.
@@ -188,7 +188,7 @@ $b_4$ & 5 \\
 \label{tab4}
 \end{table}
 
-Como vemos, en ambos casos se le da mayor importancia al término de superposición, ya que éste es la mayor de las restricciones que debemos satisfacer, sin ella, la tabla de horarios obtenida sería de poca utilidad para cualquier alumno. El segundo término en importancia es el solapamiento entre asignaturas de años adyacentes, ya que es una de las condiciones más deseables de una tabla horaria. El resto de las restricciones tienen valores bajos, ya que no son tan importantes o se cumplen por defecto al satisfacer las importantes.
+Como vemos, en ambos casos se le da mayor importancia al término de superposición, ya que éste es la mayor de las restricciones que debemos satisfacer, y sin ella, la tabla de horarios obtenida sería de poca utilidad para cualquier alumno. El segundo término en importancia es el solapamiento entre asignaturas de años adyacentes, ya que es una de las condiciones más deseables de una tabla horaria. El resto de las restricciones tienen valores bajos, ya que no son tan importantes o se cumplen por defecto al satisfacer las principales.
 
 \section{Resultados}
 La elección de una u otra función de fitness es arbitraria. En ambas se obtienen resultados similares. Es de destacar que la función productoria tiene ``peor'' fitness, debido a que los valores están exponenciados. Sin embargo, al comparar la calidad de la solución en término de los contadores $p,q,r$ y $s$, apreciamos lo antedicho: que se logran resultados similares.
@@ -228,7 +228,7 @@ En la Fig. \ref{fig5} mostramos un resultado donde se alcanza fitness perfecto, 
 \label{fig6}
 \end{figure}
 
-Para contrastar, en las Fig. \ref{fig7} y Fig. \ref{fig8} se muestra el resultado para un fitness regular. Los resultados que corresponden a este fitness se muestran en la Tabla \ref{tab6}, donde se sombrearon los solapamientos. Se puede apreciar en la Fig. \ref{fig7} que los parámetros utilizados no son los óptimos según la Tabla \ref{tab5}.
+Para contrastar, en las Fig. \ref{fig7} y Fig. \ref{fig8} se muestra el resultado para un fitness regular. Los resultados que corresponden a este fitness se muestran en la Tabla \ref{tab6}. Se puede apreciar en la Fig. \ref{fig7} que los parámetros utilizados no son los óptimos según la Tabla \ref{tab5}. Además, en esta figura se sombrearon los solapamientos entre años adyacentes.
 
 \begin{table}[htbp]
 \caption{Resultados obtenidos en los contadores del fitness regular}
@@ -259,7 +259,7 @@ Superposición de clases & 0\\
 \label{fig8}
 \end{figure}
 
-Es de destacar que todos estos resultados fueron obtenidos para la simplificación de las clases que se enunciaba al principio, por lo que estas soluciones son sólo del caso simplificado. En la Fig. \ref{fig9} mostramos el resultado obtenido para el caso real, en el que ya no hay necesariamente 3 clases por asignatura, si no que hay más (principalmente en los primeros 2 años) o menos (en los años avanzados). Además se debe aclarar que se dicta más de una comisión por materia, por lo que los alumnos pueden elegir a cuál asistir. 
+Es de destacar que todos estos resultados fueron obtenidos para la simplificación de las clases que se enunciaba al principio, por lo que estas soluciones son sólo del caso simplificado. En la Fig. \ref{fig9} mostramos el resultado obtenido para el caso real, en el que ya no hay necesariamente 3 clases por asignatura, si no que hay más (principalmente en los primeros 2 años) o menos (en los años avanzados). Además se debe aclarar que se dicta más de una comisión por materia, por lo que los alumnos pueden elegir a cuál asistir. Por lo tanto, el contador de solapamientos ya no es tan importante.
 \begin{figure}[tbh!p]
 \centerline{\includegraphics[width=0.5\textwidth]{horario_superposicion.png}} % cambiaaaaaaaaaaaaaaa
 \caption{Tabla horaria obtenida para el caso real, con 12 solapamientos}

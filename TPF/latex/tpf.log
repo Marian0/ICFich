@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.27)  14 NOV 2012 11:14
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.27)  14 NOV 2012 12:03
 entering extended mode
  %&-line parsing enabled.
 **tpf.tex
@@ -213,6 +213,10 @@ File: fenotipo.png Graphic file (type png)
 
 
 ]
+Underfull \hbox (badness 2460) in paragraph at lines 87--89
+\OT1/ptm/m/n/10 cruza. Es-tos op-er-adores se apli-can en rep-re-sentaci[]on
+ []
+
 <mutacion_movimiento.png, id=11, 588.1975pt x 353.32pt>
 File: mutacion_movimiento.png Graphic file (type png)
 
@@ -226,10 +230,16 @@ File: mutacion_permutacion.png Graphic file (type png)
 
 <use mutacion_permutacion.png> [2 <./tabla_horarios.png (PNG copy)> <./fenotipo
 .png (PNG copy)> <./mutacion_movimiento.png (PNG copy)> <./mutacion_permutacion
-.png (PNG copy)>] <grafico_1.png, id=18, 569.12625pt x 340.27126pt>
-File: grafico_1.png Graphic file (type png)
+.png (PNG copy)>]
+Underfull \hbox (badness 1442) in paragraph at lines 119--120
+ \OT1/ptm/m/it/10 D.3. So-la-pamien-to de a[]nos ady-a-centes: [][] \OT1/ptm/m/
+n/10 Se suman
+ []
 
-<use grafico_1.png> <horarios_resultado.png, id=19, 762.85pt x 523.9575pt>
+<grafico_1.png, id=18, 569.12625pt x 340.27126pt>
+File: grafico_1.png Graphic file (type png)
+ <use grafico_1.png>
+<horarios_resultado.png, id=19, 762.85pt x 523.9575pt>
 File: horarios_resultado.png Graphic file (type png)
 
 <use horarios_resultado.png> <grafico_3.png, id=20, 558.085pt x 321.2pt>
@@ -261,9 +271,11 @@ a-ga, y
 
 
 [4 <./horarios_resultado.png (PNG copy)> <./grafico_3.png (PNG copy)> <./horari
-o_superposicion.png (PNG copy)>] [5
+o_superposicion.png (PNG copy)>] (./tpf.aux)
 
-] (./tpf.aux) ) 
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
  2281 strings out of 495061
  32015 string characters out of 1182621
@@ -271,20 +283,20 @@ Here is how much of TeX's memory you used:
  5464 multiletter control sequences out of 15000+50000
  42049 words of font info for 76 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 26i,9n,27p,937b,302s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/shar
-e/texmf-texlive/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-tex
-live/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/t
-ype1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-texlive/fonts/type1/public/
-amsfonts/cm/cmr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/
-cmr5.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr6.pfb></us
-r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf
--texlive/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1
-/urw/times/utmbi8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.p
-fb></usr/share/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on tpf.pdf (5 pages, 496946 bytes).
+ 26i,9n,27p,942b,302s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
+ve/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/ty
+pe1/public/amsfonts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/a
+msfonts/cm/cmmi8.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/c
+mr10.pfb></usr/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr5.pfb></us
+r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf
+-texlive/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-texlive/font
+s/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/ut
+mbi8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/shar
+e/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
+Output written on tpf.pdf (4 pages, 496344 bytes).
 PDF statistics:
- 71 PDF objects out of 1000 (max. 8388607)
+ 68 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

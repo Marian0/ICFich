@@ -82,7 +82,7 @@ void utils::saveCSV(std::string filename, std::vector<std::vector<float> > & X) 
 //Imprime un vector, separando sus valores con char separator
 void utils::printVector(std::vector<float> &v, char separator){
 	for (unsigned int i = 0; i < v.size(); i++){
-		std::cout<<v[i];
+        std::cout<<v[i];
 		if(i < v.size()-1) //Si no es el ultimo caso
 			std::cout<<separator;
 	}
@@ -105,7 +105,7 @@ void utils::printVectorVector(std::vector<std::vector<float> > &v, char separato
 //Imprime un vector, separando sus valores con char separator
 void utils::printVector(std::vector<unsigned int> &v, char separator){
 	for (unsigned int i = 0; i < v.size(); i++){
-		std::cout<<v[i];
+        std::cout<<v[i];
 		if(i < v.size()-1) //Si no es el ultimo caso
 			std::cout<<separator;
 	}

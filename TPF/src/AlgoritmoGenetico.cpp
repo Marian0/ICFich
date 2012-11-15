@@ -577,14 +577,11 @@ void AlgoritmoGenetico::mutacionMovimiento(Individuo &individuo_a_mutar) {
             break;
         }
 
-
         control_iteraciones--;
         if (control_iteraciones == 0)
-            break; //Control anti while true infinito
-
+            return; //Control anti while true infinito
     }
     this->cantidad_mutaciones_movimiento++;
-
 }
 
 void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
@@ -679,7 +676,18 @@ void AlgoritmoGenetico::mutacionPermutacion(Individuo &individuo_a_mutar) {
 }
 
 std::vector<std::vector<std::vector<int> > > AlgoritmoGenetico::getSolucion() {
-    return this->poblacion[this->id_maximo_fitness].matriz_int;
+    unsigned int id_mejor = 0;
+    float fit = this->poblacion[id_mejor].getFitness();
+    for (unsigned int i = 1; i < this->poblacion.size(); i++) {
+        float f = this->poblacion[i].getFitness();
+        if (f > fit) {
+            fit = f;
+            id_mejor = i;
+        }
+    }
+    this->poblacion[id_mejor].calcularMatrices();
+    return this->poblacion[id_mejor].matriz_int;
+    //return this->poblacion[this->id_maximo_fitness].matriz_int;
 }
 
 unsigned int AlgoritmoGenetico::getDiversidad() {
