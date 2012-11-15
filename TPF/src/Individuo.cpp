@@ -62,6 +62,14 @@ float Individuo::getFitness(){
 
 //Calcula el fitness de este individuo
 float Individuo::calcularFitness() {
+
+    std::vector<int> aprobar;
+
+    utils::vectorBinary2Int(this->genotipo, aprobar, 5);
+    utils::printVector(aprobar);
+
+
+
     float nuevo_fitness = 0.0;
 
     //Validamos que sea un individuo valido.
