@@ -17,7 +17,8 @@
 
 \begin{abstract}
 El problema de acomodar los horarios de una facultad, llamado Timetabling Problem en inglés, es una difícil tarea que se debe realizar en cualquier institución educativa. Se tienen un conjunto de recursos limitados tales como la cantidad de profesores, alumnos o aulas, y se los debe asignar a cada una de las asignaturas que se cursan en la institución de manera de minimizar el impacto negativo tanto en los alumnos como en los docentes. Se quieren evitar situaciones tales como que se cursen simultáneamente materias del mismo año o de años adyacentes, ya que con frecuencia hay estudiantes que pueden asistir a asignaturas de distintos años.
-En este paper abordamos el Timetabling Problem utilizando un Algoritmo Genético y modelando las restricciones en una simple función de fitness. Si bien no consideramos todas los requisitos que participan en este problema, encontramos resultados satisfactorios con respecto al programa semanal obtenido. Primero presentamos el modelado del problema, luego los operadores definidos para el algoritmo genético y el fitness. Por último se presentan los resultados obtenidos y algunos ejemplos.
+
+En este trabajo abordamos el Timetabling Problem utilizando un Algoritmo Genético y modelando las restricciones en una simple función de fitness. Si bien no consideramos todas los requisitos que participan en este problema, encontramos resultados satisfactorios con respecto al programa semanal obtenido. Primero presentamos el modelado del problema, luego los operadores definidos para el algoritmo genético y el fitness. Por último se presentan los resultados obtenidos y algunos ejemplos.
 \end{abstract}
 
 \begin{keywords}
@@ -26,6 +27,7 @@ timetabling problem, restricciones, algoritmo genético, optimización
 
 \section{Introducción}
 \PARstart{L}{a} distribución de los horarios en que se dictan las asignaturas de la facultad se debe actualizar todos los años e implica un trabajo iterativo hasta que se cumplan todas las restricciones, o al menos se minimicen la cantidad de conflictos. Entre los requisitos a cumplir se encuentran los inherentes a los planes de las carreras, tales como que no se asignen materias del mismo año al mismo horario, o incluso de años consecutivos, ya que muchos alumnos asisten a asignaturas de distintos años por problemas de correlatividades. Asimismo, otras limitaciones surgen por la disponibilidad de aulas (y sus correspondientes equipamientos y límite de alumnos) y los docentes asignados a cada clase. Sobre este último, con frecuencia surge que cada profesor impone una restricción del tipo: ``sólo de mañana'' o ``los lunes y martes únicamente''. 
+
 De la definición de todas estas limitaciones, vemos que encontrar una distribución de clases durante la semana se torna una tarea casi imposible para cualquier ser humano. 
 
 En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. Debido a la variedad, artículos anteriores como el de Colorni y otros \cite{Datta2006}, tomaron casos particulares para su estudio. Nosotros especializamos este trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También, imitando a Perez de la Cruz y Ramírez Rodríguez \cite{Perez2011}, se resumieron las clases de cada materia a 3: una de teoría de dos horas, y dos de práctica de tres horas cada una (a las que los alumnos deben acudir a ambas). En total existen 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
@@ -68,7 +70,9 @@ Con respecto a la distribución de horarios, siguiendo el enfoque de Enzhe y Ki-S
 
 \section{Algoritmo genético}
 Para la solución del problema, se utilizó un AG \cite{Goldberg1989}, \cite{Roeva2012} en el que se definió un fenotipo como se muestra en la Fig. \ref{fig2}.
+
 De acuerdo a los ID definidos para cada clase en la Tabla \ref{tab1}, se le asigna una posición específica en el fenotipo a cada una. Así, la clase con identificador igual a 1, será la primera en el fenotipo. Lo mismo se aplica a $ID = 2$, que estará ubicada segunda, y lo mismo con el resto. En cada posición del fenotipo, se almacena un número que referencia en qué bloque está situada. Siguiendo con el ejemplo de la Fig. \ref{fig2}, se aprecia que la clase 1 se dictará en el módulo 12, que al consultar la Fig. \ref{fig1} vemos que corresponde a los miércoles a las 14 horas.
+
 A partir de la representación fenotípica, se codifica en un genotipo binario de 300 bits de extensión, ya que se toman 5 bits para cada elemento del fenotipo (que está en el rango 0-24).
 \begin{figure}[tbh!p]
 \centerline{\includegraphics[width=0.5\textwidth]{fenotipo.png}}
@@ -81,10 +85,12 @@ Se parte de una población inicial aleatoria. Para generarla, se toman las clases
 
 \subsection{Selección de individuos para la siguiente generación}
 La población siempre se mantiene en el mismo tamaño. En cada generación, se deben elegir a los individuos que formarán parte de la generación siguiente. Se utilizó el método de selección por ventanas. A los individuos elegidos se les aplicará, si corresponde, las cruzas y mutaciones que se describen en la próxima sección.
+
 Además, a través de elitismo, siempre se pasa el mejor individuo (según su fitness) a la próxima generación. Por último, se elige un término de brecha generacional del 10\% del tamaño de la población. Por lo tanto, sin importar el fitness, se elige aleatoriamente cierta cantidad de individuos que serán integrantes del próximo conjunto. De esta manera, nos aseguramos que siempre haya cierta diversidad en el conjunto de búsqueda.
 
 \subsection{Operadores genéticos}
 Se definieron dos operadores de mutación y uno de cruza. Estos operadores se aplican en representación genotípica, pero cuidan de realizarse en posiciones que se corresponden con el fenotipo, de manera de no generar individuos inválidos.
+
 Cada uno de estos operadores tiene una probabilidad de aplicarse definida al inicio, por lo que puede suceder que se realicen ambas mutaciones y no la cruza, viceversa o cualquier otra combinación.
 
 \subsubsection{Cruza}
@@ -259,17 +265,19 @@ Superposición de clases & 0\\
 \label{fig8}
 \end{figure}
 
-Es de destacar que todos estos resultados fueron obtenidos para la simplificación de las clases que se enunciaba al principio, por lo que estas soluciones son sólo del caso simplificado. En la Fig. \ref{fig9} mostramos el resultado obtenido para el caso real, en el que ya no hay necesariamente 3 clases por asignatura, si no que hay más (principalmente en los primeros 2 años) o menos (en los años avanzados). Además se debe aclarar que se dicta más de una comisión por materia, por lo que los alumnos pueden elegir a cuál asistir. Por lo tanto, el contador de solapamientos ya no es tan importante.
+Es de destacar que todos estos resultados fueron obtenidos para la simplificación de las clases que se enunciaba al principio, por lo que estas soluciones son sólo del caso simplificado. En la Fig. \ref{fig9} mostramos el resultado obtenido para el caso real, en el que ya no hay necesariamente 3 clases por asignatura, si no que hay más (principalmente en los primeros 2 años) o menos (en los años avanzados). Además se debe aclarar que se dicta más de una comisión por materia, por lo que los alumnos pueden elegir a cuál asistir. Por lo tanto, el contador de solapamientos ya no es tan representativo.
 \begin{figure}[tbh!p]
-\centerline{\includegraphics[width=0.5\textwidth]{horario_superposicion.png}} % cambiaaaaaaaaaaaaaaa
-\caption{Tabla horaria obtenida para el caso real, con 12 solapamientos}
+\centerline{\includegraphics[width=0.42\textwidth]{tabla_caso_real.png}} 
+\caption{Tabla horaria obtenida para el caso real}
 \label{fig9}
 \end{figure}
 
 \section{Conclusiones}
 Si bien en el presente trabajo se realizaron muchas simplificaciones de cara a reducir la complejidad, la inclusión de más requisitos no presenta, ``en la práctica'', una mayor dificultad. A pesar de que las soluciones obtenidas no son utilizables debido a las restricciones no consideradas, concluímos que el uso de un algoritmo genético para encarar el TTP fue la elección correcta.
+
 Uno de los problemas que encontramos durante el desarrollo del trabajo, es que la diversidad de cada generación es pequeña debido a que la función de fitness (la cual se basa en las restricciones planteadas) tiene un limitado conjunto de valores posibles. Esto provoca que fenotipos muy distintos tengan exactamente el mismo fitness, y este fenómeno se repita para toda la población.
-Como trabajo futuro, se plantea la inclusión de más restricciones a la función de aptitud, tales como requerimientos propios de los profesores o relacionadas a la disponibilidad y equipamiento de las aulas. En un análisis prelimiar, concluímos que no habría mayor dificultad, siguiendo el enfoque actual, en implementar estas extensiones. 
+
+Como trabajo futuro, se plantea la inclusión de más restricciones a la función de aptitud, tales como requerimientos propios de los profesores o relacionadas a la disponibilidad y equipamiento de las aulas. En un análisis preliminar, concluímos que no habría mayor dificultad, siguiendo el enfoque actual, en implementar estas extensiones. 
 
 \nocite{*}
 \bibliographystyle{tpf}

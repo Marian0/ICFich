@@ -1,0 +1,14 @@
+F
+Motivacion
+TTP y restricciones elegidas
+
+M
+Modelado
+Algoritmo Genetico: Fenotipo, Cruza y Mutaciones
+
+F
+Fitness
+Resultados: Regular, Perfecto y real
+
+M
+Conclusiones

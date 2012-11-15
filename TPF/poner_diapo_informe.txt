@@ -15,7 +15,6 @@ Algoritmo Genetico
 
 Resultados
 + Tablas obtenidas con el algoritmo
-	* Fitness malo
 	* Fitness regular
 	* Fitness perfecto
 + Graficos (comparando suma y producto)
@@ -27,3 +26,9 @@ Resultados
 + Tabla obtenida con Problema realista
 
 Conclusiones
+
+
+Cosas que hablamos con dipersia, vemos si las ponemos en la diapo
+* probar otro software [NO]
+* eliminar parametros del fitness
+* 

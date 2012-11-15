@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.27)  14 NOV 2012 12:03
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2012.4.27)  15 NOV 2012 11:55
 entering extended mode
  %&-line parsing enabled.
 **tpf.tex
@@ -174,29 +174,39 @@ LaTeX Font Info:    ... okay on input line 7.
 \MPnumerator=\count99
 \everyMPtoPDFconversion=\toks20
 )
-Underfull \hbox (badness 10000) in paragraph at lines 23--25
+Underfull \hbox (badness 2717) in paragraph at lines 21--22
+[]\OT1/ptm/b/n/9 En este tra-ba-jo abor-damos el Timetabling Prob-lem
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--22
+\OT1/ptm/b/n/9 uti-lizan-do un Al-go-rit-mo Gen[]etico y mod-e-lando las
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--26
 []\OT1/ptm/b/it/9 Palabras clave\OT1/ptm/b/n/9 ---timetabling prob-lem, re-stri
 c-ciones,
  []
 
 
-Underfull \hbox (badness 2158) in paragraph at lines 28--30
+Underfull \hbox (badness 2158) in paragraph at lines 29--30
 \OT1/ptm/m/n/10 con fre-cuen-cia surge que ca-da pro-fe-sor im-pone una
  []
 
 
-Underfull \hbox (badness 3657) in paragraph at lines 31--32
+Underfull \hbox (badness 3657) in paragraph at lines 33--34
 []\OT1/ptm/m/n/10 En este tra-ba-jo, nos en-fo-camos en solu-cionar el
  []
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 36.
+(Font)              <8> on input line 38.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 36.
+(Font)              <6> on input line 38.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 36.
+(Font)              <5> on input line 38.
 
-Underfull \hbox (badness 1874) in paragraph at lines 58--59
+Underfull \hbox (badness 1874) in paragraph at lines 60--61
 []\OT1/ptm/m/it/10 Solapamiento en a[]nos ady-a-centes: \OT1/ptm/m/n/10 No se d
 eben
  []
@@ -205,23 +215,20 @@ eben
 File: tabla_horarios.png Graphic file (type png)
  <use tabla_horarios.png>
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 71.
+(Font)              <7> on input line 74.
 
-<fenotipo.png, id=2, 639.38875pt x 52.195pt>
-File: fenotipo.png Graphic file (type png)
- <use fenotipo.png> [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ]
-Underfull \hbox (badness 2460) in paragraph at lines 87--89
-\OT1/ptm/m/n/10 cruza. Es-tos op-er-adores se apli-can en rep-re-sentaci[]on
- []
-
+<fenotipo.png, id=10, 639.38875pt x 52.195pt>
+File: fenotipo.png Graphic file (type png)
+ <use fenotipo.png>
 <mutacion_movimiento.png, id=11, 588.1975pt x 353.32pt>
 File: mutacion_movimiento.png Graphic file (type png)
 
 <use mutacion_movimiento.png>
-Underfull \hbox (badness 1496) in paragraph at lines 94--100
+Underfull \hbox (badness 1496) in paragraph at lines 100--106
 \OT1/ptm/m/n/10 en el fenotipo al azar, que iden-ti-ficar[]a a un bloque
  []
 
@@ -231,7 +238,7 @@ File: mutacion_permutacion.png Graphic file (type png)
 <use mutacion_permutacion.png> [2 <./tabla_horarios.png (PNG copy)> <./fenotipo
 .png (PNG copy)> <./mutacion_movimiento.png (PNG copy)> <./mutacion_permutacion
 .png (PNG copy)>]
-Underfull \hbox (badness 1442) in paragraph at lines 119--120
+Underfull \hbox (badness 1442) in paragraph at lines 125--126
  \OT1/ptm/m/it/10 D.3. So-la-pamien-to de a[]nos ady-a-centes: [][] \OT1/ptm/m/
 n/10 Se suman
  []
@@ -250,15 +257,31 @@ File: grafico_3.png Graphic file (type png)
 File: horario_superposicion.png Graphic file (type png)
 
 <use horario_superposicion.png>
-File: horario_superposicion.png Graphic file (type png)
- <use horario_superposicion.png>
-Underfull \hbox (badness 2932) in paragraph at lines 262--268
+<tabla_caso_real.png, id=22, 610.28pt x 507.8975pt>
+File: tabla_caso_real.png Graphic file (type png)
+ <use tabla_caso_real.png>
+Underfull \hbox (badness 2932) in paragraph at lines 268--274
 []\OT1/ptm/m/n/10 Es de destacar que to-dos es-tos re-sul-ta-dos fueron
  []
 
 [3 <./grafico_1.png (PNG copy)>]
-Underfull \hbox (badness 1721) in paragraph at lines 270--273
+Underfull \hbox (badness 1721) in paragraph at lines 276--277
 \OT1/ptm/m/n/10 sim-pli-fi-ca-ciones de cara a re-ducir la com-ple-ji-dad, la
+ []
+
+
+Underfull \hbox (badness 1953) in paragraph at lines 278--279
+\OT1/ptm/m/n/10 de-sar-rol-lo del tra-ba-jo, es que la di-ver-si-dad de ca-da
+ []
+
+
+Underfull \hbox (badness 4608) in paragraph at lines 280--281
+[]\OT1/ptm/m/n/10 Como tra-ba-jo fu-turo, se plantea la in-clusi[]on de
+ []
+
+
+Underfull \hbox (badness 1688) in paragraph at lines 280--281
+\OT1/ptm/m/n/10 a la disponi-bil-i-dad y equipamien-to de las aulas. En
  []
 
 (./tpf.bbl
@@ -267,23 +290,25 @@ Underfull \hbox (badness 3281) in paragraph at lines 36--39
 a-ga, y
  []
 
-)
-
-
 [4 <./horarios_resultado.png (PNG copy)> <./grafico_3.png (PNG copy)> <./horari
-o_superposicion.png (PNG copy)>] (./tpf.aux)
+o_superposicion.png (PNG copy)> <./tabla_caso_real.png (PNG copy)>])
+
+
+[5
+
+] (./tpf.aux)
 
 LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 2281 strings out of 495061
- 32015 string characters out of 1182621
+ 2286 strings out of 495061
+ 32129 string characters out of 1182621
  101785 words of memory out of 3000000
- 5464 multiletter control sequences out of 15000+50000
+ 5468 multiletter control sequences out of 15000+50000
  42049 words of font info for 76 fonts, out of 3000000 for 9000
  28 hyphenation exceptions out of 8191
- 26i,9n,27p,942b,302s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 26i,9n,27p,942b,372s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf-texlive/fonts/enc/dvips/base/8r.enc}</usr/share/texmf-texli
 ve/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/ty
 pe1/public/amsfonts/cm/cmmi7.pfb></usr/share/texmf-texlive/fonts/type1/public/a
@@ -294,9 +319,9 @@ r/share/texmf-texlive/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf
 s/type1/urw/times/utmb8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/ut
 mbi8a.pfb></usr/share/texmf-texlive/fonts/type1/urw/times/utmr8a.pfb></usr/shar
 e/texmf-texlive/fonts/type1/urw/times/utmri8a.pfb>
-Output written on tpf.pdf (4 pages, 496344 bytes).
+Output written on tpf.pdf (5 pages, 576234 bytes).
 PDF statistics:
- 68 PDF objects out of 1000 (max. 8388607)
+ 72 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 41 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 46 words of extra memory for PDF output out of 10000 (max. 10000000)
 
