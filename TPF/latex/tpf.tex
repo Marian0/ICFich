@@ -16,7 +16,7 @@
 \maketitle
 
 \begin{abstract}
-El problema de acomodar los horarios de una facultad, llamado Timetabling Problem en inglés, es una difícil tarea que se debe realizar en cualquier institución educativa. Se tienen un conjunto de recursos limitados tales como la cantidad de profesores, alumnos o aulas, y se los debe asignar a cada una de las asignaturas que se cursan en la institución de manera de minimizar el impacto negativo tanto en los alumnos como en los docentes. Se quieren evitar situaciones tales como que se cursen simultáneamente materias del mismo año o de años adyacentes, ya que con frecuencia hay estudiantes que pueden asistir a asignaturas de distintos años.
+El problema de acomodar los horarios, llamado Timetabling Problem en inglés, es una difícil tarea que se debe realizar en cualquier institución educativa. Se tiene un conjunto de recursos limitados tales como la cantidad de profesores, alumnos o aulas, y se los debe asignar a cada una de las asignaturas que se cursan en la institución, de manera de minimizar el impacto negativo tanto en los alumnos como en los docentes. Se quieren evitar situaciones tales como que se cursen simultáneamente materias del mismo año o de años adyacentes, ya que con frecuencia hay estudiantes que pueden asistir a asignaturas de distintos años.
 
 En este trabajo abordamos el Timetabling Problem utilizando un Algoritmo Genético y modelando las restricciones en una simple función de fitness. Si bien no consideramos todas los requisitos que participan en este problema, encontramos resultados satisfactorios con respecto al programa semanal obtenido. Primero presentamos el modelado del problema, luego los operadores definidos para el algoritmo genético y el fitness. Por último se presentan los resultados obtenidos y algunos ejemplos.
 \end{abstract}
@@ -26,23 +26,23 @@ timetabling problem, restricciones, algoritmo genético, optimización
 \end{keywords}
 
 \section{Introducción}
-\PARstart{L}{a} distribución de los horarios en que se dictan las asignaturas de la facultad se debe actualizar todos los años e implica un trabajo iterativo hasta que se cumplan todas las restricciones, o al menos se minimicen la cantidad de conflictos. Entre los requisitos a cumplir se encuentran los inherentes a los planes de las carreras, tales como que no se asignen materias del mismo año al mismo horario, o incluso de años consecutivos, ya que muchos alumnos asisten a asignaturas de distintos años por problemas de correlatividades. Asimismo, otras limitaciones surgen por la disponibilidad de aulas (y sus correspondientes equipamientos y límite de alumnos) y los docentes asignados a cada clase. Sobre este último, con frecuencia surge que cada profesor impone una restricción del tipo: ``sólo de mañana'' o ``los lunes y martes únicamente''. De la definición de todas estas limitaciones, vemos que encontrar una distribución de clases durante la semana se torna una tarea casi imposible para cualquier ser humano. 
+\PARstart{L}{a} distribución de los horarios en que se dictan las asignaturas de la facultad se debe actualizar todos los años e implica un trabajo iterativo hasta que se cumplan todas las restricciones, o al menos se minimice la cantidad de conflictos. Entre los requisitos a cumplir, se encuentran los inherentes a los planes de las carreras, tales como que no se asignen materias del mismo año al mismo horario, o incluso de años consecutivos, ya que muchos alumnos asisten a asignaturas de distintos cuatrimestres por problemas de correlatividades. Asimismo, otras limitaciones surgen por la disponibilidad de aulas (y sus correspondientes equipamientos y límite de alumnos) y los docentes asignados a cada clase. Sobre este último, con frecuencia surge que cada profesor impone una restricción del tipo: ``sólo de mañana'' o ``los lunes y martes únicamente''. De la definición de todas estas limitaciones, vemos que encontrar una distribución de clases durante la semana se torna una tarea casi imposible para cualquier ser humano. 
 
-En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. Debido a la variedad, artículos anteriores como el de Colorni y otros \cite{Datta2006}, tomaron casos particulares para su estudio. Nosotros especializamos este trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma. También, imitando a Perez de la Cruz y Ramírez Rodríguez \cite{Perez2011}, se resumieron las clases de cada materia a 3: una de teoría y dos de práctica, que pueden ser de dos o tres horas cada una (a las que los alumnos deben acudir a ambas). En total existen 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
+En este trabajo, nos enfocamos en solucionar el Timetabling Problem (TTP) para un conjunto limitado de restricciones. Además, simplificamos la definición del problema. Debido a la variedad, artículos anteriores como el de Colorni y otros \cite{Datta2006}, tomaron casos particulares para su estudio. Nosotros especializamos este trabajo en nuestra propia carrera: Ingeniería en Informática. Por lo tanto, modelamos las asignaturas de los 5 años de la misma (y del mismo semestre). También, imitando a Perez de la Cruz y Ramírez Rodríguez \cite{Perez2011}, se resumieron las clases de cada materia a 3: una de teoría y dos de práctica, que pueden ser de dos o tres horas cada una (a las que los alumnos deben acudir a ambas). En total existen 20 materias que se dictan en un semestre, de 3 clases cada una, lo que suma un total de 60 clases a ubicar. Un ejemplo para las primeras asignaturas se ve en la Tabla I. Luego se estudiará el caso más general.
 
 \begin{table}[htbp]
 \caption{Asignaturas modeladas como clases}
 \begin{center}
 \begin{tabular}{l|c|c|c|c}
 \hline
-Asignatura     & Clase    & ID   \\
+Asignatura     & Clase    & ID Clase  \\
 \hline
-Cálculo II 	& Cálculo II (Teoría, 2 horas) 		& 1 \\
-Cálculo II 	& Cálculo II (Práctica 1, 3 horas) 	& 2 \\
-Cálculo II 	& Cálculo II (Práctica 2, 3 horas) 	& 3 \\
-Física I 	& Física I (Teoría, 3 horas) 		& 4 \\
-Física I 	& Física I (Práctica 1, 2 horas) 	& 5 \\
-Física I 	& Física I (Práctica 2, 2 horas) 	& 6 \\
+Matemática		& Matemática (Teoría, 2 horas) 		& 1 \\
+Matemática		& Matemática (Práctica 1, 3 horas) 	& 2 \\
+Matemática		& Matemática (Práctica 2, 3 horas) 	& 3 \\
+Programación	& Programación (Teoría, 2 horas) 		& 4 \\
+Programación	& Programación (Práctica 1, 2 horas) 	& 5 \\
+Programación	& Programación (Práctica 2, 2 horas) 	& 6 \\
 \hline
 \end{tabular}
 \end{center}
@@ -54,12 +54,12 @@ No se tuvo en consideración la distribución de los profesores ni sus restriccion
 Por el lado de las restricciones, elegimos las siguientes a satisfacer:
 \begin{itemize}
 \item \textit{Limitación de aulas:} No se pueden utilizar más de 4 aulas al mismo tiempo
-\item \textit{Asignaturas en un mismo día: }No se desea que la misma asignatura, aún de clases distintas, se dicte dos veces en el mismo día.
+%\item \textit{Asignaturas en un mismo día: }No se desea que la misma asignatura, aún de clases distintas, se dicte dos veces en el mismo día.
 \item \textit{Solapamiento en años adyacentes:} No se deben superponer las clases de asignaturas de un año, con las clases del año anterior o siguiente, para dar la posibilidad a los alumnos de cursar ambos semestres.
 \item \textit{Superposición en un mismo año:} No es posible que se dicten dos clases del mismo año en el mismo momento, ya que imposibilita a los estudiantes a hacerse presente en ambas clases.
 \end{itemize}
 
-Con respecto a la distribución de horarios, siguiendo el enfoque de Enzhe y Ki-Seok \cite{Enzhe2002} y Martínez y otros \cite{Martinez2006}, se divide cada día, de lunes a viernes, en 5 módulos o franjas horarias. A cada módulo se le asigna un ID único, que servirá para identificarlo en el algoritmo genético. En la Fig. \ref{fig1} se aprecian los módulos y el ID asignado a cada uno. El uso de estos identificadores se explicará en la próxima sección.
+Con respecto a la distribución de horarios, siguiendo el enfoque de Enzhe y Ki-Seok \cite{Enzhe2002}, y Martínez y otros \cite{Martinez2006}, se divide cada día, de lunes a viernes, en 5 módulos o franjas horarias. A cada módulo se le asigna un ID único, que servirá para identificarlo en el algoritmo genético. En la Fig. \ref{fig1} se aprecian los módulos y el ID asignado a cada uno. El uso de estos identificadores se explicará en la próxima sección.
 \begin{figure}[tbhp]
 \centerline{\includegraphics[width=0.5\textwidth]{tabla_horarios.png}}
 \caption{Módulos definidos para la semana}
@@ -67,7 +67,7 @@ Con respecto a la distribución de horarios, siguiendo el enfoque de Enzhe y Ki-S
 \end{figure}
 
 \section{Algoritmo genético}
-Para la solución del problema, se utilizó un AG \cite{Goldberg1989}, \cite{Roeva2012} en el que se definió un fenotipo como se muestra en la Fig. \ref{fig2}. De acuerdo a los ID definidos para cada clase en la Tabla \ref{tab1}, se le asigna una posición específica en el fenotipo a cada una. Así, la clase con identificador igual a 1, será la primera en el fenotipo. Lo mismo se aplica a $ID = 2$, que estará ubicada segunda, y lo mismo con el resto. En cada posición del fenotipo, se almacena un número que referencia en qué bloque está situada. Siguiendo con el ejemplo de la Fig. \ref{fig2}, se aprecia que la clase 1 se dictará en el módulo 12, que al consultar la Fig. \ref{fig1} vemos que corresponde a los miércoles a las 14 horas.
+Para la solución del problema, se utilizó un AG \cite{Goldberg1989}, \cite{Roeva2012}, en el que se definió un fenotipo como se muestra en la Fig. \ref{fig2}. De acuerdo a los ID definidos para cada clase como en la Tabla \ref{tab1}, se le asigna una posición específica en el fenotipo a cada una. Así, la clase con identificador igual a 1, será la primera en el fenotipo. Lo mismo se aplica a ID 2, que estará ubicada segunda, y de igual manera con el resto. En cada posición del fenotipo, se almacena un número que referencia en qué bloque está situada. Siguiendo con el ejemplo de la Fig. \ref{fig2}, se aprecia que la clase 1 se dictará en el módulo 12, que al consultar la Fig. \ref{fig1} vemos que corresponde a los miércoles a las 14 horas.
 
 A partir de la representación fenotípica, se codifica en un genotipo binario de 300 bits de extensión, ya que se toman 5 bits para cada elemento del fenotipo (que está en el rango $0-24$).
 \begin{figure}[tbh!p]
@@ -80,7 +80,7 @@ A partir de la representación fenotípica, se codifica en un genotipo binario de 
 Se parte de una población inicial aleatoria. Para generarla, se toman las clases de a una y se le asigna un bloque aleatorio en el rango $0-24$. De esta forma, se comenzará con muchos individuos con una evaluación de fitness pobre, ya que no se espera que cumplan ninguna restricción al inicio, pero todos serán válidos en el sentido de que no se asignarán bloques fuera del rango $0-24$. Esta propiedad se mantendrá durante todo el algoritmo.
 
 \subsection{Selección de individuos para la siguiente generación}
-La población siempre se mantiene en el mismo tamaño. En cada generación, se deben elegir a los individuos que formarán parte de la generación siguiente. Se utilizó el método de selección por ventanas. A los individuos elegidos se les aplicará, si corresponde, las cruzas y mutaciones que se describen en la próxima sección. Además, a través de elitismo, siempre se pasa el mejor individuo (según su fitness) a la próxima generación. Por último, se elige un término de brecha generacional del $10\%$ del tamaño de la población. Por lo tanto, sin importar el fitness, se elige aleatoriamente cierta cantidad de individuos que serán integrantes del próximo conjunto. De esta manera, nos aseguramos que siempre haya cierta diversidad en el conjunto de búsqueda.
+La población siempre se mantiene en el mismo tamaño. En cada generación, se deben elegir a los individuos que formarán parte de la generación siguiente. Se utilizó el método de selección por ventanas. A los individuos elegidos se les aplicará, si corresponde, las cruzas y mutaciones que se describen en la próxima sección. Además, a través de elitismo, siempre se hereda el mejor individuo (según su fitness) a la próxima generación. Por último, se elige un término de brecha generacional del $10\%$ del tamaño de la población. Por lo tanto, sin importar el fitness, se elige aleatoriamente cierta cantidad de individuos que serán integrantes del próximo conjunto. De esta manera, nos aseguramos que siempre haya cierta diversidad en el conjunto de búsqueda.
 
 \subsection{Operadores genéticos}
 Se definieron dos operadores de mutación y uno de cruza. Estos operadores se aplican en representación genotípica, pero cuidan de realizarse en posiciones que se corresponden con el fenotipo, de manera de no generar individuos inválidos. Cada uno de estos operadores tiene una probabilidad de aplicarse definida al inicio, por lo que puede suceder que se realicen ambas mutaciones y no la cruza, viceversa o cualquier otra combinación.
@@ -105,13 +105,15 @@ Se toma una posición aleatoria del fenotipo. A partir de ésta, y dependiendo de 
 \end{figure}
 
 \subsection{Función de fitness}
-La función de fitness que evalúa la calidad de la solución representada por cada individuo, debe tener en cuenta qué tanto cumple con las restricciones definidas. Para ello, el fitness está formado por 4 términos, uno por cada requisito a satisfacer. Se probaron dos tipos de funciones de fitness, una aditiva y otra multiplicativa. Primero se expondrán cada uno de los términos y luego la relación entre éstos.
+La función de fitness que evalúa la calidad de la solución representada por cada individuo, debe tener en cuenta qué tanto cumple con las restricciones definidas. Para ello, el fitness está formado por 3 términos, uno por cada requisito a satisfacer. Se probaron dos tipos de funciones de fitness, una aditiva y otra multiplicativa. Primero se expondrán cada uno de los términos y luego la relación entre éstos.
 
 \subsubsection{Sobrepaso de Aulas}
-Cuenta la cantidad de veces que se supera la capacidad de aulas definida. Si se dispone de 4 aulas, contará para cada bloque horario, la cantidad de clases que se dictan simultáneamente. Si se sobrepasa el límite de 4, se sumará 1 en este contador. 
+Cuenta la cantidad de veces que se supera la capacidad de aulas definida. Si se dispone de 4 aulas, contará para cada bloque horario, la cantidad de clases que se dictan simultáneamente. Si se sobrepasa el límite, se sumará 1 en este contador. 
 
-\subsubsection{Repeticiones de Asignaturas}
-Cuenta las veces que se da más de una vez cierta asignatura en el mismo día. Si el individuo establece, por ejemplo, que la teoría y la práctica de la asignatura 4 se dan en el mismo día, sumará 1 en este contador.
+%
+%\subsubsection{Repeticiones de Asignaturas}
+%Cuenta las veces que se da más de una vez cierta asignatura en el mismo día. Si el individuo establece, por ejemplo, que la teoría y la práctica %de la asignatura 4 se dan en el mismo día, sumará 1 en este contador.
+%
 
 \subsubsection{Solapamiento de años adyacentes}
 Se suman la cantidad de oportunidades en las que clase de años adyacentes se dictan en el mismo módulo. Por ejemplo, este contador sumará 1 cada vez que el individuo represente que un curso de segundo año se solape con cualquier clase de primer o tercer año.
@@ -120,12 +122,15 @@ Se suman la cantidad de oportunidades en las que clase de años adyacentes se dic
 Se aumentará el contador de esta restricción cuando dos clases del mismo año se asignen al mismo bloque horario, ya que significará que un alumno debería estar al mismo tiempo en dos clases distintas.
 
 Una vez definido los términos de la función de fitness, procedemos a enunciar su forma.
-Primero presentamos la función costo aditiva en la Ecuación \ref{eq1}:
+Primero presentamos la función de aptitud aditiva en la Ecuación \ref{eq1}:
 \begin{equation}
-fitness = \frac{a_1}{p+1} + \frac{a_2}{q+1} + \frac{a_3}{r+1} + \frac{a_4}{s+1}
+%fitness = \frac{a_1}{p+1} + \frac{a_2}{q+1} + \frac{a_3}{r+1} + \frac{a_4}{s+1}
+fitness_{suma} = \frac{a_1}{p+1} + \frac{a_2}{q+1} + \frac{a_3}{r+1}
 \label{eq1}
 \end{equation}
-donde los $a_i$ representan el peso o importancia que se le da a cada término del fitness y se definen según la Tabla \ref{tab2}. Por otra parte, $p,q,r$ y $s$ representan los contadores, datos que se enuncian en la Tabla \ref{tab3}.
+donde los $a_i$ representan el peso o importancia que se le da a cada término del fitness y se definen según la Tabla \ref{tab2}. 
+%Por otra parte, $p,q,r$ y $s$ representan los contadores, datos que se enuncian en la Tabla \ref{tab3}.
+Por otra parte, $p, q$ y $r$ representan los contadores, datos que se enuncian en la Tabla \ref{tab3}.
 
 \begin{table}[htbp]
 \caption{Valores de los parámetros del fitness suma}
@@ -134,10 +139,13 @@ donde los $a_i$ representan el peso o importancia que se le da a cada término de
 \hline
 Parámetro     & Valor   \\
 \hline
-$a_1$ & 0.05 \\
-$a_2$ & 0.05 \\
-$a_3$ & 0.35 \\
-$a_4$ & 0.55 \\
+%$a_1$ & 0.05 \\
+%$a_2$ & 0.05 \\
+%$a_3$ & 0.35 \\
+%$a_4$ & 0.55 \\
+$a_1$ & $0.10$ \\
+$a_2$ & $0.35$ \\
+$a_3$ & $0.55$ \\
 \hline
 \end{tabular}
 \end{center}
@@ -151,23 +159,28 @@ $a_4$ & 0.55 \\
 \hline
 Contador     & Nombre    \\
 \hline
-$p$ & Repeticiones de asignaturas en un mismo día \\
-$q$ & Sobrepaso de aulas \\
-$r$ & Solapamiento de años adyacentes \\
-$s$ & Superposición de clases \\
+%$p$ & Repeticiones de asignaturas en un mismo día \\
+%$q$ & Sobrepaso de aulas \\
+%$r$ & Solapamiento de años adyacentes \\
+%$s$ & Superposición de clases \\
+%
+$p$ & Sobrepaso de aulas \\
+$q$ & Solapamiento de años adyacentes \\
+$r$ & Superposición de clases \\
 \hline
 \end{tabular}
 \end{center}
 \label{tab3}
 \end{table}
 
-A continuación, enunciamos la forma del fitness producto en la Ecuación \ref{eq2}
+A continuación, enunciamos la forma del fitness producto en la Ecuación \ref{eq2}:
 \begin{equation}
-fitness = \frac{1}{(p+1)^{b_1}} \frac{1}{(q+1)^{b_2}} \frac{1}{(r+1)^{b_3}} \frac{1}{(s+1)^{b_4}}
+%fitness = \frac{1}{(p+1)^{b_1}} \frac{1}{(q+1)^{b_2}} \frac{1}{(r+1)^{b_3}} \frac{1}{(s+1)^{b_4}}
+fitness_{producto} = \frac{1}{(p+1)^{b_1}} \frac{1}{(q+1)^{b_2}} \frac{1}{(r+1)^{b_3}} 
 \label{eq2}
 \end{equation}
-
-donde $p, q, r$ y $s$ son como en \ref{eq1} y los $b_i$ representan la importancia de cada término y cuyos valores se muestran en la Tabla \ref{tab4}.
+%donde $p, q, r$ y $s$ son como en \ref{eq1} y los $b_i$ representan la importancia de cada término y cuyos valores se muestran en la Tabla \ref{tab4}.
+donde $p, q$ y $r$ son como en la Ecuación \ref{eq1} y los $b_i$ representan la importancia de cada término y cuyos valores se muestran en la Tabla \ref{tab4}.
 
 \begin{table}[htbp]
 \caption{Valores de los parámetros del fitness producto}
@@ -176,20 +189,26 @@ donde $p, q, r$ y $s$ son como en \ref{eq1} y los $b_i$ representan la importanc
 \hline
 Parámetro     & Valor   \\
 \hline
+%$b_1$ & 1 \\
+%$b_2$ & 1 \\
+%$b_3$ & 2 \\
+%$b_4$ & 5 \\
+%
 $b_1$ & 1 \\
-$b_2$ & 1 \\
-$b_3$ & 2 \\
-$b_4$ & 5 \\
+$b_2$ & 2 \\
+$b_3$ & 5 \\
 \hline
 \end{tabular}
 \end{center}
 \label{tab4}
 \end{table}
 
-Como vemos, en ambos casos se le da mayor importancia al término de superposición, ya que éste es la mayor de las restricciones que debemos satisfacer, y sin ella, la tabla de horarios obtenida sería de poca utilidad para cualquier alumno. El segundo término en importancia es el solapamiento entre asignaturas de años adyacentes, ya que es una de las condiciones más deseables de una tabla horaria. El resto de las restricciones tienen valores bajos, ya que no son tan importantes o se cumplen por defecto al satisfacer las principales.
+Como vemos, en ambos casos se le da mayor importancia al término de superposición, ya que ésta es la mayor de las restricciones que debemos satisfacer, y sin ella, la tabla de horarios obtenida sería de poca utilidad para cualquier alumno. El segundo término en importancia es el solapamiento entre asignaturas de años adyacentes, ya que es una de las condiciones más deseables de una tabla horaria. 
 
 \section{Resultados}
-La elección de una u otra función de fitness es arbitraria. En ambas se obtienen resultados similares. Es de destacar que la función productoria tiene ``peor'' fitness, debido a que los valores están exponenciados. Sin embargo, al comparar la calidad de la solución en término de los contadores $p,q,r$ y $s$, apreciamos lo antedicho: que se logran resultados similares.
+La elección de una u otra función de fitness es arbitraria. En ambas se obtienen resultados similares. Es de destacar que la función productoria tiene ``peor'' fitness, debido a que los valores están exponenciados. 
+%Sin embargo, al comparar la calidad de la solución en término de los contadores $p,q,r$ y $s$, apreciamos lo antedicho: que se logran resultados similares.
+Sin embargo, al comparar la calidad de la solución en término de los contadores $p, q$ y $r$, apreciamos lo antedicho: que se logran resultados similares.
 
 Para probar el desempeño del algoritmo, se ejecutó para diversos conjuntos de configuraciones. Se estimaron los parámetros del algoritmo que daban mejores resultados, los cuales se resumen en la Tabla \ref{tab5}.
 \begin{table}[htbp]
@@ -235,7 +254,7 @@ Para contrastar, en las Fig. \ref{fig7} y Fig. \ref{fig8} se muestra el resultad
 \hline
 Contador     & Resultado   \\
 \hline
-Repeticiones de asignaturas en un mismo día & 0\\
+%Repeticiones de asignaturas en un mismo día & 0\\
 Sobrepaso de aulas & 0\\
 Solapamiento de años adyacentes & 9\\
 Superposición de clases & 0\\
@@ -265,11 +284,14 @@ Es de destacar que todos estos resultados fueron obtenidos para la simplificació
 \end{figure}
 
 \section{Conclusiones}
-Si bien en el presente trabajo se realizaron muchas simplificaciones de cara a reducir la complejidad, la inclusión de más requisitos no presenta, ``en la práctica'', una mayor dificultad. A pesar de que las soluciones obtenidas no son utilizables debido a las restricciones no consideradas, concluímos que el uso de un algoritmo genético para encarar el TTP fue la elección correcta.
+Si bien en el presente trabajo se realizaron muchas simplificaciones de cara a reducir la complejidad, la inclusión de más requisitos no presenta, en la práctica, una mayor dificultad. A pesar de que las soluciones obtenidas no son utilizables debido a las restricciones no consideradas, concluímos que el uso de un algoritmo genético para encarar el TTP fue la elección correcta.
 
-Uno de los problemas que encontramos durante el desarrollo del trabajo, es que la diversidad de cada generación es pequeña debido a que la función de fitness (la cual se basa en las restricciones planteadas) tiene un limitado conjunto de valores posibles. Esto provoca que fenotipos muy distintos tengan exactamente el mismo fitness, y este fenómeno se repita para toda la población.
+Uno de los problemas que encontramos durante el desarrollo del trabajo, fue que la diversidad de cada generación es pequeña debido a que la función de fitness (la cual se basa en las restricciones planteadas) tiene un limitado conjunto de valores posibles. Esto provoca que fenotipos muy distintos tengan exactamente el mismo fitness, y este fenómeno se repita para toda la población.
 
+\subsection{Trabajo Futuro}
 Como trabajo futuro, se plantea la inclusión de más restricciones a la función de aptitud, tales como requerimientos propios de los profesores o relacionadas a la disponibilidad y equipamiento de las aulas. En un análisis preliminar, concluímos que no habría mayor dificultad, siguiendo el enfoque actual, en implementar estas extensiones. 
+
+Además, se plantea la modificación del modelado de la semana en bloques de longitud y ubicación fijas, para pasar a franjas horarias en término de numeros reales. De esta manera, se daría la posibilidad de que las clases comiencen, por ejemplo, a las 9:45 horas, y terminen a las 11:15. Sin embargo, esto implicaría hacer un total cambio del fenotipo y las correspondientes modificaciones en los operadores, por lo que no se consideró en el trabajo actual y es una de las mayores limitaciones del mismo.
 
 \nocite{*}
 \bibliographystyle{tpf}
